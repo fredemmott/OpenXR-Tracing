@@ -223,7 +223,7 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 		parameters = []
 		arguments = []
 		trace_in = [f'"{xr_command.name}"']
-		trace_out = ['OXRTL_ARGS_XrResult(ret, "XrResult")']
+		trace_out = [f'"{xr_command.name}"', 'OXRTL_ARGS_XrResult(ret, "XrResult")']
 		trace_next_in = []
 		trace_next_out = []
 		for param in xr_command.params:
