@@ -222,6 +222,33 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 			ret += f'static PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
 		return ret
 
+	def genXrGetInstanceProcAddr(self):
+		ret = '''
+XrResult OXRTracing_xrGetInstanceProcAddr(
+    XrInstance instance,
+	const char* nameCStr,
+	PFN_xrVoidFunction* function) {
+
+	*function = nullptr;
+	const auto ret = gXrNextGetInstanceProcAddr(instance, nameCStr, function);
+	if (XR_FAILED(ret) || !*function) {
+		return ret;
+	}
+	const std::string_view name {nameCStr};
+'''
+		for xr_command in self.getWrappedCommands():
+			ret += f'''
+if (name == "{xr_command.name}") {{
+	next_{xr_command.name} = reinterpret_cast<PFN_{xr_command.name}>(*function);
+	*function = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_{xr_command.name});
+	return ret;
+}}
+'''
+		ret += '''
+	return ret;
+}'''
+		return ret
+
 	def genWrappers(self):
 		ret = ''
 		for xr_command in self.getWrappedCommands():
@@ -305,9 +332,6 @@ namespace OXRTracing {
 	extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 }
 
-XrResult OXRTracing_xrGetInstanceProcAddr(
-    XrInstance instance, const char* name, PFN_xrVoidFunction* function);
-
 using namespace OXRTracing;
 '''
 		write(content, file=self.outFile)
@@ -315,7 +339,10 @@ using namespace OXRTracing;
 	def endFile(self):
 		content = f'''
 {self.genNextPFNDefinitions()}
+
 {self.genWrappers()}
+
+{self.genXrGetInstanceProcAddr()}
 '''
 		write(content, file=self.outFile)
 		BoilerplateOutputGenerator.endFile(self)

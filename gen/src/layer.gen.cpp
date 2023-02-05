@@ -34,9 +34,6 @@ static thread_local XrInstance gXrInstance{};
 extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 } // namespace OXRTracing
 
-XrResult OXRTracing_xrGetInstanceProcAddr(
-    XrInstance instance, const char* name, PFN_xrVoidFunction* function);
-
 using namespace OXRTracing;
 
 static PFN_xrDestroyInstance next_xrDestroyInstance{ nullptr };
@@ -1086,6 +1083,414 @@ XrResult OXRTracing_xrStopHapticFeedback(
 
 	TraceLoggingWriteStop(localActivity, "xrStopHapticFeedback",
 	    OXRTL_ARGS_XrResult(ret, "XrResult"));
+
+	return ret;
+}
+
+XrResult OXRTracing_xrGetInstanceProcAddr(
+    XrInstance instance, const char* nameCStr, PFN_xrVoidFunction* function)
+{
+
+	*function = nullptr;
+	const auto ret = gXrNextGetInstanceProcAddr(instance, nameCStr, function);
+	if (XR_FAILED(ret) || !*function) {
+		return ret;
+	}
+	const std::string_view name{ nameCStr };
+
+	if (name == "xrDestroyInstance") {
+		next_xrDestroyInstance
+		    = reinterpret_cast<PFN_xrDestroyInstance>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrDestroyInstance);
+		return ret;
+	}
+
+	if (name == "xrGetInstanceProperties") {
+		next_xrGetInstanceProperties
+		    = reinterpret_cast<PFN_xrGetInstanceProperties>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetInstanceProperties);
+		return ret;
+	}
+
+	if (name == "xrPollEvent") {
+		next_xrPollEvent = reinterpret_cast<PFN_xrPollEvent>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrPollEvent);
+		return ret;
+	}
+
+	if (name == "xrResultToString") {
+		next_xrResultToString
+		    = reinterpret_cast<PFN_xrResultToString>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrResultToString);
+		return ret;
+	}
+
+	if (name == "xrStructureTypeToString") {
+		next_xrStructureTypeToString
+		    = reinterpret_cast<PFN_xrStructureTypeToString>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrStructureTypeToString);
+		return ret;
+	}
+
+	if (name == "xrGetSystem") {
+		next_xrGetSystem = reinterpret_cast<PFN_xrGetSystem>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrGetSystem);
+		return ret;
+	}
+
+	if (name == "xrGetSystemProperties") {
+		next_xrGetSystemProperties
+		    = reinterpret_cast<PFN_xrGetSystemProperties>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetSystemProperties);
+		return ret;
+	}
+
+	if (name == "xrEnumerateEnvironmentBlendModes") {
+		next_xrEnumerateEnvironmentBlendModes
+		    = reinterpret_cast<PFN_xrEnumerateEnvironmentBlendModes>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateEnvironmentBlendModes);
+		return ret;
+	}
+
+	if (name == "xrCreateSession") {
+		next_xrCreateSession = reinterpret_cast<PFN_xrCreateSession>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrCreateSession);
+		return ret;
+	}
+
+	if (name == "xrDestroySession") {
+		next_xrDestroySession
+		    = reinterpret_cast<PFN_xrDestroySession>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrDestroySession);
+		return ret;
+	}
+
+	if (name == "xrEnumerateReferenceSpaces") {
+		next_xrEnumerateReferenceSpaces
+		    = reinterpret_cast<PFN_xrEnumerateReferenceSpaces>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateReferenceSpaces);
+		return ret;
+	}
+
+	if (name == "xrCreateReferenceSpace") {
+		next_xrCreateReferenceSpace
+		    = reinterpret_cast<PFN_xrCreateReferenceSpace>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrCreateReferenceSpace);
+		return ret;
+	}
+
+	if (name == "xrGetReferenceSpaceBoundsRect") {
+		next_xrGetReferenceSpaceBoundsRect
+		    = reinterpret_cast<PFN_xrGetReferenceSpaceBoundsRect>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetReferenceSpaceBoundsRect);
+		return ret;
+	}
+
+	if (name == "xrCreateActionSpace") {
+		next_xrCreateActionSpace
+		    = reinterpret_cast<PFN_xrCreateActionSpace>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrCreateActionSpace);
+		return ret;
+	}
+
+	if (name == "xrLocateSpace") {
+		next_xrLocateSpace = reinterpret_cast<PFN_xrLocateSpace>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrLocateSpace);
+		return ret;
+	}
+
+	if (name == "xrDestroySpace") {
+		next_xrDestroySpace = reinterpret_cast<PFN_xrDestroySpace>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrDestroySpace);
+		return ret;
+	}
+
+	if (name == "xrEnumerateViewConfigurations") {
+		next_xrEnumerateViewConfigurations
+		    = reinterpret_cast<PFN_xrEnumerateViewConfigurations>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateViewConfigurations);
+		return ret;
+	}
+
+	if (name == "xrGetViewConfigurationProperties") {
+		next_xrGetViewConfigurationProperties
+		    = reinterpret_cast<PFN_xrGetViewConfigurationProperties>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetViewConfigurationProperties);
+		return ret;
+	}
+
+	if (name == "xrEnumerateViewConfigurationViews") {
+		next_xrEnumerateViewConfigurationViews
+		    = reinterpret_cast<PFN_xrEnumerateViewConfigurationViews>(
+		        *function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateViewConfigurationViews);
+		return ret;
+	}
+
+	if (name == "xrEnumerateSwapchainFormats") {
+		next_xrEnumerateSwapchainFormats
+		    = reinterpret_cast<PFN_xrEnumerateSwapchainFormats>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateSwapchainFormats);
+		return ret;
+	}
+
+	if (name == "xrCreateSwapchain") {
+		next_xrCreateSwapchain
+		    = reinterpret_cast<PFN_xrCreateSwapchain>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrCreateSwapchain);
+		return ret;
+	}
+
+	if (name == "xrDestroySwapchain") {
+		next_xrDestroySwapchain
+		    = reinterpret_cast<PFN_xrDestroySwapchain>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrDestroySwapchain);
+		return ret;
+	}
+
+	if (name == "xrEnumerateSwapchainImages") {
+		next_xrEnumerateSwapchainImages
+		    = reinterpret_cast<PFN_xrEnumerateSwapchainImages>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateSwapchainImages);
+		return ret;
+	}
+
+	if (name == "xrAcquireSwapchainImage") {
+		next_xrAcquireSwapchainImage
+		    = reinterpret_cast<PFN_xrAcquireSwapchainImage>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrAcquireSwapchainImage);
+		return ret;
+	}
+
+	if (name == "xrWaitSwapchainImage") {
+		next_xrWaitSwapchainImage
+		    = reinterpret_cast<PFN_xrWaitSwapchainImage>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrWaitSwapchainImage);
+		return ret;
+	}
+
+	if (name == "xrReleaseSwapchainImage") {
+		next_xrReleaseSwapchainImage
+		    = reinterpret_cast<PFN_xrReleaseSwapchainImage>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrReleaseSwapchainImage);
+		return ret;
+	}
+
+	if (name == "xrBeginSession") {
+		next_xrBeginSession = reinterpret_cast<PFN_xrBeginSession>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrBeginSession);
+		return ret;
+	}
+
+	if (name == "xrEndSession") {
+		next_xrEndSession = reinterpret_cast<PFN_xrEndSession>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrEndSession);
+		return ret;
+	}
+
+	if (name == "xrRequestExitSession") {
+		next_xrRequestExitSession
+		    = reinterpret_cast<PFN_xrRequestExitSession>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrRequestExitSession);
+		return ret;
+	}
+
+	if (name == "xrWaitFrame") {
+		next_xrWaitFrame = reinterpret_cast<PFN_xrWaitFrame>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrWaitFrame);
+		return ret;
+	}
+
+	if (name == "xrBeginFrame") {
+		next_xrBeginFrame = reinterpret_cast<PFN_xrBeginFrame>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrBeginFrame);
+		return ret;
+	}
+
+	if (name == "xrEndFrame") {
+		next_xrEndFrame = reinterpret_cast<PFN_xrEndFrame>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrEndFrame);
+		return ret;
+	}
+
+	if (name == "xrLocateViews") {
+		next_xrLocateViews = reinterpret_cast<PFN_xrLocateViews>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrLocateViews);
+		return ret;
+	}
+
+	if (name == "xrStringToPath") {
+		next_xrStringToPath = reinterpret_cast<PFN_xrStringToPath>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrStringToPath);
+		return ret;
+	}
+
+	if (name == "xrPathToString") {
+		next_xrPathToString = reinterpret_cast<PFN_xrPathToString>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrPathToString);
+		return ret;
+	}
+
+	if (name == "xrCreateActionSet") {
+		next_xrCreateActionSet
+		    = reinterpret_cast<PFN_xrCreateActionSet>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrCreateActionSet);
+		return ret;
+	}
+
+	if (name == "xrDestroyActionSet") {
+		next_xrDestroyActionSet
+		    = reinterpret_cast<PFN_xrDestroyActionSet>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrDestroyActionSet);
+		return ret;
+	}
+
+	if (name == "xrCreateAction") {
+		next_xrCreateAction = reinterpret_cast<PFN_xrCreateAction>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrCreateAction);
+		return ret;
+	}
+
+	if (name == "xrDestroyAction") {
+		next_xrDestroyAction = reinterpret_cast<PFN_xrDestroyAction>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrDestroyAction);
+		return ret;
+	}
+
+	if (name == "xrSuggestInteractionProfileBindings") {
+		next_xrSuggestInteractionProfileBindings
+		    = reinterpret_cast<PFN_xrSuggestInteractionProfileBindings>(
+		        *function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrSuggestInteractionProfileBindings);
+		return ret;
+	}
+
+	if (name == "xrAttachSessionActionSets") {
+		next_xrAttachSessionActionSets
+		    = reinterpret_cast<PFN_xrAttachSessionActionSets>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrAttachSessionActionSets);
+		return ret;
+	}
+
+	if (name == "xrGetCurrentInteractionProfile") {
+		next_xrGetCurrentInteractionProfile
+		    = reinterpret_cast<PFN_xrGetCurrentInteractionProfile>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetCurrentInteractionProfile);
+		return ret;
+	}
+
+	if (name == "xrGetActionStateBoolean") {
+		next_xrGetActionStateBoolean
+		    = reinterpret_cast<PFN_xrGetActionStateBoolean>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetActionStateBoolean);
+		return ret;
+	}
+
+	if (name == "xrGetActionStateFloat") {
+		next_xrGetActionStateFloat
+		    = reinterpret_cast<PFN_xrGetActionStateFloat>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetActionStateFloat);
+		return ret;
+	}
+
+	if (name == "xrGetActionStateVector2f") {
+		next_xrGetActionStateVector2f
+		    = reinterpret_cast<PFN_xrGetActionStateVector2f>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetActionStateVector2f);
+		return ret;
+	}
+
+	if (name == "xrGetActionStatePose") {
+		next_xrGetActionStatePose
+		    = reinterpret_cast<PFN_xrGetActionStatePose>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetActionStatePose);
+		return ret;
+	}
+
+	if (name == "xrSyncActions") {
+		next_xrSyncActions = reinterpret_cast<PFN_xrSyncActions>(*function);
+		*function
+		    = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrSyncActions);
+		return ret;
+	}
+
+	if (name == "xrEnumerateBoundSourcesForAction") {
+		next_xrEnumerateBoundSourcesForAction
+		    = reinterpret_cast<PFN_xrEnumerateBoundSourcesForAction>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrEnumerateBoundSourcesForAction);
+		return ret;
+	}
+
+	if (name == "xrGetInputSourceLocalizedName") {
+		next_xrGetInputSourceLocalizedName
+		    = reinterpret_cast<PFN_xrGetInputSourceLocalizedName>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrGetInputSourceLocalizedName);
+		return ret;
+	}
+
+	if (name == "xrApplyHapticFeedback") {
+		next_xrApplyHapticFeedback
+		    = reinterpret_cast<PFN_xrApplyHapticFeedback>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrApplyHapticFeedback);
+		return ret;
+	}
+
+	if (name == "xrStopHapticFeedback") {
+		next_xrStopHapticFeedback
+		    = reinterpret_cast<PFN_xrStopHapticFeedback>(*function);
+		*function = reinterpret_cast<PFN_xrVoidFunction>(
+		    &OXRTracing_xrStopHapticFeedback);
+		return ret;
+	}
 
 	return ret;
 }
