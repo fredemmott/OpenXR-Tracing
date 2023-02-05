@@ -127,12 +127,21 @@ inline const char* ToCString({xr_enum.name} value) {{
 		# to make different logs depending on the XrType
 		member_macros = []
 		for member in xr_struct.members:
-			if member.pointer_count > 0:
-				member_macros.append(
-					f'OXRTL_ARGS_{member.type}_{"P" * member.pointer_count}(x.{member.name}, "{member.name}")')
-			else:
-				member_macros.append(
-					f'OXRTL_ARGS_{member.type}(x.{member.name}, "{member.name}")')
+			suffix = ''
+			trailing = ''
+			pointer_count = member.pointer_count
+			if member.is_array:
+				if member.is_static_array:
+					suffix += '_FA'
+					trailing += f', {member.static_array_sizes[0]}'
+				else:
+					suffix += '_DA'
+					pointer_count -= 1
+					trailing += f', {member.pointer_count_var}'
+			if pointer_count > 0:
+				suffix = '_' + ('P' * pointer_count) + suffix
+			member_macros.append(
+				f'OXRTL_ARGS_{member.type}{suffix}(x.{member.name}, "{member.name}"{trailing})')
 		return f'#define OXRTL_ARGS_{xr_struct.name}(x, name) TraceLoggingStruct({len(member_macros)}, name),' + ','.join(member_macros)
 
 	def beginFile(self, genOpts):

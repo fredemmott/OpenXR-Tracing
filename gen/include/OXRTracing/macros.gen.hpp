@@ -958,20 +958,25 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrApiLayerProperties(x, name) \
 	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char(x.layerName, "layerName"), \
+	    OXRTL_ARGS_char_FA( \
+	        x.layerName, "layerName", XR_MAX_API_LAYER_NAME_SIZE), \
 	    OXRTL_ARGS_XrVersion(x.specVersion, "specVersion"), \
 	    OXRTL_ARGS_uint32_t(x.layerVersion, "layerVersion"), \
-	    OXRTL_ARGS_char(x.description, "description")
+	    OXRTL_ARGS_char_FA( \
+	        x.description, "description", XR_MAX_API_LAYER_DESCRIPTION_SIZE)
 #define OXRTL_ARGS_XrExtensionProperties(x, name) \
 	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char(x.extensionName, "extensionName"), \
+	    OXRTL_ARGS_char_FA( \
+	        x.extensionName, "extensionName", XR_MAX_EXTENSION_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(x.extensionVersion, "extensionVersion")
 #define OXRTL_ARGS_XrApplicationInfo(x, name) \
 	TraceLoggingStruct(5, name), \
-	    OXRTL_ARGS_char(x.applicationName, "applicationName"), \
+	    OXRTL_ARGS_char_FA(x.applicationName, "applicationName", \
+	        XR_MAX_APPLICATION_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(x.applicationVersion, "applicationVersion"), \
-	    OXRTL_ARGS_char(x.engineName, "engineName"), \
+	    OXRTL_ARGS_char_FA( \
+	        x.engineName, "engineName", XR_MAX_ENGINE_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(x.engineVersion, "engineVersion"), \
 	    OXRTL_ARGS_XrVersion(x.apiVersion, "apiVersion")
 #define OXRTL_ARGS_XrInstanceCreateInfo(x, name) \
@@ -980,18 +985,21 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrInstanceCreateFlags(x.createFlags, "createFlags"), \
 	    OXRTL_ARGS_XrApplicationInfo(x.applicationInfo, "applicationInfo"), \
 	    OXRTL_ARGS_uint32_t(x.enabledApiLayerCount, "enabledApiLayerCount"), \
-	    OXRTL_ARGS_char_PP(x.enabledApiLayerNames, "enabledApiLayerNames"), \
+	    OXRTL_ARGS_char_P_DA(x.enabledApiLayerNames, "enabledApiLayerNames", \
+	        enabledApiLayerCount), \
 	    OXRTL_ARGS_uint32_t(x.enabledExtensionCount, "enabledExtensionCount"), \
-	    OXRTL_ARGS_char_PP(x.enabledExtensionNames, "enabledExtensionNames")
+	    OXRTL_ARGS_char_P_DA(x.enabledExtensionNames, "enabledExtensionNames", \
+	        enabledExtensionCount)
 #define OXRTL_ARGS_XrInstanceProperties(x, name) \
 	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
 	    OXRTL_ARGS_XrVersion(x.runtimeVersion, "runtimeVersion"), \
-	    OXRTL_ARGS_char(x.runtimeName, "runtimeName")
+	    OXRTL_ARGS_char_FA( \
+	        x.runtimeName, "runtimeName", XR_MAX_RUNTIME_NAME_SIZE)
 #define OXRTL_ARGS_XrEventDataBuffer(x, name) \
 	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_uint8_t(x.varying, "varying")
+	    OXRTL_ARGS_uint8_t_FA(x.varying, "varying", 4000)
 #define OXRTL_ARGS_XrSystemGetInfo(x, name) \
 	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
@@ -1012,7 +1020,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_void_P(x.next, "next"), \
 	    OXRTL_ARGS_XrSystemId(x.systemId, "systemId"), \
 	    OXRTL_ARGS_uint32_t(x.vendorId, "vendorId"), \
-	    OXRTL_ARGS_char(x.systemName, "systemName"), \
+	    OXRTL_ARGS_char_FA( \
+	        x.systemName, "systemName", XR_MAX_SYSTEM_NAME_SIZE), \
 	    OXRTL_ARGS_XrSystemGraphicsProperties( \
 	        x.graphicsProperties, "graphicsProperties"), \
 	    OXRTL_ARGS_XrSystemTrackingProperties( \
@@ -1133,7 +1142,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrEnvironmentBlendMode( \
 	        x.environmentBlendMode, "environmentBlendMode"), \
 	    OXRTL_ARGS_uint32_t(x.layerCount, "layerCount"), \
-	    OXRTL_ARGS_XrCompositionLayerBaseHeader_PP(x.layers, "layers")
+	    OXRTL_ARGS_XrCompositionLayerBaseHeader_P_DA( \
+	        x.layers, "layers", layerCount)
 #define OXRTL_ARGS_XrViewLocateInfo(x, name) \
 	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
@@ -1157,17 +1167,22 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrActionSetCreateInfo(x, name) \
 	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char(x.actionSetName, "actionSetName"), \
-	    OXRTL_ARGS_char(x.localizedActionSetName, "localizedActionSetName"), \
+	    OXRTL_ARGS_char_FA( \
+	        x.actionSetName, "actionSetName", XR_MAX_ACTION_SET_NAME_SIZE), \
+	    OXRTL_ARGS_char_FA(x.localizedActionSetName, "localizedActionSetName", \
+	        XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(x.priority, "priority")
 #define OXRTL_ARGS_XrActionCreateInfo(x, name) \
 	TraceLoggingStruct(7, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char(x.actionName, "actionName"), \
+	    OXRTL_ARGS_char_FA( \
+	        x.actionName, "actionName", XR_MAX_ACTION_NAME_SIZE), \
 	    OXRTL_ARGS_XrActionType(x.actionType, "actionType"), \
 	    OXRTL_ARGS_uint32_t(x.countSubactionPaths, "countSubactionPaths"), \
-	    OXRTL_ARGS_XrPath_P(x.subactionPaths, "subactionPaths"), \
-	    OXRTL_ARGS_char(x.localizedActionName, "localizedActionName")
+	    OXRTL_ARGS_XrPath_DA( \
+	        x.subactionPaths, "subactionPaths", countSubactionPaths), \
+	    OXRTL_ARGS_char_FA(x.localizedActionName, "localizedActionName", \
+	        XR_MAX_LOCALIZED_ACTION_NAME_SIZE)
 #define OXRTL_ARGS_XrActionSuggestedBinding(x, name) \
 	TraceLoggingStruct(2, name), OXRTL_ARGS_XrAction(x.action, "action"), \
 	    OXRTL_ARGS_XrPath(x.binding, "binding")
@@ -1177,13 +1192,13 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrPath(x.interactionProfile, "interactionProfile"), \
 	    OXRTL_ARGS_uint32_t( \
 	        x.countSuggestedBindings, "countSuggestedBindings"), \
-	    OXRTL_ARGS_XrActionSuggestedBinding_P( \
-	        x.suggestedBindings, "suggestedBindings")
+	    OXRTL_ARGS_XrActionSuggestedBinding_DA( \
+	        x.suggestedBindings, "suggestedBindings", countSuggestedBindings)
 #define OXRTL_ARGS_XrSessionActionSetsAttachInfo(x, name) \
 	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
 	    OXRTL_ARGS_uint32_t(x.countActionSets, "countActionSets"), \
-	    OXRTL_ARGS_XrActionSet_P(x.actionSets, "actionSets")
+	    OXRTL_ARGS_XrActionSet_DA(x.actionSets, "actionSets", countActionSets)
 #define OXRTL_ARGS_XrInteractionProfileState(x, name) \
 	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
@@ -1229,7 +1244,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
 	    OXRTL_ARGS_uint32_t(x.countActiveActionSets, "countActiveActionSets"), \
-	    OXRTL_ARGS_XrActiveActionSet_P(x.activeActionSets, "activeActionSets")
+	    OXRTL_ARGS_XrActiveActionSet_DA( \
+	        x.activeActionSets, "activeActionSets", countActiveActionSets)
 #define OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo(x, name) \
 	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \
@@ -1279,7 +1295,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrCompositionLayerFlags(x.layerFlags, "layerFlags"), \
 	    OXRTL_ARGS_XrSpace(x.space, "space"), \
 	    OXRTL_ARGS_uint32_t(x.viewCount, "viewCount"), \
-	    OXRTL_ARGS_XrCompositionLayerProjectionView_P(x.views, "views")
+	    OXRTL_ARGS_XrCompositionLayerProjectionView_DA( \
+	        x.views, "views", viewCount)
 #define OXRTL_ARGS_XrCompositionLayerQuad(x, name) \
 	TraceLoggingStruct(8, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
 	    OXRTL_ARGS_void_P(x.next, "next"), \

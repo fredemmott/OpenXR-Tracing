@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <string.h>
 #include <format>
 
 ///////////////////////////
@@ -45,20 +46,40 @@
 ///// Base types /////
 //////////////////////
 
-#define OXRTL_ARGS_ATOM(x, name)                                                \
-  TraceLoggingValue(std::format("{:#016x}", x).c_str(), name)
-#define OXRTL_ARGS_POINTER(x, name)                                             \
-  TraceLoggingValue(                                                         \
-      std::format("{:#016x}", reinterpret_cast<const uint64_t>(x)).c_str(),  \
-      name)
+#define OXRTL_ARGS_ATOM(x, name) \
+	TraceLoggingValue(std::format("{:#016x}", x).c_str(), name)
+#define OXRTL_ARGS_POINTER(x, name) \
+	TraceLoggingValue( \
+	    std::format("{:#016x}", reinterpret_cast<const uint64_t>(x)).c_str(), \
+	    name)
 #define OXRTL_ARGS_HANDLE OXRTL_ARGS_POINTER
+
+#define OXRTL_ARGS_void_P OXRTL_ARGS_POINTER
 
 /////////////////////////////////////
 ///// Base types: special cases /////
 /////////////////////////////////////
 
-#define OXRTL_ARGS_XrVersion(x, name)                                           \
-  TraceLoggingValue(std::format("{} (v {}.{}.{})", x, XR_VERSION_MAJOR(x),   \
-                        XR_VERSION_MINOR(x), XR_VERSION_PATCH(x))            \
-                        .c_str(),                                            \
-      name)
+#define OXRTL_ARGS_XrVersion(x, name) \
+	TraceLoggingValue(std::format("{} (v {}.{}.{})", x, XR_VERSION_MAJOR(x), \
+	                      XR_VERSION_MINOR(x), XR_VERSION_PATCH(x)) \
+	                      .c_str(), \
+	    name)
+
+#define OXRTL_ARGS_char_FA(x, name, maxLen) \
+  TraceLoggingCountedString(x, strnlen_s(x, maxLen), name)
+
+namespace OXRTracing {
+  inline constexpr const char* ToCString(const char** arr, size_t count) {
+    std::string out;
+    for (size_t i = 0; i < count; ++i) {
+      if (!out.empty()) {
+        out += ",";
+      }
+      out += arr[i];
+    }
+    return out.c_str();
+  }
+}
+#define OXRTL_ARGS_char_P_DA(x, name, count) \
+  TraceLoggingValue(::OXRTracing::ToCString(x, count), name)

@@ -1,4 +1,10 @@
+$ErrorActionPreference = "Stop"
+
 python.exe tracing-generator.py
+if ($LastExitCode -ne 0) {
+  return 1
+}
+
 foreach ($generated in Get-ChildItem -Path gen -Recurse -Include *.cpp, *.hpp) {
   clang-format -i $generated.FullName
 }
