@@ -23,5 +23,6 @@
 
 #pragma once
 
+#include <Windows.h>
 #include <OXRTracing/macros.base-types.hpp>
 #include <OXRTracing/macros.gen.hpp>
