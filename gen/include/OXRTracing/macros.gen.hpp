@@ -45,6 +45,17 @@
 #define OXRTL_ARGS_XrAction(x, name) OXRTL_ARGS_HANDLE(x, name)
 #define OXRTL_ARGS_XrSwapchain(x, name) OXRTL_ARGS_HANDLE(x, name)
 #define OXRTL_ARGS_XrActionSet(x, name) OXRTL_ARGS_HANDLE(x, name)
+#define OXRTL_ARGS_XrInstanceCreateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrSessionCreateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrSpaceVelocityFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrSpaceLocationFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrSwapchainCreateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrSwapchainUsageFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrCompositionLayerFlags(x, name) \
+	OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrViewStateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
+#define OXRTL_ARGS_XrInputSourceLocalizedNameFlags(x, name) \
+	OXRTL_ARGS_XrFlags64(x, name)
 
 /////////////////////////////////////////////
 ///// Generated macros for OpenXR enums /////
