@@ -63,6 +63,32 @@
 	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
 #define OXRTL_ARGS_XrInputSourceLocalizedNameFlags(oxrtlIt, name) \
 	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrVersion_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrFlags64_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrSystemId_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrBool32_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrPath_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrTime_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrDuration_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrInstance_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrSession_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrSpace_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrAction_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrSwapchain_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrActionSet_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
 
 /////////////////////////////////////////////
 ///// Generated macros for OpenXR enums /////

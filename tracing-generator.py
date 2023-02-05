@@ -84,6 +84,11 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
 			ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)' + '\n'
 		for xr_type in self.api_flags:
 			ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
+
+		for xr_type in self.api_base_types:
+			ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
+		for xr_type in self.api_handles:
+			ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
 		return ret
 
 	def genBaseTypeMacro(self, xr_type):
