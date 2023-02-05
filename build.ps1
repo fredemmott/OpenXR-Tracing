@@ -17,6 +17,7 @@ foreach ($generated in Get-ChildItem -Path gen -Recurse -Include *.cpp, *.hpp) {
 
 $cwd = Get-Location
 New-Item -Path out -ItemType Directory -Force | Out-Null
+Copy-Item -Force .\APILayer.json out\APILayer.json
 try {
   Set-Location out
   cl.exe `

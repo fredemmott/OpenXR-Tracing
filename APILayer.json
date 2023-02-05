@@ -1,0 +1,14 @@
+{
+  "file_format_version": "1.0.0",
+  "api_layer": {
+    "name": "XR_APILAYER_FREDEMMOTT_OXRTracing",
+    "library_path": ".\\XR_APILAYER_FREDEMMOTT_OXRTracing.dll",
+    "api_version": "1.0",
+    "implementation_version": "1",
+    "description": "Hand-tracked cockpit clicking for flight simulators - https://github.com/fredemmott/hand-tracked-cockpit-clicking",
+    "functions": {
+      "xrNegotiateLoaderApiLayerInterface": "OXRTracing_xrNegotiateLoaderApiLayerInterface"
+    },
+    "disable_environment": "DISABLE_XR_APILAYER_FREDEMMOTT_OXRTracing"
+  }
+}
