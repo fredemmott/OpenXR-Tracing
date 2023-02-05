@@ -35,60 +35,6 @@ static thread_local XrInstance gXrInstance{};
 
 using namespace OXRTracing;
 
-static PFN_xrGetInstanceProcAddr next_xrGetInstanceProcAddr{ nullptr };
-XrResult OXRTracing_xrGetInstanceProcAddr(
-    XrInstance instance, const char* name, PFN_xrVoidFunction* function)
-{
-	gXrInstance = instance;
-	TraceLoggingActivity<gTraceProvider> localActivity;
-	TraceLoggingWriteStart(localActivity, "xrGetInstanceProcAddr",
-	    OXRTL_ARGS_XrInstance(instance, "instance"),
-	    OXRTL_ARGS_char((*name), "name"));
-	const auto ret = next_xrGetInstanceProcAddr(instance, name, function);
-	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
-
-	return ret;
-}
-
-static PFN_xrEnumerateApiLayerProperties next_xrEnumerateApiLayerProperties{
-	nullptr
-};
-XrResult OXRTracing_xrEnumerateApiLayerProperties(
-    uint32_t propertyCapacityInput, uint32_t* propertyCountOutput,
-    XrApiLayerProperties* properties)
-{
-
-	TraceLoggingActivity<gTraceProvider> localActivity;
-	TraceLoggingWriteStart(localActivity, "xrEnumerateApiLayerProperties",
-	    OXRTL_ARGS_uint32_t(propertyCapacityInput, "propertyCapacityInput"));
-	const auto ret = next_xrEnumerateApiLayerProperties(
-	    propertyCapacityInput, propertyCountOutput, properties);
-	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
-	    OXRTL_ARGS_uint32_t((*propertyCountOutput), "propertyCountOutput"));
-
-	return ret;
-}
-
-static PFN_xrEnumerateInstanceExtensionProperties
-    next_xrEnumerateInstanceExtensionProperties{ nullptr };
-XrResult OXRTracing_xrEnumerateInstanceExtensionProperties(
-    const char* layerName, uint32_t propertyCapacityInput,
-    uint32_t* propertyCountOutput, XrExtensionProperties* properties)
-{
-
-	TraceLoggingActivity<gTraceProvider> localActivity;
-	TraceLoggingWriteStart(localActivity,
-	    "xrEnumerateInstanceExtensionProperties",
-	    OXRTL_ARGS_char((*layerName), "layerName"),
-	    OXRTL_ARGS_uint32_t(propertyCapacityInput, "propertyCapacityInput"));
-	const auto ret = next_xrEnumerateInstanceExtensionProperties(
-	    layerName, propertyCapacityInput, propertyCountOutput, properties);
-	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
-	    OXRTL_ARGS_uint32_t((*propertyCountOutput), "propertyCountOutput"));
-
-	return ret;
-}
-
 static PFN_xrCreateInstance next_xrCreateInstance{ nullptr };
 XrResult OXRTracing_xrCreateInstance(
     const XrInstanceCreateInfo* createInfo, XrInstance* instance)
@@ -97,7 +43,10 @@ XrResult OXRTracing_xrCreateInstance(
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrCreateInstance",
 	    OXRTL_ARGS_XrInstanceCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateInstance_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateInstance(createInfo, instance);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrInstance((*instance), "instance"));
 
@@ -111,7 +60,9 @@ XrResult OXRTracing_xrDestroyInstance(XrInstance instance)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrDestroyInstance",
 	    OXRTL_ARGS_XrInstance(instance, "instance"));
+
 	const auto ret = next_xrDestroyInstance(instance);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	if (gXrInstance == instance) {
@@ -129,7 +80,10 @@ XrResult OXRTracing_xrGetInstanceProperties(
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrGetInstanceProperties",
 	    OXRTL_ARGS_XrInstance(instance, "instance"));
+
 	const auto ret = next_xrGetInstanceProperties(instance, instanceProperties);
+	// XRTracing::TraceNext(localActivity,
+	// "xrGetInstanceProperties_instanceProperties", instanceProperties);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrInstanceProperties(
 	        (*instanceProperties), "instanceProperties"));
@@ -145,7 +99,9 @@ XrResult OXRTracing_xrPollEvent(
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrPollEvent",
 	    OXRTL_ARGS_XrInstance(instance, "instance"));
+
 	const auto ret = next_xrPollEvent(instance, eventData);
+	// XRTracing::TraceNext(localActivity, "xrPollEvent_eventData", eventData);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrEventDataBuffer((*eventData), "eventData"));
 
@@ -161,7 +117,9 @@ XrResult OXRTracing_xrResultToString(
 	TraceLoggingWriteStart(localActivity, "xrResultToString",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrResult(value, "value"));
+
 	const auto ret = next_xrResultToString(instance, value, buffer);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -176,7 +134,9 @@ XrResult OXRTracing_xrStructureTypeToString(XrInstance instance,
 	TraceLoggingWriteStart(localActivity, "xrStructureTypeToString",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrStructureType(value, "value"));
+
 	const auto ret = next_xrStructureTypeToString(instance, value, buffer);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -191,7 +151,9 @@ XrResult OXRTracing_xrGetSystem(
 	TraceLoggingWriteStart(localActivity, "xrGetSystem",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrSystemGetInfo((*getInfo), "getInfo"));
+	// XRTracing::TraceNext(localActivity, "xrGetSystem_getInfo", getInfo);
 	const auto ret = next_xrGetSystem(instance, getInfo, systemId);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSystemId((*systemId), "systemId"));
 
@@ -207,7 +169,10 @@ XrResult OXRTracing_xrGetSystemProperties(
 	TraceLoggingWriteStart(localActivity, "xrGetSystemProperties",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrSystemId(systemId, "systemId"));
+
 	const auto ret = next_xrGetSystemProperties(instance, systemId, properties);
+	// XRTracing::TraceNext(localActivity, "xrGetSystemProperties_properties",
+	// properties);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSystemProperties((*properties), "properties"));
 
@@ -231,9 +196,11 @@ XrResult OXRTracing_xrEnumerateEnvironmentBlendModes(XrInstance instance,
 	        viewConfigurationType, "viewConfigurationType"),
 	    OXRTL_ARGS_uint32_t(environmentBlendModeCapacityInput,
 	        "environmentBlendModeCapacityInput"));
+
 	const auto ret = next_xrEnumerateEnvironmentBlendModes(instance, systemId,
 	    viewConfigurationType, environmentBlendModeCapacityInput,
 	    environmentBlendModeCountOutput, environmentBlendModes);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*environmentBlendModeCountOutput),
 	        "environmentBlendModeCountOutput"));
@@ -250,7 +217,10 @@ XrResult OXRTracing_xrCreateSession(XrInstance instance,
 	TraceLoggingWriteStart(localActivity, "xrCreateSession",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrSessionCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateSession_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateSession(instance, createInfo, session);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSession((*session), "session"));
 
@@ -264,7 +234,9 @@ XrResult OXRTracing_xrDestroySession(XrSession session)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrDestroySession",
 	    OXRTL_ARGS_XrSession(session, "session"));
+
 	const auto ret = next_xrDestroySession(session);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -282,8 +254,10 @@ XrResult OXRTracing_xrEnumerateReferenceSpaces(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrEnumerateReferenceSpaces",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_uint32_t(spaceCapacityInput, "spaceCapacityInput"));
+
 	const auto ret = next_xrEnumerateReferenceSpaces(
 	    session, spaceCapacityInput, spaceCountOutput, spaces);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*spaceCountOutput), "spaceCountOutput"));
 
@@ -299,7 +273,10 @@ XrResult OXRTracing_xrCreateReferenceSpace(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrCreateReferenceSpace",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrReferenceSpaceCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateReferenceSpace_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateReferenceSpace(session, createInfo, space);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSpace((*space), "space"));
 
@@ -318,8 +295,11 @@ XrResult OXRTracing_xrGetReferenceSpaceBoundsRect(XrSession session,
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrReferenceSpaceType(
 	        referenceSpaceType, "referenceSpaceType"));
+
 	const auto ret = next_xrGetReferenceSpaceBoundsRect(
 	    session, referenceSpaceType, bounds);
+	// XRTracing::TraceNext(localActivity,
+	// "xrGetReferenceSpaceBoundsRect_bounds", bounds);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrExtent2Df((*bounds), "bounds"));
 
@@ -335,7 +315,10 @@ XrResult OXRTracing_xrCreateActionSpace(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrCreateActionSpace",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrActionSpaceCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateActionSpace_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateActionSpace(session, createInfo, space);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSpace((*space), "space"));
 
@@ -352,7 +335,9 @@ XrResult OXRTracing_xrLocateSpace(
 	    OXRTL_ARGS_XrSpace(space, "space"),
 	    OXRTL_ARGS_XrSpace(baseSpace, "baseSpace"),
 	    OXRTL_ARGS_XrTime(time, "time"));
+
 	const auto ret = next_xrLocateSpace(space, baseSpace, time, location);
+	// XRTracing::TraceNext(localActivity, "xrLocateSpace_location", location);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSpaceLocation((*location), "location"));
 
@@ -366,7 +351,9 @@ XrResult OXRTracing_xrDestroySpace(XrSpace space)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(
 	    localActivity, "xrDestroySpace", OXRTL_ARGS_XrSpace(space, "space"));
+
 	const auto ret = next_xrDestroySpace(space);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -387,9 +374,11 @@ XrResult OXRTracing_xrEnumerateViewConfigurations(XrInstance instance,
 	    OXRTL_ARGS_XrSystemId(systemId, "systemId"),
 	    OXRTL_ARGS_uint32_t(viewConfigurationTypeCapacityInput,
 	        "viewConfigurationTypeCapacityInput"));
+
 	const auto ret = next_xrEnumerateViewConfigurations(instance, systemId,
 	    viewConfigurationTypeCapacityInput, viewConfigurationTypeCountOutput,
 	    viewConfigurationTypes);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*viewConfigurationTypeCountOutput),
 	        "viewConfigurationTypeCountOutput"));
@@ -410,8 +399,12 @@ XrResult OXRTracing_xrGetViewConfigurationProperties(XrInstance instance,
 	    OXRTL_ARGS_XrSystemId(systemId, "systemId"),
 	    OXRTL_ARGS_XrViewConfigurationType(
 	        viewConfigurationType, "viewConfigurationType"));
+
 	const auto ret = next_xrGetViewConfigurationProperties(
 	    instance, systemId, viewConfigurationType, configurationProperties);
+	// XRTracing::TraceNext(localActivity,
+	// "xrGetViewConfigurationProperties_configurationProperties",
+	// configurationProperties);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrViewConfigurationProperties(
 	        (*configurationProperties), "configurationProperties"));
@@ -434,8 +427,10 @@ XrResult OXRTracing_xrEnumerateViewConfigurationViews(XrInstance instance,
 	    OXRTL_ARGS_XrViewConfigurationType(
 	        viewConfigurationType, "viewConfigurationType"),
 	    OXRTL_ARGS_uint32_t(viewCapacityInput, "viewCapacityInput"));
+
 	const auto ret = next_xrEnumerateViewConfigurationViews(instance, systemId,
 	    viewConfigurationType, viewCapacityInput, viewCountOutput, views);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*viewCountOutput), "viewCountOutput"));
 
@@ -453,8 +448,10 @@ XrResult OXRTracing_xrEnumerateSwapchainFormats(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrEnumerateSwapchainFormats",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_uint32_t(formatCapacityInput, "formatCapacityInput"));
+
 	const auto ret = next_xrEnumerateSwapchainFormats(
 	    session, formatCapacityInput, formatCountOutput, formats);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*formatCountOutput), "formatCountOutput"));
 
@@ -470,7 +467,10 @@ XrResult OXRTracing_xrCreateSwapchain(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrCreateSwapchain",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrSwapchainCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateSwapchain_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateSwapchain(session, createInfo, swapchain);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrSwapchain((*swapchain), "swapchain"));
 
@@ -484,7 +484,9 @@ XrResult OXRTracing_xrDestroySwapchain(XrSwapchain swapchain)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrDestroySwapchain",
 	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"));
+
 	const auto ret = next_xrDestroySwapchain(swapchain);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -502,8 +504,10 @@ XrResult OXRTracing_xrEnumerateSwapchainImages(XrSwapchain swapchain,
 	TraceLoggingWriteStart(localActivity, "xrEnumerateSwapchainImages",
 	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"),
 	    OXRTL_ARGS_uint32_t(imageCapacityInput, "imageCapacityInput"));
+
 	const auto ret = next_xrEnumerateSwapchainImages(
 	    swapchain, imageCapacityInput, imageCountOutput, images);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*imageCountOutput), "imageCountOutput"));
 
@@ -519,8 +523,11 @@ XrResult OXRTracing_xrAcquireSwapchainImage(XrSwapchain swapchain,
 	TraceLoggingWriteStart(localActivity, "xrAcquireSwapchainImage",
 	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"),
 	    OXRTL_ARGS_XrSwapchainImageAcquireInfo((*acquireInfo), "acquireInfo"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrAcquireSwapchainImage_acquireInfo", acquireInfo);
 	const auto ret
 	    = next_xrAcquireSwapchainImage(swapchain, acquireInfo, index);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*index), "index"));
 
@@ -536,7 +543,10 @@ XrResult OXRTracing_xrWaitSwapchainImage(
 	TraceLoggingWriteStart(localActivity, "xrWaitSwapchainImage",
 	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"),
 	    OXRTL_ARGS_XrSwapchainImageWaitInfo((*waitInfo), "waitInfo"));
+	// XRTracing::TraceNext(localActivity, "xrWaitSwapchainImage_waitInfo",
+	// waitInfo);
 	const auto ret = next_xrWaitSwapchainImage(swapchain, waitInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -551,7 +561,10 @@ XrResult OXRTracing_xrReleaseSwapchainImage(
 	TraceLoggingWriteStart(localActivity, "xrReleaseSwapchainImage",
 	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"),
 	    OXRTL_ARGS_XrSwapchainImageReleaseInfo((*releaseInfo), "releaseInfo"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrReleaseSwapchainImage_releaseInfo", releaseInfo);
 	const auto ret = next_xrReleaseSwapchainImage(swapchain, releaseInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -566,7 +579,10 @@ XrResult OXRTracing_xrBeginSession(
 	TraceLoggingWriteStart(localActivity, "xrBeginSession",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrSessionBeginInfo((*beginInfo), "beginInfo"));
+	// XRTracing::TraceNext(localActivity, "xrBeginSession_beginInfo",
+	// beginInfo);
 	const auto ret = next_xrBeginSession(session, beginInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -579,7 +595,9 @@ XrResult OXRTracing_xrEndSession(XrSession session)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrEndSession",
 	    OXRTL_ARGS_XrSession(session, "session"));
+
 	const auto ret = next_xrEndSession(session);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -592,7 +610,9 @@ XrResult OXRTracing_xrRequestExitSession(XrSession session)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrRequestExitSession",
 	    OXRTL_ARGS_XrSession(session, "session"));
+
 	const auto ret = next_xrRequestExitSession(session);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -607,7 +627,11 @@ XrResult OXRTracing_xrWaitFrame(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrWaitFrame",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrFrameWaitInfo((*frameWaitInfo), "frameWaitInfo"));
+	// XRTracing::TraceNext(localActivity, "xrWaitFrame_frameWaitInfo",
+	// frameWaitInfo);
 	const auto ret = next_xrWaitFrame(session, frameWaitInfo, frameState);
+	// XRTracing::TraceNext(localActivity, "xrWaitFrame_frameState",
+	// frameState);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrFrameState((*frameState), "frameState"));
 
@@ -623,7 +647,10 @@ XrResult OXRTracing_xrBeginFrame(
 	TraceLoggingWriteStart(localActivity, "xrBeginFrame",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrFrameBeginInfo((*frameBeginInfo), "frameBeginInfo"));
+	// XRTracing::TraceNext(localActivity, "xrBeginFrame_frameBeginInfo",
+	// frameBeginInfo);
 	const auto ret = next_xrBeginFrame(session, frameBeginInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -638,7 +665,10 @@ XrResult OXRTracing_xrEndFrame(
 	TraceLoggingWriteStart(localActivity, "xrEndFrame",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrFrameEndInfo((*frameEndInfo), "frameEndInfo"));
+	// XRTracing::TraceNext(localActivity, "xrEndFrame_frameEndInfo",
+	// frameEndInfo);
 	const auto ret = next_xrEndFrame(session, frameEndInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -655,8 +685,12 @@ XrResult OXRTracing_xrLocateViews(XrSession session,
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrViewLocateInfo((*viewLocateInfo), "viewLocateInfo"),
 	    OXRTL_ARGS_uint32_t(viewCapacityInput, "viewCapacityInput"));
+	// XRTracing::TraceNext(localActivity, "xrLocateViews_viewLocateInfo",
+	// viewLocateInfo);
 	const auto ret = next_xrLocateViews(session, viewLocateInfo, viewState,
 	    viewCapacityInput, viewCountOutput, views);
+	// XRTracing::TraceNext(localActivity, "xrLocateViews_viewState",
+	// viewState);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrViewState((*viewState), "viewState"),
 	    OXRTL_ARGS_uint32_t((*viewCountOutput), "viewCountOutput"));
@@ -673,7 +707,9 @@ XrResult OXRTracing_xrStringToPath(
 	TraceLoggingWriteStart(localActivity, "xrStringToPath",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_char((*pathString), "pathString"));
+
 	const auto ret = next_xrStringToPath(instance, pathString, path);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrPath((*path), "path"));
 
@@ -690,8 +726,10 @@ XrResult OXRTracing_xrPathToString(XrInstance instance, XrPath path,
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrPath(path, "path"),
 	    OXRTL_ARGS_uint32_t(bufferCapacityInput, "bufferCapacityInput"));
+
 	const auto ret = next_xrPathToString(
 	    instance, path, bufferCapacityInput, bufferCountOutput, buffer);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*bufferCountOutput), "bufferCountOutput"));
 
@@ -707,7 +745,10 @@ XrResult OXRTracing_xrCreateActionSet(XrInstance instance,
 	TraceLoggingWriteStart(localActivity, "xrCreateActionSet",
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrActionSetCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateActionSet_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateActionSet(instance, createInfo, actionSet);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrActionSet((*actionSet), "actionSet"));
 
@@ -721,7 +762,9 @@ XrResult OXRTracing_xrDestroyActionSet(XrActionSet actionSet)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrDestroyActionSet",
 	    OXRTL_ARGS_XrActionSet(actionSet, "actionSet"));
+
 	const auto ret = next_xrDestroyActionSet(actionSet);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -736,7 +779,10 @@ XrResult OXRTracing_xrCreateAction(XrActionSet actionSet,
 	TraceLoggingWriteStart(localActivity, "xrCreateAction",
 	    OXRTL_ARGS_XrActionSet(actionSet, "actionSet"),
 	    OXRTL_ARGS_XrActionCreateInfo((*createInfo), "createInfo"));
+	// XRTracing::TraceNext(localActivity, "xrCreateAction_createInfo",
+	// createInfo);
 	const auto ret = next_xrCreateAction(actionSet, createInfo, action);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrAction((*action), "action"));
 
@@ -750,7 +796,9 @@ XrResult OXRTracing_xrDestroyAction(XrAction action)
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrDestroyAction",
 	    OXRTL_ARGS_XrAction(action, "action"));
+
 	const auto ret = next_xrDestroyAction(action);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -767,8 +815,12 @@ XrResult OXRTracing_xrSuggestInteractionProfileBindings(XrInstance instance,
 	    OXRTL_ARGS_XrInstance(instance, "instance"),
 	    OXRTL_ARGS_XrInteractionProfileSuggestedBinding(
 	        (*suggestedBindings), "suggestedBindings"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrSuggestInteractionProfileBindings_suggestedBindings",
+	// suggestedBindings);
 	const auto ret
 	    = next_xrSuggestInteractionProfileBindings(instance, suggestedBindings);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -783,7 +835,10 @@ XrResult OXRTracing_xrAttachSessionActionSets(
 	TraceLoggingWriteStart(localActivity, "xrAttachSessionActionSets",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrSessionActionSetsAttachInfo((*attachInfo), "attachInfo"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrAttachSessionActionSets_attachInfo", attachInfo);
 	const auto ret = next_xrAttachSessionActionSets(session, attachInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -800,8 +855,11 @@ XrResult OXRTracing_xrGetCurrentInteractionProfile(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrGetCurrentInteractionProfile",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrPath(topLevelUserPath, "topLevelUserPath"));
+
 	const auto ret = next_xrGetCurrentInteractionProfile(
 	    session, topLevelUserPath, interactionProfile);
+	// XRTracing::TraceNext(localActivity,
+	// "xrGetCurrentInteractionProfile_interactionProfile", interactionProfile);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrInteractionProfileState(
 	        (*interactionProfile), "interactionProfile"));
@@ -818,7 +876,11 @@ XrResult OXRTracing_xrGetActionStateBoolean(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrGetActionStateBoolean",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrActionStateGetInfo((*getInfo), "getInfo"));
+	// XRTracing::TraceNext(localActivity, "xrGetActionStateBoolean_getInfo",
+	// getInfo);
 	const auto ret = next_xrGetActionStateBoolean(session, getInfo, state);
+	// XRTracing::TraceNext(localActivity, "xrGetActionStateBoolean_state",
+	// state);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrActionStateBoolean((*state), "state"));
 
@@ -834,7 +896,11 @@ XrResult OXRTracing_xrGetActionStateFloat(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrGetActionStateFloat",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrActionStateGetInfo((*getInfo), "getInfo"));
+	// XRTracing::TraceNext(localActivity, "xrGetActionStateFloat_getInfo",
+	// getInfo);
 	const auto ret = next_xrGetActionStateFloat(session, getInfo, state);
+	// XRTracing::TraceNext(localActivity, "xrGetActionStateFloat_state",
+	// state);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrActionStateFloat((*state), "state"));
 
@@ -850,7 +916,11 @@ XrResult OXRTracing_xrGetActionStateVector2f(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrGetActionStateVector2f",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrActionStateGetInfo((*getInfo), "getInfo"));
+	// XRTracing::TraceNext(localActivity, "xrGetActionStateVector2f_getInfo",
+	// getInfo);
 	const auto ret = next_xrGetActionStateVector2f(session, getInfo, state);
+	// XRTracing::TraceNext(localActivity, "xrGetActionStateVector2f_state",
+	// state);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrActionStateVector2f((*state), "state"));
 
@@ -866,7 +936,10 @@ XrResult OXRTracing_xrGetActionStatePose(XrSession session,
 	TraceLoggingWriteStart(localActivity, "xrGetActionStatePose",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrActionStateGetInfo((*getInfo), "getInfo"));
+	// XRTracing::TraceNext(localActivity, "xrGetActionStatePose_getInfo",
+	// getInfo);
 	const auto ret = next_xrGetActionStatePose(session, getInfo, state);
+	// XRTracing::TraceNext(localActivity, "xrGetActionStatePose_state", state);
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrActionStatePose((*state), "state"));
 
@@ -882,7 +955,9 @@ XrResult OXRTracing_xrSyncActions(
 	TraceLoggingWriteStart(localActivity, "xrSyncActions",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrActionsSyncInfo((*syncInfo), "syncInfo"));
+	// XRTracing::TraceNext(localActivity, "xrSyncActions_syncInfo", syncInfo);
 	const auto ret = next_xrSyncActions(session, syncInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -901,8 +976,11 @@ XrResult OXRTracing_xrEnumerateBoundSourcesForAction(XrSession session,
 	    OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo(
 	        (*enumerateInfo), "enumerateInfo"),
 	    OXRTL_ARGS_uint32_t(sourceCapacityInput, "sourceCapacityInput"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrEnumerateBoundSourcesForAction_enumerateInfo", enumerateInfo);
 	const auto ret = next_xrEnumerateBoundSourcesForAction(session,
 	    enumerateInfo, sourceCapacityInput, sourceCountOutput, sources);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*sourceCountOutput), "sourceCountOutput"));
 
@@ -922,8 +1000,11 @@ XrResult OXRTracing_xrGetInputSourceLocalizedName(XrSession session,
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo((*getInfo), "getInfo"),
 	    OXRTL_ARGS_uint32_t(bufferCapacityInput, "bufferCapacityInput"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrGetInputSourceLocalizedName_getInfo", getInfo);
 	const auto ret = next_xrGetInputSourceLocalizedName(
 	    session, getInfo, bufferCapacityInput, bufferCountOutput, buffer);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_uint32_t((*bufferCountOutput), "bufferCountOutput"));
 
@@ -941,8 +1022,13 @@ XrResult OXRTracing_xrApplyHapticFeedback(XrSession session,
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrHapticActionInfo((*hapticActionInfo), "hapticActionInfo"),
 	    OXRTL_ARGS_XrHapticBaseHeader((*hapticFeedback), "hapticFeedback"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrApplyHapticFeedback_hapticActionInfo", hapticActionInfo);
+	// XRTracing::TraceNext(localActivity,
+	// "xrApplyHapticFeedback_hapticFeedback", hapticFeedback);
 	const auto ret
 	    = next_xrApplyHapticFeedback(session, hapticActionInfo, hapticFeedback);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
@@ -957,7 +1043,10 @@ XrResult OXRTracing_xrStopHapticFeedback(
 	TraceLoggingWriteStart(localActivity, "xrStopHapticFeedback",
 	    OXRTL_ARGS_XrSession(session, "session"),
 	    OXRTL_ARGS_XrHapticActionInfo((*hapticActionInfo), "hapticActionInfo"));
+	// XRTracing::TraceNext(localActivity,
+	// "xrStopHapticFeedback_hapticActionInfo", hapticActionInfo);
 	const auto ret = next_xrStopHapticFeedback(session, hapticActionInfo);
+
 	TraceLoggingWriteStop(localActivity, OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;

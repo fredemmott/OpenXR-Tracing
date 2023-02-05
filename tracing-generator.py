@@ -203,11 +203,15 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 	def genWrapper(self, xr_command):
 		if xr_command.return_type is None:
 			return f'// void OXRTracing_{xr_command.name}'
+		
+		newline="\n"
 
 		parameters = []
 		arguments = []
 		trace_in = [f'"{xr_command.name}"']
 		trace_out = ['OXRTL_ARGS_XrResult(ret, "XrResult")']
+		trace_next_in = []
+		trace_next_out = []
 		for param in xr_command.params:
 			parameters.append(param.cdecl.strip())
 			arguments.append(param.name)
@@ -218,10 +222,15 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 				trace_in.append(trace_arg)
 				continue
 			trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'
-			if (param.is_const):
+			is_struct = self.isStruct(param.type)
+			if param.is_const:
 				trace_in.append(trace_arg)
+				if is_struct:
+					trace_next_in.append(param.name)
 				continue
 			trace_out.append(trace_arg)
+			if is_struct:
+				trace_next_out.append(param.name)
 
 		instance_state_pre = ''
 		instance_state_post = ''
@@ -240,7 +249,9 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {instance_state_pre}
   TraceLoggingActivity<gTraceProvider> localActivity;
   TraceLoggingWriteStart(localActivity, {', '.join(trace_in)});
+  {newline.join([f'//XRTracing::TraceNext(localActivity, "{xr_command.name}_{x}", {x});' for x in trace_next_in])}
   const auto ret = next_{xr_command.name}({', '.join(arguments)});
+  {newline.join([f'//XRTracing::TraceNext(localActivity, "{xr_command.name}_{x}", {x});' for x in trace_next_out])}
   TraceLoggingWriteStop(localActivity, {', '.join(trace_out)});
   {instance_state_post}
   return ret;
