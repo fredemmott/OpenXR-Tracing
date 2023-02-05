@@ -76,6 +76,9 @@ namespace OXRTracing {
   using ConstCStr = const char*;
 inline constexpr const char* ToCString(const ConstCStr* const arr, size_t count)
 {
+  if (count == 0) {
+    return "[empty]";
+  }
 	std::string out;
 	for (size_t i = 0; i < count; ++i) {
 		if (!out.empty()) {

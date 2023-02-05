@@ -144,7 +144,11 @@ inline const char* ToCString({xr_enum.name} value) {{
 				suffix = '_' + ('P' * pointer_count) + suffix
 			member_macros.append(
 				f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
-		return f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),' + ','.join(member_macros)
+		return f'''
+#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{', '.join(member_macros)}
+#define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
+'''
 
 	def beginFile(self, genOpts):
 		BoilerplateOutputGenerator.beginFile(self, genOpts)
