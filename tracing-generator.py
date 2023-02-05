@@ -39,14 +39,14 @@ from automatic_source_generator import AutomaticSourceOutputGenerator, Automatic
 
 
 class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
-	'''Common generator utilities and formatting.'''
+    '''Common generator utilities and formatting.'''
 
-	def outputGeneratedHeaderWarning(self):
-		warning = '''// *********** THIS FILE IS GENERATED - DO NOT EDIT ***********'''
-		write(warning, file=self.outFile)
+    def outputGeneratedHeaderWarning(self):
+        warning = '''// *********** THIS FILE IS GENERATED - DO NOT EDIT ***********'''
+        write(warning, file=self.outFile)
 
-	def outputCopywriteHeader(self):
-		copyright = '''// MIT License
+    def outputCopywriteHeader(self):
+        copyright = '''// MIT License
 //
 // Copyright(c) 2021-2022 Matthieu Bucchianeri
 // Copyright(c) 2023 Fred Emmott
@@ -69,57 +69,56 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 '''
-		write(copyright, file=self.outFile)
-	
-	def isEmptyStruct(self, name):
-		if self.getRelationGroupForBaseStruct(name) is not None:
-			return False
-		for xr_struct in self.api_structures:
-			if xr_struct.name != name:
-				continue
-			# 'next' and 'type'
-			return len(xr_struct.members) == 2
-		return False
+        write(copyright, file=self.outFile)
 
+    def isEmptyStruct(self, name):
+        if self.getRelationGroupForBaseStruct(name) is not None:
+            return False
+        for xr_struct in self.api_structures:
+            if xr_struct.name != name:
+                continue
+            # 'next' and 'type'
+            return len(xr_struct.members) == 2
+        return False
 
-	def outputGeneratedAuthorNote(self):
-		pass
+    def outputGeneratedAuthorNote(self):
+        pass
 
 
 class MacroOutputGenerator(BoilerplateOutputGenerator):
-	def genBaseTypeMacros(self):
-		ret = ''
-		for xr_type in self.api_base_types:
-			ret += self.genBaseTypeMacro(xr_type) + "\n"
-		for xr_type in self.api_handles:
-			ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)' + '\n'
-		for xr_type in self.api_flags:
-			ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
+    def genBaseTypeMacros(self):
+        ret = ''
+        for xr_type in self.api_base_types:
+            ret += self.genBaseTypeMacro(xr_type) + "\n"
+        for xr_type in self.api_handles:
+            ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)' + '\n'
+        for xr_type in self.api_flags:
+            ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
 
-		for xr_type in self.api_base_types:
-			ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
-		for xr_type in self.api_handles:
-			ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
-		return ret
+        for xr_type in self.api_base_types:
+            ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
+        for xr_type in self.api_handles:
+            ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
+        return ret
 
-	def genBaseTypeMacro(self, xr_type):
-		handwritten_types = {'XrVersion'}
-		if xr_type.name in handwritten_types:
-			return f"// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name)"
-		if xr_type.type == 'XR_DEFINE_ATOM':
-			return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)'
-		return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)'
+    def genBaseTypeMacro(self, xr_type):
+        handwritten_types = {'XrVersion'}
+        if xr_type.name in handwritten_types:
+            return f"// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name)"
+        if xr_type.type == 'XR_DEFINE_ATOM':
+            return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)'
+        return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)'
 
-	def genEnumMacros(self):
-		ret = ''
-		for xr_enum in self.api_enums:
-			ret += self.genEnumMacro(xr_enum) + "\n"
-		return ret
+    def genEnumMacros(self):
+        ret = ''
+        for xr_enum in self.api_enums:
+            ret += self.genEnumMacro(xr_enum) + "\n"
+        return ret
 
-	def genEnumMacro(self, xr_enum):
-		newline = '\n'
-		values = [value for value in xr_enum.values if value.alias is None]
-		return f'''
+    def genEnumMacro(self, xr_enum):
+        newline = '\n'
+        values = [value for value in xr_enum.values if value.alias is None]
+        return f'''
 namespace OXRTracing {{
 inline const char* ToCString({xr_enum.name} value) {{
 	switch(value) {{
@@ -134,50 +133,50 @@ inline const char* ToCString({xr_enum.name} value) {{
 #define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, name) TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 '''
 
-	def genStructMacros(self):
-		ret = ''
-		for xr_struct in self.api_structures:
-			ret += self.genStructMacro(xr_struct) + "\n"
-		return ret
-	
-	def genStructMacro(self, xr_struct):
-		member_macros = []
-		for member in xr_struct.members:
-			if member.name == 'next':
-				continue
-			if member.name == 'type' and member.type == "XrStructureType" and self.getRelationGroupForBaseStruct(member.type) is None:
-				continue
-			if self.isEmptyStruct(member.type):
-				continue
-			suffix = ''
-			trailing = ''
-			pointer_count = member.pointer_count
-			if member.is_array:
-				if member.is_static_array:
-					suffix += '_FA'
-					trailing += f', {member.static_array_sizes[0]}'
-				else:
-					suffix += '_DA'
-					pointer_count -= 1
-					trailing += f', oxrtlIt.{member.pointer_count_var}'
-			if pointer_count > 0:
-				suffix = '_' + ('P' * pointer_count) + suffix
-			member_macros.append(
-				f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
-		if member_macros:
-			struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{", ".join(member_macros)}'
-		else:
-			struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingValue(name)'
-		return f'''
+    def genStructMacros(self):
+        ret = ''
+        for xr_struct in self.api_structures:
+            ret += self.genStructMacro(xr_struct) + "\n"
+        return ret
+
+    def genStructMacro(self, xr_struct):
+        member_macros = []
+        for member in xr_struct.members:
+            if member.name == 'next':
+                continue
+            if member.name == 'type' and member.type == "XrStructureType" and self.getRelationGroupForBaseStruct(member.type) is None:
+                continue
+            if self.isEmptyStruct(member.type):
+                continue
+            suffix = ''
+            trailing = ''
+            pointer_count = member.pointer_count
+            if member.is_array:
+                if member.is_static_array:
+                    suffix += '_FA'
+                    trailing += f', {member.static_array_sizes[0]}'
+                else:
+                    suffix += '_DA'
+                    pointer_count -= 1
+                    trailing += f', oxrtlIt.{member.pointer_count_var}'
+            if pointer_count > 0:
+                suffix = '_' + ('P' * pointer_count) + suffix
+            member_macros.append(
+                f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
+        if member_macros:
+            struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{", ".join(member_macros)}'
+        else:
+            struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingValue(name)'
+        return f'''
 {struct_def}
 #define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, name) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), name)
 #define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 '''
 
-	def beginFile(self, genOpts):
-		BoilerplateOutputGenerator.beginFile(self, genOpts)
-		write('''
+    def beginFile(self, genOpts):
+        BoilerplateOutputGenerator.beginFile(self, genOpts)
+        write('''
 #pragma once
 
 #include <openxr.h>
@@ -185,8 +184,8 @@ inline const char* ToCString({xr_enum.name} value) {{
 #include <format>
 ''', file=self.outFile)
 
-	def endFile(self):
-		contents = f'''
+    def endFile(self):
+        contents = f'''
 //////////////////////////////////////////////////
 ///// Generated macros for OpenXR base types /////
 //////////////////////////////////////////////////
@@ -205,44 +204,44 @@ inline const char* ToCString({xr_enum.name} value) {{
 
 {self.genStructMacros()}
 '''
-		write(contents, file=self.outFile)
-		BoilerplateOutputGenerator.endFile(self)
+        write(contents, file=self.outFile)
+        BoilerplateOutputGenerator.endFile(self)
 
 
 class LayerOutputGenerator(BoilerplateOutputGenerator):
-	def makeParametersList(self, cmd):
-		parameters_list = ""
-		for param in cmd.params:
-			if parameters_list:
-				parameters_list += ', '
-			parameters_list += param.cdecl.strip()
+    def makeParametersList(self, cmd):
+        parameters_list = ""
+        for param in cmd.params:
+            if parameters_list:
+                parameters_list += ', '
+            parameters_list += param.cdecl.strip()
 
-		return parameters_list
+        return parameters_list
 
-	def makeArgumentsList(self, cmd):
-		arguments_list = ""
-		for param in cmd.params:
-			if arguments_list:
-				arguments_list += ', '
-			arguments_list += param.name
+    def makeArgumentsList(self, cmd):
+        arguments_list = ""
+        for param in cmd.params:
+            if arguments_list:
+                arguments_list += ', '
+            arguments_list += param.name
 
-		return arguments_list
+        return arguments_list
 
-	def getWrappedCommands(self):
-		handwritten = [ "xrGetInstanceProcAddr", 'xrCreateInstance']
-		skip = handwritten + self.no_trampoline_or_terminator
-		# TODO: self.ext_commands
-		all = self.core_commands
-		return [command for command in all if command.name not in skip]
+    def getWrappedCommands(self):
+        handwritten = ["xrGetInstanceProcAddr", 'xrCreateInstance']
+        skip = handwritten + self.no_trampoline_or_terminator
+        # TODO: self.ext_commands
+        all = self.core_commands
+        return [command for command in all if command.name not in skip]
 
-	def genNextPFNDefinitions(self):
-		ret = ''
-		for xr_command in self.getWrappedCommands():
-			ret += f'static PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
-		return ret
+    def genNextPFNDefinitions(self):
+        ret = ''
+        for xr_command in self.getWrappedCommands():
+            ret += f'static PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
+        return ret
 
-	def genXrGetInstanceProcAddr(self):
-		ret = '''
+    def genXrGetInstanceProcAddr(self):
+        ret = '''
 XrResult OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance,
 	const char* nameCStr,
@@ -255,78 +254,79 @@ XrResult OXRTracing_xrGetInstanceProcAddr(
 	}
 	const std::string_view name {nameCStr};
 '''
-		for xr_command in self.getWrappedCommands():
-			ret += f'''
+        for xr_command in self.getWrappedCommands():
+            ret += f'''
 if (name == "{xr_command.name}") {{
 	next_{xr_command.name} = reinterpret_cast<PFN_{xr_command.name}>(*function);
 	*function = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_{xr_command.name});
 	return ret;
 }}
 '''
-		ret += '''
+        ret += '''
 	return ret;
 }'''
-		return ret
+        return ret
 
-	def genWrappers(self):
-		ret = ''
-		for xr_command in self.getWrappedCommands():
-			if xr_command.name in self.no_trampoline_or_terminator:
-				continue
-			ret += self.genWrapper(xr_command)
-		return ret
+    def genWrappers(self):
+        ret = ''
+        for xr_command in self.getWrappedCommands():
+            if xr_command.name in self.no_trampoline_or_terminator:
+                continue
+            ret += self.genWrapper(xr_command)
+        return ret
 
-	def genWrapper(self, xr_command):
-		# TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
-		# to make different logs depending on the XrType
-		newline="\n"
+    def genWrapper(self, xr_command):
+        # TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
+        # to make different logs depending on the XrType
+        newline = "\n"
 
-		parameters = []
-		arguments = []
-		trace_in = [f'"{xr_command.name}"']
-		trace_out = [f'"{xr_command.name}"', 'OXRTL_ARGS_XrResult(ret, "XrResult")']
-		trace_next_in = []
-		trace_next_out = []
-		for param in xr_command.params:
-			parameters.append(param.cdecl.strip())
-			arguments.append(param.name)
+        parameters = []
+        arguments = []
+        trace_in = [f'"{xr_command.name}"']
+        trace_out = [f'"{xr_command.name}"',
+                     'OXRTL_ARGS_XrResult(ret, "XrResult")']
+        trace_next_in = []
+        trace_next_out = []
+        for param in xr_command.params:
+            parameters.append(param.cdecl.strip())
+            arguments.append(param.name)
 
-			if self.isEmptyStruct(param.type):
-				continue
+            if self.isEmptyStruct(param.type):
+                continue
 
-			# Figure out what/how to trace
-			if param.is_array or param.pointer_count > 1:
-				continue
-			if param.pointer_count == 0:
-				trace_arg = f'OXRTL_ARGS_{param.type}({param.name}, "{param.name}")'
-				trace_in.append(trace_arg)
-				continue
-			is_struct = self.isStruct(param.type)
-			if is_struct or param.type == "char":
-				trace_arg = f'OXRTL_ARGS_{param.type}_P({param.name}, "{param.name}")'
-			else:
-				trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'
-			if param.is_const:
-				trace_in.append(trace_arg)
-				if is_struct:
-					trace_next_in.append(param.name)
-				continue
-			trace_out.append(trace_arg)
-			if is_struct:
-				trace_next_out.append(param.name)
+            # Figure out what/how to trace
+            if param.is_array or param.pointer_count > 1:
+                continue
+            if param.pointer_count == 0:
+                trace_arg = f'OXRTL_ARGS_{param.type}({param.name}, "{param.name}")'
+                trace_in.append(trace_arg)
+                continue
+            is_struct = self.isStruct(param.type)
+            if is_struct or param.type == "char":
+                trace_arg = f'OXRTL_ARGS_{param.type}_P({param.name}, "{param.name}")'
+            else:
+                trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'
+            if param.is_const:
+                trace_in.append(trace_arg)
+                if is_struct:
+                    trace_next_in.append(param.name)
+                continue
+            trace_out.append(trace_arg)
+            if is_struct:
+                trace_next_out.append(param.name)
 
-		instance_state_pre = ''
-		instance_state_post = ''
-		if xr_command.params[0].type == "XrInstance":
-			if xr_command.name == "xrDestroyInstance":
-				instance_state_post = f'''
+        instance_state_pre = ''
+        instance_state_post = ''
+        if xr_command.params[0].type == "XrInstance":
+            if xr_command.name == "xrDestroyInstance":
+                instance_state_post = f'''
 if (gXrInstance == {xr_command.params[0].name}) {{
   gXrInstance = {{}};
 }}
 '''
-			else:
-				instance_state_pre = f'gXrInstance = {xr_command.params[0].name};'
-		return f'''
+            else:
+                instance_state_pre = f'gXrInstance = {xr_command.params[0].name};'
+        return f'''
 XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {instance_state_pre}
   TraceLoggingActivity<gTraceProvider> localActivity;
@@ -340,9 +340,9 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
 }}
 '''
 
-	def beginFile(self, genOpts):
-		BoilerplateOutputGenerator.beginFile(self, genOpts)
-		content = '''
+    def beginFile(self, genOpts):
+        BoilerplateOutputGenerator.beginFile(self, genOpts)
+        content = '''
 #include <openxr.h>
 #include <OXRTracing.hpp>
 
@@ -357,60 +357,60 @@ namespace OXRTracing {
 
 using namespace OXRTracing;
 '''
-		write(content, file=self.outFile)
+        write(content, file=self.outFile)
 
-	def endFile(self):
-		content = f'''
+    def endFile(self):
+        content = f'''
 {self.genNextPFNDefinitions()}
 
 {self.genWrappers()}
 
 {self.genXrGetInstanceProcAddr()}
 '''
-		write(content, file=self.outFile)
-		BoilerplateOutputGenerator.endFile(self)
+        write(content, file=self.outFile)
+        BoilerplateOutputGenerator.endFile(self)
 
 
 def generate(gen, gen_opts):
-	registry = Registry(gen, gen_opts)
-	registry.loadFile(os.path.join(
-		sdk_dir, 'specification', 'registry', 'xr.xml'))
-	registry.apiGen()
+    registry = Registry(gen, gen_opts)
+    registry.loadFile(os.path.join(
+        sdk_dir, 'specification', 'registry', 'xr.xml'))
+    registry.apiGen()
 
 
 if __name__ == '__main__':
-	conventions = OpenXRConventions()
-	featuresPat = 'XR_VERSION_1_0'
-	extensionsPat = "^$"
+    conventions = OpenXRConventions()
+    featuresPat = 'XR_VERSION_1_0'
+    extensionsPat = "^$"
 
-	gen = MacroOutputGenerator(diagFile=None)
-	out_dir = os.path.join(cur_dir, "gen", "include", "OXRTracing")
-	gen_opts = AutomaticSourceGeneratorOptions(
-		conventions=conventions,
-		filename='macros.gen.hpp',
-		directory=out_dir,
-		apiname='openxr',
-		profile=None,
-		versions=featuresPat,
-		emitversions=featuresPat,
-		defaultExtensions='openxr',
-		addExtensions=None,
-		removeExtensions=None,
-		emitExtensions=extensionsPat)
-	generate(gen, gen_opts)
+    gen = MacroOutputGenerator(diagFile=None)
+    out_dir = os.path.join(cur_dir, "gen", "include", "OXRTracing")
+    gen_opts = AutomaticSourceGeneratorOptions(
+        conventions=conventions,
+        filename='macros.gen.hpp',
+        directory=out_dir,
+        apiname='openxr',
+        profile=None,
+        versions=featuresPat,
+        emitversions=featuresPat,
+        defaultExtensions='openxr',
+        addExtensions=None,
+        removeExtensions=None,
+        emitExtensions=extensionsPat)
+    generate(gen, gen_opts)
 
-	gen = LayerOutputGenerator(diagFile=None)
-	out_dir = os.path.join(cur_dir, "gen", "src")
-	gen_opts = AutomaticSourceGeneratorOptions(
-		conventions=conventions,
-		filename='layer.gen.cpp',
-		directory=out_dir,
-		apiname='openxr',
-		profile=None,
-		versions=featuresPat,
-		emitversions=featuresPat,
-		defaultExtensions='openxr',
-		addExtensions=None,
-		removeExtensions=None,
-		emitExtensions=extensionsPat)
-	generate(gen, gen_opts)
+    gen = LayerOutputGenerator(diagFile=None)
+    out_dir = os.path.join(cur_dir, "gen", "src")
+    gen_opts = AutomaticSourceGeneratorOptions(
+        conventions=conventions,
+        filename='layer.gen.cpp',
+        directory=out_dir,
+        apiname='openxr',
+        profile=None,
+        versions=featuresPat,
+        emitversions=featuresPat,
+        defaultExtensions='openxr',
+        addExtensions=None,
+        removeExtensions=None,
+        emitExtensions=extensionsPat)
+    generate(gen, gen_opts)
