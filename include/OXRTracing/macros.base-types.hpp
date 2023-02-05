@@ -52,7 +52,10 @@
 	TraceLoggingValue( \
 	    std::format("{:#016x}", reinterpret_cast<const uint64_t>(x)).c_str(), \
 	    name)
-#define OXRTL_ARGS_HANDLE OXRTL_ARGS_POINTER
+#define OXRTL_ARGS_HANDLE(x, name) \
+	TraceLoggingValue( \
+	    std::format("{:#016x}", static_cast<const uint64_t>(x)).c_str(), \
+	    name)
 
 #define OXRTL_ARGS_void_P OXRTL_ARGS_POINTER
 
