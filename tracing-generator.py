@@ -216,6 +216,12 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 		all = self.core_commands
 		return [command for command in all if command.name not in skip]
 
+	def genNextPFNDefinitions(self):
+		ret = ''
+		for xr_command in self.getWrappedCommands():
+			ret += f'static PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
+		return ret
+
 	def genWrappers(self):
 		ret = ''
 		for xr_command in self.getWrappedCommands():
@@ -225,9 +231,6 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 		return ret
 
 	def genWrapper(self, xr_command):
-		if xr_command.return_type is None:
-			return f'// void OXRTracing_{xr_command.name}'
-		
 		newline="\n"
 
 		parameters = []
@@ -271,7 +274,6 @@ if (gXrInstance == {xr_command.params[0].name}) {{
 			else:
 				instance_state_pre = f'gXrInstance = {xr_command.params[0].name};'
 		return f'''
-static PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};
 XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {instance_state_pre}
   TraceLoggingActivity<gTraceProvider> localActivity;
@@ -300,14 +302,21 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
 namespace OXRTracing {
 	TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
 	static thread_local XrInstance gXrInstance {};
+	extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 }
+
+XrResult OXRTracing_xrGetInstanceProcAddr(
+    XrInstance instance, const char* name, PFN_xrVoidFunction* function);
 
 using namespace OXRTracing;
 '''
 		write(content, file=self.outFile)
 
 	def endFile(self):
-		content = self.genWrappers()
+		content = f'''
+{self.genNextPFNDefinitions()}
+{self.genWrappers()}
+'''
 		write(content, file=self.outFile)
 		BoilerplateOutputGenerator.endFile(self)
 

@@ -31,30 +31,85 @@
 namespace OXRTracing {
 TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
 static thread_local XrInstance gXrInstance{};
+extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 } // namespace OXRTracing
+
+XrResult OXRTracing_xrGetInstanceProcAddr(
+    XrInstance instance, const char* name, PFN_xrVoidFunction* function);
 
 using namespace OXRTracing;
 
-static PFN_xrCreateInstance next_xrCreateInstance{ nullptr };
-XrResult OXRTracing_xrCreateInstance(
-    const XrInstanceCreateInfo* createInfo, XrInstance* instance)
-{
-
-	TraceLoggingActivity<gTraceProvider> localActivity;
-	TraceLoggingWriteStart(localActivity, "xrCreateInstance",
-	    OXRTL_ARGS_XrInstanceCreateInfo_P(createInfo, "createInfo"));
-	// XRTracing::TraceNext(localActivity, "xrCreateInstance_createInfo",
-	// createInfo);
-	const auto ret = next_xrCreateInstance(createInfo, instance);
-
-	TraceLoggingWriteStop(localActivity, "xrCreateInstance",
-	    OXRTL_ARGS_XrResult(ret, "XrResult"),
-	    OXRTL_ARGS_XrInstance((*instance), "instance"));
-
-	return ret;
-}
-
 static PFN_xrDestroyInstance next_xrDestroyInstance{ nullptr };
+static PFN_xrGetInstanceProperties next_xrGetInstanceProperties{ nullptr };
+static PFN_xrPollEvent next_xrPollEvent{ nullptr };
+static PFN_xrResultToString next_xrResultToString{ nullptr };
+static PFN_xrStructureTypeToString next_xrStructureTypeToString{ nullptr };
+static PFN_xrGetSystem next_xrGetSystem{ nullptr };
+static PFN_xrGetSystemProperties next_xrGetSystemProperties{ nullptr };
+static PFN_xrEnumerateEnvironmentBlendModes
+    next_xrEnumerateEnvironmentBlendModes{ nullptr };
+static PFN_xrCreateSession next_xrCreateSession{ nullptr };
+static PFN_xrDestroySession next_xrDestroySession{ nullptr };
+static PFN_xrEnumerateReferenceSpaces next_xrEnumerateReferenceSpaces{
+	nullptr
+};
+static PFN_xrCreateReferenceSpace next_xrCreateReferenceSpace{ nullptr };
+static PFN_xrGetReferenceSpaceBoundsRect next_xrGetReferenceSpaceBoundsRect{
+	nullptr
+};
+static PFN_xrCreateActionSpace next_xrCreateActionSpace{ nullptr };
+static PFN_xrLocateSpace next_xrLocateSpace{ nullptr };
+static PFN_xrDestroySpace next_xrDestroySpace{ nullptr };
+static PFN_xrEnumerateViewConfigurations next_xrEnumerateViewConfigurations{
+	nullptr
+};
+static PFN_xrGetViewConfigurationProperties
+    next_xrGetViewConfigurationProperties{ nullptr };
+static PFN_xrEnumerateViewConfigurationViews
+    next_xrEnumerateViewConfigurationViews{ nullptr };
+static PFN_xrEnumerateSwapchainFormats next_xrEnumerateSwapchainFormats{
+	nullptr
+};
+static PFN_xrCreateSwapchain next_xrCreateSwapchain{ nullptr };
+static PFN_xrDestroySwapchain next_xrDestroySwapchain{ nullptr };
+static PFN_xrEnumerateSwapchainImages next_xrEnumerateSwapchainImages{
+	nullptr
+};
+static PFN_xrAcquireSwapchainImage next_xrAcquireSwapchainImage{ nullptr };
+static PFN_xrWaitSwapchainImage next_xrWaitSwapchainImage{ nullptr };
+static PFN_xrReleaseSwapchainImage next_xrReleaseSwapchainImage{ nullptr };
+static PFN_xrBeginSession next_xrBeginSession{ nullptr };
+static PFN_xrEndSession next_xrEndSession{ nullptr };
+static PFN_xrRequestExitSession next_xrRequestExitSession{ nullptr };
+static PFN_xrWaitFrame next_xrWaitFrame{ nullptr };
+static PFN_xrBeginFrame next_xrBeginFrame{ nullptr };
+static PFN_xrEndFrame next_xrEndFrame{ nullptr };
+static PFN_xrLocateViews next_xrLocateViews{ nullptr };
+static PFN_xrStringToPath next_xrStringToPath{ nullptr };
+static PFN_xrPathToString next_xrPathToString{ nullptr };
+static PFN_xrCreateActionSet next_xrCreateActionSet{ nullptr };
+static PFN_xrDestroyActionSet next_xrDestroyActionSet{ nullptr };
+static PFN_xrCreateAction next_xrCreateAction{ nullptr };
+static PFN_xrDestroyAction next_xrDestroyAction{ nullptr };
+static PFN_xrSuggestInteractionProfileBindings
+    next_xrSuggestInteractionProfileBindings{ nullptr };
+static PFN_xrAttachSessionActionSets next_xrAttachSessionActionSets{ nullptr };
+static PFN_xrGetCurrentInteractionProfile next_xrGetCurrentInteractionProfile{
+	nullptr
+};
+static PFN_xrGetActionStateBoolean next_xrGetActionStateBoolean{ nullptr };
+static PFN_xrGetActionStateFloat next_xrGetActionStateFloat{ nullptr };
+static PFN_xrGetActionStateVector2f next_xrGetActionStateVector2f{ nullptr };
+static PFN_xrGetActionStatePose next_xrGetActionStatePose{ nullptr };
+static PFN_xrSyncActions next_xrSyncActions{ nullptr };
+static PFN_xrEnumerateBoundSourcesForAction
+    next_xrEnumerateBoundSourcesForAction{ nullptr };
+static PFN_xrGetInputSourceLocalizedName next_xrGetInputSourceLocalizedName{
+	nullptr
+};
+static PFN_xrApplyHapticFeedback next_xrApplyHapticFeedback{ nullptr };
+static PFN_xrStopHapticFeedback next_xrStopHapticFeedback{ nullptr };
+
 XrResult OXRTracing_xrDestroyInstance(XrInstance instance)
 {
 
@@ -74,7 +129,6 @@ XrResult OXRTracing_xrDestroyInstance(XrInstance instance)
 	return ret;
 }
 
-static PFN_xrGetInstanceProperties next_xrGetInstanceProperties{ nullptr };
 XrResult OXRTracing_xrGetInstanceProperties(
     XrInstance instance, XrInstanceProperties* instanceProperties)
 {
@@ -94,7 +148,6 @@ XrResult OXRTracing_xrGetInstanceProperties(
 	return ret;
 }
 
-static PFN_xrPollEvent next_xrPollEvent{ nullptr };
 XrResult OXRTracing_xrPollEvent(
     XrInstance instance, XrEventDataBuffer* eventData)
 {
@@ -112,7 +165,6 @@ XrResult OXRTracing_xrPollEvent(
 	return ret;
 }
 
-static PFN_xrResultToString next_xrResultToString{ nullptr };
 XrResult OXRTracing_xrResultToString(
     XrInstance instance, XrResult value, char buffer[XR_MAX_RESULT_STRING_SIZE])
 {
@@ -130,7 +182,6 @@ XrResult OXRTracing_xrResultToString(
 	return ret;
 }
 
-static PFN_xrStructureTypeToString next_xrStructureTypeToString{ nullptr };
 XrResult OXRTracing_xrStructureTypeToString(XrInstance instance,
     XrStructureType value, char buffer[XR_MAX_STRUCTURE_NAME_SIZE])
 {
@@ -148,7 +199,6 @@ XrResult OXRTracing_xrStructureTypeToString(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrGetSystem next_xrGetSystem{ nullptr };
 XrResult OXRTracing_xrGetSystem(
     XrInstance instance, const XrSystemGetInfo* getInfo, XrSystemId* systemId)
 {
@@ -167,7 +217,6 @@ XrResult OXRTracing_xrGetSystem(
 	return ret;
 }
 
-static PFN_xrGetSystemProperties next_xrGetSystemProperties{ nullptr };
 XrResult OXRTracing_xrGetSystemProperties(
     XrInstance instance, XrSystemId systemId, XrSystemProperties* properties)
 {
@@ -187,8 +236,6 @@ XrResult OXRTracing_xrGetSystemProperties(
 	return ret;
 }
 
-static PFN_xrEnumerateEnvironmentBlendModes
-    next_xrEnumerateEnvironmentBlendModes{ nullptr };
 XrResult OXRTracing_xrEnumerateEnvironmentBlendModes(XrInstance instance,
     XrSystemId systemId, XrViewConfigurationType viewConfigurationType,
     uint32_t environmentBlendModeCapacityInput,
@@ -217,7 +264,6 @@ XrResult OXRTracing_xrEnumerateEnvironmentBlendModes(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrCreateSession next_xrCreateSession{ nullptr };
 XrResult OXRTracing_xrCreateSession(XrInstance instance,
     const XrSessionCreateInfo* createInfo, XrSession* session)
 {
@@ -237,7 +283,6 @@ XrResult OXRTracing_xrCreateSession(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrDestroySession next_xrDestroySession{ nullptr };
 XrResult OXRTracing_xrDestroySession(XrSession session)
 {
 
@@ -253,9 +298,6 @@ XrResult OXRTracing_xrDestroySession(XrSession session)
 	return ret;
 }
 
-static PFN_xrEnumerateReferenceSpaces next_xrEnumerateReferenceSpaces{
-	nullptr
-};
 XrResult OXRTracing_xrEnumerateReferenceSpaces(XrSession session,
     uint32_t spaceCapacityInput, uint32_t* spaceCountOutput,
     XrReferenceSpaceType* spaces)
@@ -276,7 +318,6 @@ XrResult OXRTracing_xrEnumerateReferenceSpaces(XrSession session,
 	return ret;
 }
 
-static PFN_xrCreateReferenceSpace next_xrCreateReferenceSpace{ nullptr };
 XrResult OXRTracing_xrCreateReferenceSpace(XrSession session,
     const XrReferenceSpaceCreateInfo* createInfo, XrSpace* space)
 {
@@ -296,9 +337,6 @@ XrResult OXRTracing_xrCreateReferenceSpace(XrSession session,
 	return ret;
 }
 
-static PFN_xrGetReferenceSpaceBoundsRect next_xrGetReferenceSpaceBoundsRect{
-	nullptr
-};
 XrResult OXRTracing_xrGetReferenceSpaceBoundsRect(XrSession session,
     XrReferenceSpaceType referenceSpaceType, XrExtent2Df* bounds)
 {
@@ -320,7 +358,6 @@ XrResult OXRTracing_xrGetReferenceSpaceBoundsRect(XrSession session,
 	return ret;
 }
 
-static PFN_xrCreateActionSpace next_xrCreateActionSpace{ nullptr };
 XrResult OXRTracing_xrCreateActionSpace(XrSession session,
     const XrActionSpaceCreateInfo* createInfo, XrSpace* space)
 {
@@ -340,7 +377,6 @@ XrResult OXRTracing_xrCreateActionSpace(XrSession session,
 	return ret;
 }
 
-static PFN_xrLocateSpace next_xrLocateSpace{ nullptr };
 XrResult OXRTracing_xrLocateSpace(
     XrSpace space, XrSpace baseSpace, XrTime time, XrSpaceLocation* location)
 {
@@ -360,7 +396,6 @@ XrResult OXRTracing_xrLocateSpace(
 	return ret;
 }
 
-static PFN_xrDestroySpace next_xrDestroySpace{ nullptr };
 XrResult OXRTracing_xrDestroySpace(XrSpace space)
 {
 
@@ -376,9 +411,6 @@ XrResult OXRTracing_xrDestroySpace(XrSpace space)
 	return ret;
 }
 
-static PFN_xrEnumerateViewConfigurations next_xrEnumerateViewConfigurations{
-	nullptr
-};
 XrResult OXRTracing_xrEnumerateViewConfigurations(XrInstance instance,
     XrSystemId systemId, uint32_t viewConfigurationTypeCapacityInput,
     uint32_t* viewConfigurationTypeCountOutput,
@@ -404,8 +436,6 @@ XrResult OXRTracing_xrEnumerateViewConfigurations(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrGetViewConfigurationProperties
-    next_xrGetViewConfigurationProperties{ nullptr };
 XrResult OXRTracing_xrGetViewConfigurationProperties(XrInstance instance,
     XrSystemId systemId, XrViewConfigurationType viewConfigurationType,
     XrViewConfigurationProperties* configurationProperties)
@@ -431,8 +461,6 @@ XrResult OXRTracing_xrGetViewConfigurationProperties(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrEnumerateViewConfigurationViews
-    next_xrEnumerateViewConfigurationViews{ nullptr };
 XrResult OXRTracing_xrEnumerateViewConfigurationViews(XrInstance instance,
     XrSystemId systemId, XrViewConfigurationType viewConfigurationType,
     uint32_t viewCapacityInput, uint32_t* viewCountOutput,
@@ -457,9 +485,6 @@ XrResult OXRTracing_xrEnumerateViewConfigurationViews(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrEnumerateSwapchainFormats next_xrEnumerateSwapchainFormats{
-	nullptr
-};
 XrResult OXRTracing_xrEnumerateSwapchainFormats(XrSession session,
     uint32_t formatCapacityInput, uint32_t* formatCountOutput, int64_t* formats)
 {
@@ -479,7 +504,6 @@ XrResult OXRTracing_xrEnumerateSwapchainFormats(XrSession session,
 	return ret;
 }
 
-static PFN_xrCreateSwapchain next_xrCreateSwapchain{ nullptr };
 XrResult OXRTracing_xrCreateSwapchain(XrSession session,
     const XrSwapchainCreateInfo* createInfo, XrSwapchain* swapchain)
 {
@@ -499,7 +523,6 @@ XrResult OXRTracing_xrCreateSwapchain(XrSession session,
 	return ret;
 }
 
-static PFN_xrDestroySwapchain next_xrDestroySwapchain{ nullptr };
 XrResult OXRTracing_xrDestroySwapchain(XrSwapchain swapchain)
 {
 
@@ -515,9 +538,6 @@ XrResult OXRTracing_xrDestroySwapchain(XrSwapchain swapchain)
 	return ret;
 }
 
-static PFN_xrEnumerateSwapchainImages next_xrEnumerateSwapchainImages{
-	nullptr
-};
 XrResult OXRTracing_xrEnumerateSwapchainImages(XrSwapchain swapchain,
     uint32_t imageCapacityInput, uint32_t* imageCountOutput,
     XrSwapchainImageBaseHeader* images)
@@ -538,7 +558,6 @@ XrResult OXRTracing_xrEnumerateSwapchainImages(XrSwapchain swapchain,
 	return ret;
 }
 
-static PFN_xrAcquireSwapchainImage next_xrAcquireSwapchainImage{ nullptr };
 XrResult OXRTracing_xrAcquireSwapchainImage(XrSwapchain swapchain,
     const XrSwapchainImageAcquireInfo* acquireInfo, uint32_t* index)
 {
@@ -559,7 +578,6 @@ XrResult OXRTracing_xrAcquireSwapchainImage(XrSwapchain swapchain,
 	return ret;
 }
 
-static PFN_xrWaitSwapchainImage next_xrWaitSwapchainImage{ nullptr };
 XrResult OXRTracing_xrWaitSwapchainImage(
     XrSwapchain swapchain, const XrSwapchainImageWaitInfo* waitInfo)
 {
@@ -578,7 +596,6 @@ XrResult OXRTracing_xrWaitSwapchainImage(
 	return ret;
 }
 
-static PFN_xrReleaseSwapchainImage next_xrReleaseSwapchainImage{ nullptr };
 XrResult OXRTracing_xrReleaseSwapchainImage(
     XrSwapchain swapchain, const XrSwapchainImageReleaseInfo* releaseInfo)
 {
@@ -597,7 +614,6 @@ XrResult OXRTracing_xrReleaseSwapchainImage(
 	return ret;
 }
 
-static PFN_xrBeginSession next_xrBeginSession{ nullptr };
 XrResult OXRTracing_xrBeginSession(
     XrSession session, const XrSessionBeginInfo* beginInfo)
 {
@@ -616,7 +632,6 @@ XrResult OXRTracing_xrBeginSession(
 	return ret;
 }
 
-static PFN_xrEndSession next_xrEndSession{ nullptr };
 XrResult OXRTracing_xrEndSession(XrSession session)
 {
 
@@ -632,7 +647,6 @@ XrResult OXRTracing_xrEndSession(XrSession session)
 	return ret;
 }
 
-static PFN_xrRequestExitSession next_xrRequestExitSession{ nullptr };
 XrResult OXRTracing_xrRequestExitSession(XrSession session)
 {
 
@@ -648,7 +662,6 @@ XrResult OXRTracing_xrRequestExitSession(XrSession session)
 	return ret;
 }
 
-static PFN_xrWaitFrame next_xrWaitFrame{ nullptr };
 XrResult OXRTracing_xrWaitFrame(XrSession session,
     const XrFrameWaitInfo* frameWaitInfo, XrFrameState* frameState)
 {
@@ -669,7 +682,6 @@ XrResult OXRTracing_xrWaitFrame(XrSession session,
 	return ret;
 }
 
-static PFN_xrBeginFrame next_xrBeginFrame{ nullptr };
 XrResult OXRTracing_xrBeginFrame(
     XrSession session, const XrFrameBeginInfo* frameBeginInfo)
 {
@@ -688,7 +700,6 @@ XrResult OXRTracing_xrBeginFrame(
 	return ret;
 }
 
-static PFN_xrEndFrame next_xrEndFrame{ nullptr };
 XrResult OXRTracing_xrEndFrame(
     XrSession session, const XrFrameEndInfo* frameEndInfo)
 {
@@ -707,7 +718,6 @@ XrResult OXRTracing_xrEndFrame(
 	return ret;
 }
 
-static PFN_xrLocateViews next_xrLocateViews{ nullptr };
 XrResult OXRTracing_xrLocateViews(XrSession session,
     const XrViewLocateInfo* viewLocateInfo, XrViewState* viewState,
     uint32_t viewCapacityInput, uint32_t* viewCountOutput, XrView* views)
@@ -732,7 +742,6 @@ XrResult OXRTracing_xrLocateViews(XrSession session,
 	return ret;
 }
 
-static PFN_xrStringToPath next_xrStringToPath{ nullptr };
 XrResult OXRTracing_xrStringToPath(
     XrInstance instance, const char* pathString, XrPath* path)
 {
@@ -751,7 +760,6 @@ XrResult OXRTracing_xrStringToPath(
 	return ret;
 }
 
-static PFN_xrPathToString next_xrPathToString{ nullptr };
 XrResult OXRTracing_xrPathToString(XrInstance instance, XrPath path,
     uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer)
 {
@@ -772,7 +780,6 @@ XrResult OXRTracing_xrPathToString(XrInstance instance, XrPath path,
 	return ret;
 }
 
-static PFN_xrCreateActionSet next_xrCreateActionSet{ nullptr };
 XrResult OXRTracing_xrCreateActionSet(XrInstance instance,
     const XrActionSetCreateInfo* createInfo, XrActionSet* actionSet)
 {
@@ -792,7 +799,6 @@ XrResult OXRTracing_xrCreateActionSet(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrDestroyActionSet next_xrDestroyActionSet{ nullptr };
 XrResult OXRTracing_xrDestroyActionSet(XrActionSet actionSet)
 {
 
@@ -808,7 +814,6 @@ XrResult OXRTracing_xrDestroyActionSet(XrActionSet actionSet)
 	return ret;
 }
 
-static PFN_xrCreateAction next_xrCreateAction{ nullptr };
 XrResult OXRTracing_xrCreateAction(XrActionSet actionSet,
     const XrActionCreateInfo* createInfo, XrAction* action)
 {
@@ -828,7 +833,6 @@ XrResult OXRTracing_xrCreateAction(XrActionSet actionSet,
 	return ret;
 }
 
-static PFN_xrDestroyAction next_xrDestroyAction{ nullptr };
 XrResult OXRTracing_xrDestroyAction(XrAction action)
 {
 
@@ -844,8 +848,6 @@ XrResult OXRTracing_xrDestroyAction(XrAction action)
 	return ret;
 }
 
-static PFN_xrSuggestInteractionProfileBindings
-    next_xrSuggestInteractionProfileBindings{ nullptr };
 XrResult OXRTracing_xrSuggestInteractionProfileBindings(XrInstance instance,
     const XrInteractionProfileSuggestedBinding* suggestedBindings)
 {
@@ -867,7 +869,6 @@ XrResult OXRTracing_xrSuggestInteractionProfileBindings(XrInstance instance,
 	return ret;
 }
 
-static PFN_xrAttachSessionActionSets next_xrAttachSessionActionSets{ nullptr };
 XrResult OXRTracing_xrAttachSessionActionSets(
     XrSession session, const XrSessionActionSetsAttachInfo* attachInfo)
 {
@@ -886,9 +887,6 @@ XrResult OXRTracing_xrAttachSessionActionSets(
 	return ret;
 }
 
-static PFN_xrGetCurrentInteractionProfile next_xrGetCurrentInteractionProfile{
-	nullptr
-};
 XrResult OXRTracing_xrGetCurrentInteractionProfile(XrSession session,
     XrPath topLevelUserPath, XrInteractionProfileState* interactionProfile)
 {
@@ -910,7 +908,6 @@ XrResult OXRTracing_xrGetCurrentInteractionProfile(XrSession session,
 	return ret;
 }
 
-static PFN_xrGetActionStateBoolean next_xrGetActionStateBoolean{ nullptr };
 XrResult OXRTracing_xrGetActionStateBoolean(XrSession session,
     const XrActionStateGetInfo* getInfo, XrActionStateBoolean* state)
 {
@@ -931,7 +928,6 @@ XrResult OXRTracing_xrGetActionStateBoolean(XrSession session,
 	return ret;
 }
 
-static PFN_xrGetActionStateFloat next_xrGetActionStateFloat{ nullptr };
 XrResult OXRTracing_xrGetActionStateFloat(XrSession session,
     const XrActionStateGetInfo* getInfo, XrActionStateFloat* state)
 {
@@ -952,7 +948,6 @@ XrResult OXRTracing_xrGetActionStateFloat(XrSession session,
 	return ret;
 }
 
-static PFN_xrGetActionStateVector2f next_xrGetActionStateVector2f{ nullptr };
 XrResult OXRTracing_xrGetActionStateVector2f(XrSession session,
     const XrActionStateGetInfo* getInfo, XrActionStateVector2f* state)
 {
@@ -973,7 +968,6 @@ XrResult OXRTracing_xrGetActionStateVector2f(XrSession session,
 	return ret;
 }
 
-static PFN_xrGetActionStatePose next_xrGetActionStatePose{ nullptr };
 XrResult OXRTracing_xrGetActionStatePose(XrSession session,
     const XrActionStateGetInfo* getInfo, XrActionStatePose* state)
 {
@@ -993,7 +987,6 @@ XrResult OXRTracing_xrGetActionStatePose(XrSession session,
 	return ret;
 }
 
-static PFN_xrSyncActions next_xrSyncActions{ nullptr };
 XrResult OXRTracing_xrSyncActions(
     XrSession session, const XrActionsSyncInfo* syncInfo)
 {
@@ -1011,8 +1004,6 @@ XrResult OXRTracing_xrSyncActions(
 	return ret;
 }
 
-static PFN_xrEnumerateBoundSourcesForAction
-    next_xrEnumerateBoundSourcesForAction{ nullptr };
 XrResult OXRTracing_xrEnumerateBoundSourcesForAction(XrSession session,
     const XrBoundSourcesForActionEnumerateInfo* enumerateInfo,
     uint32_t sourceCapacityInput, uint32_t* sourceCountOutput, XrPath* sources)
@@ -1036,9 +1027,6 @@ XrResult OXRTracing_xrEnumerateBoundSourcesForAction(XrSession session,
 	return ret;
 }
 
-static PFN_xrGetInputSourceLocalizedName next_xrGetInputSourceLocalizedName{
-	nullptr
-};
 XrResult OXRTracing_xrGetInputSourceLocalizedName(XrSession session,
     const XrInputSourceLocalizedNameGetInfo* getInfo,
     uint32_t bufferCapacityInput, uint32_t* bufferCountOutput, char* buffer)
@@ -1061,7 +1049,6 @@ XrResult OXRTracing_xrGetInputSourceLocalizedName(XrSession session,
 	return ret;
 }
 
-static PFN_xrApplyHapticFeedback next_xrApplyHapticFeedback{ nullptr };
 XrResult OXRTracing_xrApplyHapticFeedback(XrSession session,
     const XrHapticActionInfo* hapticActionInfo,
     const XrHapticBaseHeader* hapticFeedback)
@@ -1085,7 +1072,6 @@ XrResult OXRTracing_xrApplyHapticFeedback(XrSession session,
 	return ret;
 }
 
-static PFN_xrStopHapticFeedback next_xrStopHapticFeedback{ nullptr };
 XrResult OXRTracing_xrStopHapticFeedback(
     XrSession session, const XrHapticActionInfo* hapticActionInfo)
 {
