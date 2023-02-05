@@ -70,6 +70,17 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 // SOFTWARE.
 '''
 		write(copyright, file=self.outFile)
+	
+	def isEmptyStruct(self, name):
+		if self.getRelationGroupForBaseStruct(name) is not None:
+			return False
+		for xr_struct in self.api_structures:
+			if xr_struct.name != name:
+				continue
+			# 'next' and 'type'
+			return len(xr_struct.members) == 2
+		return False
+
 
 	def outputGeneratedAuthorNote(self):
 		pass
@@ -128,12 +139,16 @@ inline const char* ToCString({xr_enum.name} value) {{
 		for xr_struct in self.api_structures:
 			ret += self.genStructMacro(xr_struct) + "\n"
 		return ret
-
+	
 	def genStructMacro(self, xr_struct):
-		# TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
-		# to make different logs depending on the XrType
 		member_macros = []
 		for member in xr_struct.members:
+			if member.name == 'next':
+				continue
+			if member.name == 'type' and member.type == "XrStructureType" and self.getRelationGroupForBaseStruct(member.type) is None:
+				continue
+			if self.isEmptyStruct(member.type):
+				continue
 			suffix = ''
 			trailing = ''
 			pointer_count = member.pointer_count
@@ -149,8 +164,12 @@ inline const char* ToCString({xr_enum.name} value) {{
 				suffix = '_' + ('P' * pointer_count) + suffix
 			member_macros.append(
 				f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
+		if member_macros:
+			struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{", ".join(member_macros)}'
+		else:
+			struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingValue(name)'
 		return f'''
-#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{', '.join(member_macros)}
+{struct_def}
 #define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, name) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), name)
 #define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
@@ -258,6 +277,8 @@ if (name == "{xr_command.name}") {{
 		return ret
 
 	def genWrapper(self, xr_command):
+		# TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
+		# to make different logs depending on the XrType
 		newline="\n"
 
 		parameters = []
@@ -269,6 +290,11 @@ if (name == "{xr_command.name}") {{
 		for param in xr_command.params:
 			parameters.append(param.cdecl.strip())
 			arguments.append(param.name)
+
+			if self.isEmptyStruct(param.type):
+				continue
+
+			# Figure out what/how to trace
 			if param.is_array or param.pointer_count > 1:
 				continue
 			if param.pointer_count == 0:
@@ -313,9 +339,6 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   return ret;
 }}
 '''
-
-	def genVoidWrapper(self, xr_command):
-		return f'// void {xr_command.name}'
 
 	def beginFile(self, genOpts):
 		BoilerplateOutputGenerator.beginFile(self, genOpts)

@@ -346,11 +346,9 @@ XrResult OXRTracing_xrGetReferenceSpaceBoundsRect(XrSession session,
 
 	const auto ret = next_xrGetReferenceSpaceBoundsRect(
 	    session, referenceSpaceType, bounds);
-	// XRTracing::TraceNext(localActivity,
-	// "xrGetReferenceSpaceBoundsRect_bounds", bounds);
+
 	TraceLoggingWriteStop(localActivity, "xrGetReferenceSpaceBoundsRect",
-	    OXRTL_ARGS_XrResult(ret, "XrResult"),
-	    OXRTL_ARGS_XrExtent2Df_P(bounds, "bounds"));
+	    OXRTL_ARGS_XrResult(ret, "XrResult"));
 
 	return ret;
 }
@@ -561,10 +559,8 @@ XrResult OXRTracing_xrAcquireSwapchainImage(XrSwapchain swapchain,
 
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrAcquireSwapchainImage",
-	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"),
-	    OXRTL_ARGS_XrSwapchainImageAcquireInfo_P(acquireInfo, "acquireInfo"));
-	// XRTracing::TraceNext(localActivity,
-	// "xrAcquireSwapchainImage_acquireInfo", acquireInfo);
+	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"));
+
 	const auto ret
 	    = next_xrAcquireSwapchainImage(swapchain, acquireInfo, index);
 
@@ -599,10 +595,8 @@ XrResult OXRTracing_xrReleaseSwapchainImage(
 
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrReleaseSwapchainImage",
-	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"),
-	    OXRTL_ARGS_XrSwapchainImageReleaseInfo_P(releaseInfo, "releaseInfo"));
-	// XRTracing::TraceNext(localActivity,
-	// "xrReleaseSwapchainImage_releaseInfo", releaseInfo);
+	    OXRTL_ARGS_XrSwapchain(swapchain, "swapchain"));
+
 	const auto ret = next_xrReleaseSwapchainImage(swapchain, releaseInfo);
 
 	TraceLoggingWriteStop(localActivity, "xrReleaseSwapchainImage",
@@ -664,11 +658,9 @@ XrResult OXRTracing_xrWaitFrame(XrSession session,
 {
 
 	TraceLoggingActivity<gTraceProvider> localActivity;
-	TraceLoggingWriteStart(localActivity, "xrWaitFrame",
-	    OXRTL_ARGS_XrSession(session, "session"),
-	    OXRTL_ARGS_XrFrameWaitInfo_P(frameWaitInfo, "frameWaitInfo"));
-	// XRTracing::TraceNext(localActivity, "xrWaitFrame_frameWaitInfo",
-	// frameWaitInfo);
+	TraceLoggingWriteStart(
+	    localActivity, "xrWaitFrame", OXRTL_ARGS_XrSession(session, "session"));
+
 	const auto ret = next_xrWaitFrame(session, frameWaitInfo, frameState);
 	// XRTracing::TraceNext(localActivity, "xrWaitFrame_frameState",
 	// frameState);
@@ -685,10 +677,8 @@ XrResult OXRTracing_xrBeginFrame(
 
 	TraceLoggingActivity<gTraceProvider> localActivity;
 	TraceLoggingWriteStart(localActivity, "xrBeginFrame",
-	    OXRTL_ARGS_XrSession(session, "session"),
-	    OXRTL_ARGS_XrFrameBeginInfo_P(frameBeginInfo, "frameBeginInfo"));
-	// XRTracing::TraceNext(localActivity, "xrBeginFrame_frameBeginInfo",
-	// frameBeginInfo);
+	    OXRTL_ARGS_XrSession(session, "session"));
+
 	const auto ret = next_xrBeginFrame(session, frameBeginInfo);
 
 	TraceLoggingWriteStop(
