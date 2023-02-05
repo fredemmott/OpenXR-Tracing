@@ -1,8 +1,14 @@
+param(
+  [switch] $SkipCodegen = $false
+)
+
 $ErrorActionPreference = "Stop"
 
-python.exe tracing-generator.py
-if ($LastExitCode -ne 0) {
-  return 1
+if (-not $SkipCodegen) {
+  python.exe tracing-generator.py
+  if ($LastExitCode -ne 0) {
+    return 1
+  }
 }
 
 foreach ($generated in Get-ChildItem -Path gen -Recurse -Include *.cpp, *.hpp) {
