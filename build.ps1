@@ -1,5 +1,6 @@
 param(
-  [switch] $SkipCodegen = $false
+  [switch] $SkipCodegen = $false,
+  [switch] $Clang = $false
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,7 +21,11 @@ New-Item -Path out -ItemType Directory -Force | Out-Null
 Copy-Item -Force .\APILayer.json out\APILayer.json
 try {
   Set-Location out
-  cl.exe `
+  $compiler = 'cl.exe'
+  if ($Clang) {
+    $compiler = 'clang-cl.exe'
+  }
+  & $compiler `
     /std:c++20 `
     /Zc:__cplusplus `
     /permissive- `
