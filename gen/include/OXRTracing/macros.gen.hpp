@@ -39,6 +39,12 @@
 #define OXRTL_ARGS_XrPath(x, name) OXRTL_ARGS_ATOM(x, name)
 #define OXRTL_ARGS_XrTime(x, name) OXRTL_ARGS_int64_t(x, name)
 #define OXRTL_ARGS_XrDuration(x, name) OXRTL_ARGS_int64_t(x, name)
+#define OXRTL_ARGS_XrInstance(x, name) OXRTL_ARGS_HANDLE(x, name)
+#define OXRTL_ARGS_XrSession(x, name) OXRTL_ARGS_HANDLE(x, name)
+#define OXRTL_ARGS_XrSpace(x, name) OXRTL_ARGS_HANDLE(x, name)
+#define OXRTL_ARGS_XrAction(x, name) OXRTL_ARGS_HANDLE(x, name)
+#define OXRTL_ARGS_XrSwapchain(x, name) OXRTL_ARGS_HANDLE(x, name)
+#define OXRTL_ARGS_XrActionSet(x, name) OXRTL_ARGS_HANDLE(x, name)
 
 /////////////////////////////////////////////
 ///// Generated macros for OpenXR enums /////
