@@ -100,11 +100,12 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
 
 	def genEnumMacro(self, xr_enum):
 		newline = '\n'
+		values = [value for value in xr_enum.values if value.alias is None]
 		return f'''
 namespace OXRTracing {{
 inline const char* ToCString({xr_enum.name} value) {{
 	switch(value) {{
-		{newline.join([f'case {x.name}: return "{x.name}";' for x in xr_enum.values])}
+		{newline.join([f'case {x.name}: return "{x.name}";' for x in values])}
 		default:
 			using BasicT = std::underlying_type_t<{xr_enum.name}>;
 			const auto basicValue = static_cast<BasicT>(value);
