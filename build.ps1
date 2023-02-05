@@ -21,9 +21,13 @@ try {
   Set-Location out
   cl.exe `
     /std:c++20 `
+    /Zc:__cplusplus `
+    /permissive- `
     /D WIN32_LEAN_AND_MEAN=1 `
     /D NOMINMAX=1 `
     /I "$cwd/OpenXR-SDK-Source/build/include/openxr" `
+    /I "$cwd/OpenXR-SDK-Source/build/include" `
+    /I "$cwd/OpenXR-SDK-Source/src/common" `
     /I "$cwd/gen/include" `
     /I "$cwd/include" `
     /Fe:XR_APILAYER_FREDEMMOTT_OXRTracing.dll `

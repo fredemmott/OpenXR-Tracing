@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <OXRTracing.hpp>
+#include <loader_interfaces.h>
 #include <openxr.h>
 
 #include <TraceLoggingActivity.h>
@@ -37,10 +38,32 @@ namespace OXRTracing {
 TRACELOGGING_DEFINE_PROVIDER(gTraceProvider, "FredEmmott.OpenXRTracing",
     (0x0f924f5f, 0x21f0, 0x513d, 0xa2, 0xab, 0x2e, 0xde, 0x80, 0x2e, 0x0b,
         0x8f));
-
+PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr{ nullptr };
 } // namespace OXRTracing
 
+XrResult OXRTracing_xrGetInstanceProcAddr(
+    XrInstance instance, const char* name, PFN_xrVoidFunction* function);
+
 using namespace OXRTracing;
+
+static XrResult OXRTracing_xrCreateApiLayerInstance(
+    const XrInstanceCreateInfo* createInfo,
+    const struct XrApiLayerCreateInfo* layerCreateInfo, XrInstance* instance)
+{
+	auto nextLayerCreateInfo = *layerCreateInfo;
+	nextLayerCreateInfo.nextInfo = layerCreateInfo->nextInfo->next;
+
+	const auto ret = layerCreateInfo->nextInfo->nextCreateApiLayerInstance(
+	    createInfo, &nextLayerCreateInfo, instance);
+	if (XR_FAILED(ret)) {
+		return ret;
+	}
+
+	gXrNextGetInstanceProcAddr
+	    = layerCreateInfo->nextInfo->nextGetInstanceProcAddr;
+
+	return ret;
+}
 
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, LPVOID lpReserved)
 {
@@ -53,4 +76,23 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, LPVOID lpReserved)
 		break;
 	}
 	return TRUE;
+}
+
+extern "C" {
+XrResult __declspec(dllexport) XRAPI_CALL
+    OXRTracing_xrNegotiateLoaderApiLayerInterface(
+        const XrNegotiateLoaderInfo* loaderInfo, const char* layerName,
+        XrNegotiateApiLayerRequest* apiLayerRequest)
+{
+
+	// TODO: check version fields etc in loaderInfo
+
+	apiLayerRequest->layerInterfaceVersion
+	    = XR_CURRENT_LOADER_API_LAYER_VERSION;
+	apiLayerRequest->layerApiVersion = XR_CURRENT_API_VERSION;
+	apiLayerRequest->getInstanceProcAddr = &OXRTracing_xrGetInstanceProcAddr;
+	apiLayerRequest->createApiLayerInstance
+	    = &OXRTracing_xrCreateApiLayerInstance;
+	return XR_SUCCESS;
+}
 }
