@@ -42,6 +42,8 @@
 #define OXRTL_ARGS_size_t(x, name) TraceLoggingValue(x, name)
 #define OXRTL_ARGS_uintptr_t(x, name) TraceLoggingValue(x, name)
 
+#define OXRTL_ARGS_char_P(x, name) TraceLoggingValue(x, name)
+
 //////////////////////
 ///// Base types /////
 //////////////////////

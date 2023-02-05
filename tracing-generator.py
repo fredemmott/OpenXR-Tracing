@@ -146,6 +146,7 @@ inline const char* ToCString({xr_enum.name} value) {{
 				f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
 		return f'''
 #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{', '.join(member_macros)}
+#define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, name) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), name)
 #define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 '''
@@ -239,8 +240,11 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 				trace_arg = f'OXRTL_ARGS_{param.type}({param.name}, "{param.name}")'
 				trace_in.append(trace_arg)
 				continue
-			trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'
 			is_struct = self.isStruct(param.type)
+			if is_struct or param.type == "char":
+				trace_arg = f'OXRTL_ARGS_{param.type}_P({param.name}, "{param.name}")'
+			else:
+				trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'
 			if param.is_const:
 				trace_in.append(trace_arg)
 				if is_struct:

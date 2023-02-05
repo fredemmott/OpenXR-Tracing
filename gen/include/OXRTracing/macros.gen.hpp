@@ -983,6 +983,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_uint32_t(oxrtlIt.layerVersion, "layerVersion"), \
 	    OXRTL_ARGS_char_FA(oxrtlIt.description, "description", \
 	        XR_MAX_API_LAYER_DESCRIPTION_SIZE)
+#define OXRTL_ARGS_XrApiLayerProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrApiLayerProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrApiLayerProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrApiLayerProperties_P_DA(oxrtlIt, name, size) \
@@ -995,6 +997,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_char_FA(oxrtlIt.extensionName, "extensionName", \
 	        XR_MAX_EXTENSION_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.extensionVersion, "extensionVersion")
+#define OXRTL_ARGS_XrExtensionProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrExtensionProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrExtensionProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrExtensionProperties_P_DA(oxrtlIt, name, size) \
@@ -1009,6 +1013,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.engineName, "engineName", XR_MAX_ENGINE_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.engineVersion, "engineVersion"), \
 	    OXRTL_ARGS_XrVersion(oxrtlIt.apiVersion, "apiVersion")
+#define OXRTL_ARGS_XrApplicationInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrApplicationInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrApplicationInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrApplicationInfo_P_DA(oxrtlIt, name, size) \
@@ -1029,6 +1035,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.enabledExtensionCount, "enabledExtensionCount"), \
 	    OXRTL_ARGS_char_P_DA(oxrtlIt.enabledExtensionNames, \
 	        "enabledExtensionNames", oxrtlIt.enabledExtensionCount)
+#define OXRTL_ARGS_XrInstanceCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrInstanceCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrInstanceCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrInstanceCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1041,6 +1049,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrVersion(oxrtlIt.runtimeVersion, "runtimeVersion"), \
 	    OXRTL_ARGS_char_FA( \
 	        oxrtlIt.runtimeName, "runtimeName", XR_MAX_RUNTIME_NAME_SIZE)
+#define OXRTL_ARGS_XrInstanceProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrInstanceProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrInstanceProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrInstanceProperties_P_DA(oxrtlIt, name, size) \
@@ -1051,6 +1061,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_uint8_t_FA(oxrtlIt.varying, "varying", 4000)
+#define OXRTL_ARGS_XrEventDataBuffer_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataBuffer((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataBuffer_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrEventDataBuffer_P_DA(oxrtlIt, name, size) \
@@ -1061,6 +1073,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrFormFactor(oxrtlIt.formFactor, "formFactor")
+#define OXRTL_ARGS_XrSystemGetInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSystemGetInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSystemGetInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSystemGetInfo_P_DA(oxrtlIt, name, size) \
@@ -1073,6 +1087,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_uint32_t( \
 	        oxrtlIt.maxSwapchainImageWidth, "maxSwapchainImageWidth"), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.maxLayerCount, "maxLayerCount")
+#define OXRTL_ARGS_XrSystemGraphicsProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSystemGraphicsProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSystemGraphicsProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSystemGraphicsProperties_P_DA(oxrtlIt, name, size) \
@@ -1083,6 +1099,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrBool32( \
 	        oxrtlIt.orientationTracking, "orientationTracking"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.positionTracking, "positionTracking")
+#define OXRTL_ARGS_XrSystemTrackingProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSystemTrackingProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSystemTrackingProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSystemTrackingProperties_P_DA(oxrtlIt, name, size) \
@@ -1100,6 +1118,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.graphicsProperties, "graphicsProperties"), \
 	    OXRTL_ARGS_XrSystemTrackingProperties( \
 	        oxrtlIt.trackingProperties, "trackingProperties")
+#define OXRTL_ARGS_XrSystemProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSystemProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSystemProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSystemProperties_P_DA(oxrtlIt, name, size) \
@@ -1111,6 +1131,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrSessionCreateFlags(oxrtlIt.createFlags, "createFlags"), \
 	    OXRTL_ARGS_XrSystemId(oxrtlIt.systemId, "systemId")
+#define OXRTL_ARGS_XrSessionCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSessionCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSessionCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSessionCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1119,6 +1141,8 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrVector3f(oxrtlIt, name) \
 	TraceLoggingStruct(3, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
 	    OXRTL_ARGS_float(oxrtlIt.y, "y"), OXRTL_ARGS_float(oxrtlIt.z, "z")
+#define OXRTL_ARGS_XrVector3f_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrVector3f((*oxrtlIt), name)
 #define OXRTL_ARGS_XrVector3f_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrVector3f_P_DA(oxrtlIt, name, size) \
@@ -1132,6 +1156,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.velocityFlags, "velocityFlags"), \
 	    OXRTL_ARGS_XrVector3f(oxrtlIt.linearVelocity, "linearVelocity"), \
 	    OXRTL_ARGS_XrVector3f(oxrtlIt.angularVelocity, "angularVelocity")
+#define OXRTL_ARGS_XrSpaceVelocity_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSpaceVelocity((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSpaceVelocity_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSpaceVelocity_P_DA(oxrtlIt, name, size) \
@@ -1141,6 +1167,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(4, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
 	    OXRTL_ARGS_float(oxrtlIt.y, "y"), OXRTL_ARGS_float(oxrtlIt.z, "z"), \
 	    OXRTL_ARGS_float(oxrtlIt.w, "w")
+#define OXRTL_ARGS_XrQuaternionf_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrQuaternionf((*oxrtlIt), name)
 #define OXRTL_ARGS_XrQuaternionf_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrQuaternionf_P_DA(oxrtlIt, name, size) \
@@ -1150,6 +1178,7 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrQuaternionf(oxrtlIt.orientation, "orientation"), \
 	    OXRTL_ARGS_XrVector3f(oxrtlIt.position, "position")
+#define OXRTL_ARGS_XrPosef_P(oxrtlIt, name) OXRTL_ARGS_XrPosef((*oxrtlIt), name)
 #define OXRTL_ARGS_XrPosef_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrPosef_P_DA(oxrtlIt, name, size) \
@@ -1163,6 +1192,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.referenceSpaceType, "referenceSpaceType"), \
 	    OXRTL_ARGS_XrPosef( \
 	        oxrtlIt.poseInReferenceSpace, "poseInReferenceSpace")
+#define OXRTL_ARGS_XrReferenceSpaceCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrReferenceSpaceCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrReferenceSpaceCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrReferenceSpaceCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1171,6 +1202,8 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrExtent2Df(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), OXRTL_ARGS_float(oxrtlIt.width, "width"), \
 	    OXRTL_ARGS_float(oxrtlIt.height, "height")
+#define OXRTL_ARGS_XrExtent2Df_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrExtent2Df((*oxrtlIt), name)
 #define OXRTL_ARGS_XrExtent2Df_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrExtent2Df_P_DA(oxrtlIt, name, size) \
@@ -1183,6 +1216,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
 	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath"), \
 	    OXRTL_ARGS_XrPosef(oxrtlIt.poseInActionSpace, "poseInActionSpace")
+#define OXRTL_ARGS_XrActionSpaceCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionSpaceCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionSpaceCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionSpaceCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1195,6 +1230,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrSpaceLocationFlags( \
 	        oxrtlIt.locationFlags, "locationFlags"), \
 	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose")
+#define OXRTL_ARGS_XrSpaceLocation_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSpaceLocation((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSpaceLocation_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSpaceLocation_P_DA(oxrtlIt, name, size) \
@@ -1207,6 +1244,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrViewConfigurationType( \
 	        oxrtlIt.viewConfigurationType, "viewConfigurationType"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.fovMutable, "fovMutable")
+#define OXRTL_ARGS_XrViewConfigurationProperties_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrViewConfigurationProperties((*oxrtlIt), name)
 #define OXRTL_ARGS_XrViewConfigurationProperties_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrViewConfigurationProperties_P_DA(oxrtlIt, name, size) \
@@ -1226,6 +1265,8 @@ inline const char* ToCString(XrObjectType value)
 	        "recommendedSwapchainSampleCount"), \
 	    OXRTL_ARGS_uint32_t( \
 	        oxrtlIt.maxSwapchainSampleCount, "maxSwapchainSampleCount")
+#define OXRTL_ARGS_XrViewConfigurationView_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrViewConfigurationView((*oxrtlIt), name)
 #define OXRTL_ARGS_XrViewConfigurationView_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrViewConfigurationView_P_DA(oxrtlIt, name, size) \
@@ -1244,6 +1285,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_uint32_t(oxrtlIt.faceCount, "faceCount"), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.arraySize, "arraySize"), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.mipCount, "mipCount")
+#define OXRTL_ARGS_XrSwapchainCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSwapchainCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSwapchainCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSwapchainCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1253,6 +1296,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrSwapchainImageBaseHeader_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSwapchainImageBaseHeader((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSwapchainImageBaseHeader_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSwapchainImageBaseHeader_P_DA(oxrtlIt, name, size) \
@@ -1262,6 +1307,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrSwapchainImageAcquireInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSwapchainImageAcquireInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSwapchainImageAcquireInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSwapchainImageAcquireInfo_P_DA(oxrtlIt, name, size) \
@@ -1272,6 +1319,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrDuration(oxrtlIt.timeout, "timeout")
+#define OXRTL_ARGS_XrSwapchainImageWaitInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSwapchainImageWaitInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSwapchainImageWaitInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSwapchainImageWaitInfo_P_DA(oxrtlIt, name, size) \
@@ -1281,6 +1330,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrSwapchainImageReleaseInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSwapchainImageReleaseInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSwapchainImageReleaseInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSwapchainImageReleaseInfo_P_DA(oxrtlIt, name, size) \
@@ -1293,6 +1344,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrViewConfigurationType( \
 	        oxrtlIt.primaryViewConfigurationType, \
 	        "primaryViewConfigurationType")
+#define OXRTL_ARGS_XrSessionBeginInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSessionBeginInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSessionBeginInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSessionBeginInfo_P_DA(oxrtlIt, name, size) \
@@ -1302,6 +1355,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrFrameWaitInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrFrameWaitInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrFrameWaitInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrFrameWaitInfo_P_DA(oxrtlIt, name, size) \
@@ -1316,6 +1371,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrDuration( \
 	        oxrtlIt.predictedDisplayPeriod, "predictedDisplayPeriod"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.shouldRender, "shouldRender")
+#define OXRTL_ARGS_XrFrameState_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrFrameState((*oxrtlIt), name)
 #define OXRTL_ARGS_XrFrameState_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrFrameState_P_DA(oxrtlIt, name, size) \
@@ -1325,6 +1382,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrFrameBeginInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrFrameBeginInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrFrameBeginInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrFrameBeginInfo_P_DA(oxrtlIt, name, size) \
@@ -1336,6 +1395,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrCompositionLayerFlags(oxrtlIt.layerFlags, "layerFlags"), \
 	    OXRTL_ARGS_XrSpace(oxrtlIt.space, "space")
+#define OXRTL_ARGS_XrCompositionLayerBaseHeader_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrCompositionLayerBaseHeader((*oxrtlIt), name)
 #define OXRTL_ARGS_XrCompositionLayerBaseHeader_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrCompositionLayerBaseHeader_P_DA(oxrtlIt, name, size) \
@@ -1351,6 +1412,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_uint32_t(oxrtlIt.layerCount, "layerCount"), \
 	    OXRTL_ARGS_XrCompositionLayerBaseHeader_P_DA( \
 	        oxrtlIt.layers, "layers", oxrtlIt.layerCount)
+#define OXRTL_ARGS_XrFrameEndInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrFrameEndInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrFrameEndInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrFrameEndInfo_P_DA(oxrtlIt, name, size) \
@@ -1364,6 +1427,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.viewConfigurationType, "viewConfigurationType"), \
 	    OXRTL_ARGS_XrTime(oxrtlIt.displayTime, "displayTime"), \
 	    OXRTL_ARGS_XrSpace(oxrtlIt.space, "space")
+#define OXRTL_ARGS_XrViewLocateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrViewLocateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrViewLocateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrViewLocateInfo_P_DA(oxrtlIt, name, size) \
@@ -1374,6 +1439,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrViewStateFlags(oxrtlIt.viewStateFlags, "viewStateFlags")
+#define OXRTL_ARGS_XrViewState_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrViewState((*oxrtlIt), name)
 #define OXRTL_ARGS_XrViewState_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrViewState_P_DA(oxrtlIt, name, size) \
@@ -1385,6 +1452,7 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_float(oxrtlIt.angleRight, "angleRight"), \
 	    OXRTL_ARGS_float(oxrtlIt.angleUp, "angleUp"), \
 	    OXRTL_ARGS_float(oxrtlIt.angleDown, "angleDown")
+#define OXRTL_ARGS_XrFovf_P(oxrtlIt, name) OXRTL_ARGS_XrFovf((*oxrtlIt), name)
 #define OXRTL_ARGS_XrFovf_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrFovf_P_DA(oxrtlIt, name, size) \
@@ -1396,6 +1464,7 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose"), \
 	    OXRTL_ARGS_XrFovf(oxrtlIt.fov, "fov")
+#define OXRTL_ARGS_XrView_P(oxrtlIt, name) OXRTL_ARGS_XrView((*oxrtlIt), name)
 #define OXRTL_ARGS_XrView_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrView_P_DA(oxrtlIt, name, size) \
@@ -1410,6 +1479,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_char_FA(oxrtlIt.localizedActionSetName, \
 	        "localizedActionSetName", XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.priority, "priority")
+#define OXRTL_ARGS_XrActionSetCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionSetCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionSetCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionSetCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1428,6 +1499,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.countSubactionPaths), \
 	    OXRTL_ARGS_char_FA(oxrtlIt.localizedActionName, "localizedActionName", \
 	        XR_MAX_LOCALIZED_ACTION_NAME_SIZE)
+#define OXRTL_ARGS_XrActionCreateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionCreateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionCreateInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionCreateInfo_P_DA(oxrtlIt, name, size) \
@@ -1437,6 +1510,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
 	    OXRTL_ARGS_XrPath(oxrtlIt.binding, "binding")
+#define OXRTL_ARGS_XrActionSuggestedBinding_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionSuggestedBinding((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionSuggestedBinding_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionSuggestedBinding_P_DA(oxrtlIt, name, size) \
@@ -1451,6 +1526,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.countSuggestedBindings, "countSuggestedBindings"), \
 	    OXRTL_ARGS_XrActionSuggestedBinding_DA(oxrtlIt.suggestedBindings, \
 	        "suggestedBindings", oxrtlIt.countSuggestedBindings)
+#define OXRTL_ARGS_XrInteractionProfileSuggestedBinding_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrInteractionProfileSuggestedBinding((*oxrtlIt), name)
 #define OXRTL_ARGS_XrInteractionProfileSuggestedBinding_DA( \
     oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
@@ -1465,6 +1542,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_uint32_t(oxrtlIt.countActionSets, "countActionSets"), \
 	    OXRTL_ARGS_XrActionSet_DA( \
 	        oxrtlIt.actionSets, "actionSets", oxrtlIt.countActionSets)
+#define OXRTL_ARGS_XrSessionActionSetsAttachInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSessionActionSetsAttachInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSessionActionSetsAttachInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSessionActionSetsAttachInfo_P_DA(oxrtlIt, name, size) \
@@ -1475,6 +1554,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrPath(oxrtlIt.interactionProfile, "interactionProfile")
+#define OXRTL_ARGS_XrInteractionProfileState_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrInteractionProfileState((*oxrtlIt), name)
 #define OXRTL_ARGS_XrInteractionProfileState_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrInteractionProfileState_P_DA(oxrtlIt, name, size) \
@@ -1486,6 +1567,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
 	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath")
+#define OXRTL_ARGS_XrActionStateGetInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionStateGetInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionStateGetInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionStateGetInfo_P_DA(oxrtlIt, name, size) \
@@ -1500,6 +1583,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.changedSinceLastSync, "changedSinceLastSync"), \
 	    OXRTL_ARGS_XrTime(oxrtlIt.lastChangeTime, "lastChangeTime"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActionStateBoolean_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionStateBoolean((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionStateBoolean_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionStateBoolean_P_DA(oxrtlIt, name, size) \
@@ -1514,6 +1599,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.changedSinceLastSync, "changedSinceLastSync"), \
 	    OXRTL_ARGS_XrTime(oxrtlIt.lastChangeTime, "lastChangeTime"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActionStateFloat_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionStateFloat((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionStateFloat_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionStateFloat_P_DA(oxrtlIt, name, size) \
@@ -1522,6 +1609,8 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrVector2f(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
 	    OXRTL_ARGS_float(oxrtlIt.y, "y")
+#define OXRTL_ARGS_XrVector2f_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrVector2f((*oxrtlIt), name)
 #define OXRTL_ARGS_XrVector2f_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrVector2f_P_DA(oxrtlIt, name, size) \
@@ -1536,6 +1625,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.changedSinceLastSync, "changedSinceLastSync"), \
 	    OXRTL_ARGS_XrTime(oxrtlIt.lastChangeTime, "lastChangeTime"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActionStateVector2f_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionStateVector2f((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionStateVector2f_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionStateVector2f_P_DA(oxrtlIt, name, size) \
@@ -1546,6 +1637,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActionStatePose_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionStatePose((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionStatePose_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionStatePose_P_DA(oxrtlIt, name, size) \
@@ -1555,6 +1648,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrActionSet(oxrtlIt.actionSet, "actionSet"), \
 	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath")
+#define OXRTL_ARGS_XrActiveActionSet_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActiveActionSet((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActiveActionSet_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActiveActionSet_P_DA(oxrtlIt, name, size) \
@@ -1568,6 +1663,8 @@ inline const char* ToCString(XrObjectType value)
 	        oxrtlIt.countActiveActionSets, "countActiveActionSets"), \
 	    OXRTL_ARGS_XrActiveActionSet_DA(oxrtlIt.activeActionSets, \
 	        "activeActionSets", oxrtlIt.countActiveActionSets)
+#define OXRTL_ARGS_XrActionsSyncInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrActionsSyncInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrActionsSyncInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrActionsSyncInfo_P_DA(oxrtlIt, name, size) \
@@ -1578,6 +1675,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action")
+#define OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo_DA( \
     oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
@@ -1592,6 +1691,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrPath(oxrtlIt.sourcePath, "sourcePath"), \
 	    OXRTL_ARGS_XrInputSourceLocalizedNameFlags( \
 	        oxrtlIt.whichComponents, "whichComponents")
+#define OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo_P_DA(oxrtlIt, name, size) \
@@ -1603,6 +1704,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
 	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath")
+#define OXRTL_ARGS_XrHapticActionInfo_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrHapticActionInfo((*oxrtlIt), name)
 #define OXRTL_ARGS_XrHapticActionInfo_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrHapticActionInfo_P_DA(oxrtlIt, name, size) \
@@ -1612,6 +1715,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrHapticBaseHeader_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrHapticBaseHeader((*oxrtlIt), name)
 #define OXRTL_ARGS_XrHapticBaseHeader_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrHapticBaseHeader_P_DA(oxrtlIt, name, size) \
@@ -1621,6 +1726,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_XrBaseInStructure_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrBaseInStructure_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrBaseInStructure((*oxrtlIt), name)
 #define OXRTL_ARGS_XrBaseInStructure_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrBaseInStructure_P_DA(oxrtlIt, name, size) \
@@ -1630,6 +1737,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_XrBaseOutStructure_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrBaseOutStructure_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrBaseOutStructure((*oxrtlIt), name)
 #define OXRTL_ARGS_XrBaseOutStructure_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrBaseOutStructure_P_DA(oxrtlIt, name, size) \
@@ -1638,6 +1747,8 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrOffset2Di(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), OXRTL_ARGS_int32_t(oxrtlIt.x, "x"), \
 	    OXRTL_ARGS_int32_t(oxrtlIt.y, "y")
+#define OXRTL_ARGS_XrOffset2Di_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrOffset2Di((*oxrtlIt), name)
 #define OXRTL_ARGS_XrOffset2Di_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrOffset2Di_P_DA(oxrtlIt, name, size) \
@@ -1646,6 +1757,8 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrExtent2Di(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), OXRTL_ARGS_int32_t(oxrtlIt.width, "width"), \
 	    OXRTL_ARGS_int32_t(oxrtlIt.height, "height")
+#define OXRTL_ARGS_XrExtent2Di_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrExtent2Di((*oxrtlIt), name)
 #define OXRTL_ARGS_XrExtent2Di_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrExtent2Di_P_DA(oxrtlIt, name, size) \
@@ -1655,6 +1768,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrOffset2Di(oxrtlIt.offset, "offset"), \
 	    OXRTL_ARGS_XrExtent2Di(oxrtlIt.extent, "extent")
+#define OXRTL_ARGS_XrRect2Di_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrRect2Di((*oxrtlIt), name)
 #define OXRTL_ARGS_XrRect2Di_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrRect2Di_P_DA(oxrtlIt, name, size) \
@@ -1665,6 +1780,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrSwapchain(oxrtlIt.swapchain, "swapchain"), \
 	    OXRTL_ARGS_XrRect2Di(oxrtlIt.imageRect, "imageRect"), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.imageArrayIndex, "imageArrayIndex")
+#define OXRTL_ARGS_XrSwapchainSubImage_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrSwapchainSubImage((*oxrtlIt), name)
 #define OXRTL_ARGS_XrSwapchainSubImage_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrSwapchainSubImage_P_DA(oxrtlIt, name, size) \
@@ -1677,6 +1794,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose"), \
 	    OXRTL_ARGS_XrFovf(oxrtlIt.fov, "fov"), \
 	    OXRTL_ARGS_XrSwapchainSubImage(oxrtlIt.subImage, "subImage")
+#define OXRTL_ARGS_XrCompositionLayerProjectionView_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrCompositionLayerProjectionView((*oxrtlIt), name)
 #define OXRTL_ARGS_XrCompositionLayerProjectionView_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrCompositionLayerProjectionView_P_DA(oxrtlIt, name, size) \
@@ -1691,6 +1810,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_uint32_t(oxrtlIt.viewCount, "viewCount"), \
 	    OXRTL_ARGS_XrCompositionLayerProjectionView_DA( \
 	        oxrtlIt.views, "views", oxrtlIt.viewCount)
+#define OXRTL_ARGS_XrCompositionLayerProjection_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrCompositionLayerProjection((*oxrtlIt), name)
 #define OXRTL_ARGS_XrCompositionLayerProjection_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrCompositionLayerProjection_P_DA(oxrtlIt, name, size) \
@@ -1706,6 +1827,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrSwapchainSubImage(oxrtlIt.subImage, "subImage"), \
 	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose"), \
 	    OXRTL_ARGS_XrExtent2Df(oxrtlIt.size, "size")
+#define OXRTL_ARGS_XrCompositionLayerQuad_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrCompositionLayerQuad((*oxrtlIt), name)
 #define OXRTL_ARGS_XrCompositionLayerQuad_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrCompositionLayerQuad_P_DA(oxrtlIt, name, size) \
@@ -1715,6 +1838,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrEventDataBaseHeader_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataBaseHeader((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataBaseHeader_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrEventDataBaseHeader_P_DA(oxrtlIt, name, size) \
@@ -1725,6 +1850,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_uint32_t(oxrtlIt.lostEventCount, "lostEventCount")
+#define OXRTL_ARGS_XrEventDataEventsLost_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataEventsLost((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataEventsLost_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrEventDataEventsLost_P_DA(oxrtlIt, name, size) \
@@ -1735,6 +1862,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrTime(oxrtlIt.lossTime, "lossTime")
+#define OXRTL_ARGS_XrEventDataInstanceLossPending_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataInstanceLossPending((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataInstanceLossPending_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrEventDataInstanceLossPending_P_DA(oxrtlIt, name, size) \
@@ -1747,6 +1876,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrSession(oxrtlIt.session, "session"), \
 	    OXRTL_ARGS_XrSessionState(oxrtlIt.state, "state"), \
 	    OXRTL_ARGS_XrTime(oxrtlIt.time, "time")
+#define OXRTL_ARGS_XrEventDataSessionStateChanged_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataSessionStateChanged((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataSessionStateChanged_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrEventDataSessionStateChanged_P_DA(oxrtlIt, name, size) \
@@ -1762,6 +1893,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrTime(oxrtlIt.changeTime, "changeTime"), \
 	    OXRTL_ARGS_XrBool32(oxrtlIt.poseValid, "poseValid"), \
 	    OXRTL_ARGS_XrPosef(oxrtlIt.poseInPreviousSpace, "poseInPreviousSpace")
+#define OXRTL_ARGS_XrEventDataReferenceSpaceChangePending_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataReferenceSpaceChangePending((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataReferenceSpaceChangePending_DA( \
     oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
@@ -1774,6 +1907,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
 	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrSession(oxrtlIt.session, "session")
+#define OXRTL_ARGS_XrEventDataInteractionProfileChanged_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataInteractionProfileChanged((*oxrtlIt), name)
 #define OXRTL_ARGS_XrEventDataInteractionProfileChanged_DA( \
     oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
@@ -1788,6 +1923,8 @@ inline const char* ToCString(XrObjectType value)
 	    OXRTL_ARGS_XrDuration(oxrtlIt.duration, "duration"), \
 	    OXRTL_ARGS_float(oxrtlIt.frequency, "frequency"), \
 	    OXRTL_ARGS_float(oxrtlIt.amplitude, "amplitude")
+#define OXRTL_ARGS_XrHapticVibration_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrHapticVibration((*oxrtlIt), name)
 #define OXRTL_ARGS_XrHapticVibration_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrHapticVibration_P_DA(oxrtlIt, name, size) \
@@ -1796,6 +1933,8 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrOffset2Df(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
 	    OXRTL_ARGS_float(oxrtlIt.y, "y")
+#define OXRTL_ARGS_XrOffset2Df_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrOffset2Df((*oxrtlIt), name)
 #define OXRTL_ARGS_XrOffset2Df_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrOffset2Df_P_DA(oxrtlIt, name, size) \
@@ -1805,6 +1944,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(2, name), \
 	    OXRTL_ARGS_XrOffset2Df(oxrtlIt.offset, "offset"), \
 	    OXRTL_ARGS_XrExtent2Df(oxrtlIt.extent, "extent")
+#define OXRTL_ARGS_XrRect2Df_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrRect2Df((*oxrtlIt), name)
 #define OXRTL_ARGS_XrRect2Df_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrRect2Df_P_DA(oxrtlIt, name, size) \
@@ -1814,6 +1955,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(4, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
 	    OXRTL_ARGS_float(oxrtlIt.y, "y"), OXRTL_ARGS_float(oxrtlIt.z, "z"), \
 	    OXRTL_ARGS_float(oxrtlIt.w, "w")
+#define OXRTL_ARGS_XrVector4f_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrVector4f((*oxrtlIt), name)
 #define OXRTL_ARGS_XrVector4f_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrVector4f_P_DA(oxrtlIt, name, size) \
@@ -1823,6 +1966,8 @@ inline const char* ToCString(XrObjectType value)
 	TraceLoggingStruct(4, name), OXRTL_ARGS_float(oxrtlIt.r, "r"), \
 	    OXRTL_ARGS_float(oxrtlIt.g, "g"), OXRTL_ARGS_float(oxrtlIt.b, "b"), \
 	    OXRTL_ARGS_float(oxrtlIt.a, "a")
+#define OXRTL_ARGS_XrColor4f_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrColor4f((*oxrtlIt), name)
 #define OXRTL_ARGS_XrColor4f_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_XrColor4f_P_DA(oxrtlIt, name, size) \
