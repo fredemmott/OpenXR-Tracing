@@ -210,7 +210,7 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
 		return arguments_list
 
 	def getWrappedCommands(self):
-		handwritten = [ "xrGetInstanceProcAddr" ]
+		handwritten = [ "xrGetInstanceProcAddr", 'xrCreateInstance']
 		skip = handwritten + self.no_trampoline_or_terminator
 		# TODO: self.ext_commands
 		all = self.core_commands
