@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <string.h>
 #include <format>
+#include <string.h>
 
 ///////////////////////////
 ///// Primitive types /////
@@ -67,19 +67,22 @@
 	    name)
 
 #define OXRTL_ARGS_char_FA(x, name, maxLen) \
-  TraceLoggingCountedString(x, strnlen_s(x, maxLen), name)
+	TraceLoggingCountedString(x, strnlen_s(x, maxLen), name)
 
 namespace OXRTracing {
-  inline constexpr const char* ToCString(const char** arr, size_t count) {
-    std::string out;
-    for (size_t i = 0; i < count; ++i) {
-      if (!out.empty()) {
-        out += ",";
-      }
-      out += arr[i];
-    }
-    return out.c_str();
-  }
+  using ConstCStr = const char*;
+inline constexpr const char* ToCString(const ConstCStr* const arr, size_t count)
+{
+	std::string out;
+	for (size_t i = 0; i < count; ++i) {
+		if (!out.empty()) {
+			out += ",";
+		}
+		out += arr[i];
+	}
+	return out.c_str();
 }
+} // namespace OXRTracing
+
 #define OXRTL_ARGS_char_P_DA(x, name, count) \
-  TraceLoggingValue(::OXRTracing::ToCString(x, count), name)
+	TraceLoggingValue(::OXRTracing::ToCString(x, count), name)
