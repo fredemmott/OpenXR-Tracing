@@ -139,7 +139,7 @@ inline const char* ToCString({xr_enum.name} value) {{
 				else:
 					suffix += '_DA'
 					pointer_count -= 1
-					trailing += f', {member.pointer_count_var}'
+					trailing += f', x.{member.pointer_count_var}'
 			if pointer_count > 0:
 				suffix = '_' + ('P' * pointer_count) + suffix
 			member_macros.append(
