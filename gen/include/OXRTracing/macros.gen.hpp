@@ -32,30 +32,37 @@
 ///// Generated macros for OpenXR base types /////
 //////////////////////////////////////////////////
 
-// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_XrVersion(x, name)
-#define OXRTL_ARGS_XrFlags64(x, name) OXRTL_ARGS_uint64_t(x, name)
-#define OXRTL_ARGS_XrSystemId(x, name) OXRTL_ARGS_ATOM(x, name)
-#define OXRTL_ARGS_XrBool32(x, name) OXRTL_ARGS_uint32_t(x, name)
-#define OXRTL_ARGS_XrPath(x, name) OXRTL_ARGS_ATOM(x, name)
-#define OXRTL_ARGS_XrTime(x, name) OXRTL_ARGS_int64_t(x, name)
-#define OXRTL_ARGS_XrDuration(x, name) OXRTL_ARGS_int64_t(x, name)
-#define OXRTL_ARGS_XrInstance(x, name) OXRTL_ARGS_HANDLE(x, name)
-#define OXRTL_ARGS_XrSession(x, name) OXRTL_ARGS_HANDLE(x, name)
-#define OXRTL_ARGS_XrSpace(x, name) OXRTL_ARGS_HANDLE(x, name)
-#define OXRTL_ARGS_XrAction(x, name) OXRTL_ARGS_HANDLE(x, name)
-#define OXRTL_ARGS_XrSwapchain(x, name) OXRTL_ARGS_HANDLE(x, name)
-#define OXRTL_ARGS_XrActionSet(x, name) OXRTL_ARGS_HANDLE(x, name)
-#define OXRTL_ARGS_XrInstanceCreateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrSessionCreateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrSpaceVelocityFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrSpaceLocationFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrSwapchainCreateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrSwapchainUsageFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrCompositionLayerFlags(x, name) \
-	OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrViewStateFlags(x, name) OXRTL_ARGS_XrFlags64(x, name)
-#define OXRTL_ARGS_XrInputSourceLocalizedNameFlags(x, name) \
-	OXRTL_ARGS_XrFlags64(x, name)
+// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_XrVersion(oxrtlIt, name)
+#define OXRTL_ARGS_XrFlags64(oxrtlIt, name) OXRTL_ARGS_uint64_t(oxrtlIt, name)
+#define OXRTL_ARGS_XrSystemId(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)
+#define OXRTL_ARGS_XrBool32(oxrtlIt, name) OXRTL_ARGS_uint32_t(oxrtlIt, name)
+#define OXRTL_ARGS_XrPath(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)
+#define OXRTL_ARGS_XrTime(oxrtlIt, name) OXRTL_ARGS_int64_t(oxrtlIt, name)
+#define OXRTL_ARGS_XrDuration(oxrtlIt, name) OXRTL_ARGS_int64_t(oxrtlIt, name)
+#define OXRTL_ARGS_XrInstance(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+#define OXRTL_ARGS_XrSession(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+#define OXRTL_ARGS_XrSpace(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+#define OXRTL_ARGS_XrAction(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+#define OXRTL_ARGS_XrSwapchain(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+#define OXRTL_ARGS_XrActionSet(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+#define OXRTL_ARGS_XrInstanceCreateFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrSessionCreateFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrSpaceVelocityFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrSpaceLocationFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrSwapchainCreateFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrSwapchainUsageFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrCompositionLayerFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrViewStateFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
+#define OXRTL_ARGS_XrInputSourceLocalizedNameFlags(oxrtlIt, name) \
+	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
 
 /////////////////////////////////////////////
 ///// Generated macros for OpenXR enums /////
@@ -242,8 +249,8 @@ inline const char* ToCString(XrResult value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrResult(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrResult(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrStructureType value)
@@ -739,8 +746,8 @@ inline const char* ToCString(XrStructureType value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrStructureType(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrStructureType(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrFormFactor value)
@@ -757,8 +764,8 @@ inline const char* ToCString(XrFormFactor value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrFormFactor(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrFormFactor(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrViewConfigurationType value)
@@ -781,8 +788,8 @@ inline const char* ToCString(XrViewConfigurationType value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrViewConfigurationType(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrViewConfigurationType(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrEnvironmentBlendMode value)
@@ -802,8 +809,8 @@ inline const char* ToCString(XrEnvironmentBlendMode value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrEnvironmentBlendMode(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrEnvironmentBlendMode(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrReferenceSpaceType value)
@@ -827,8 +834,8 @@ inline const char* ToCString(XrReferenceSpaceType value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrReferenceSpaceType(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrReferenceSpaceType(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrActionType value)
@@ -851,8 +858,8 @@ inline const char* ToCString(XrActionType value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrActionType(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrActionType(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrEyeVisibility value)
@@ -871,8 +878,8 @@ inline const char* ToCString(XrEyeVisibility value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrEyeVisibility(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrEyeVisibility(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrSessionState value)
@@ -903,8 +910,8 @@ inline const char* ToCString(XrSessionState value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrSessionState(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrSessionState(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 namespace OXRTracing {
 inline const char* ToCString(XrObjectType value)
@@ -959,412 +966,487 @@ inline const char* ToCString(XrObjectType value)
 	}
 }
 } // namespace OXRTracing
-#define OXRTL_ARGS_XrObjectType(x, name) \
-	TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_XrObjectType(oxrtlIt, name) \
+	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 
 ///////////////////////////////////////////////
 ///// Generated macros for OpenXR structs /////
 ///////////////////////////////////////////////
 
-#define OXRTL_ARGS_XrApiLayerProperties(x, name) \
-	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
+#define OXRTL_ARGS_XrApiLayerProperties(oxrtlIt, name) \
+	TraceLoggingStruct(6, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_char_FA( \
-	        x.layerName, "layerName", XR_MAX_API_LAYER_NAME_SIZE), \
-	    OXRTL_ARGS_XrVersion(x.specVersion, "specVersion"), \
-	    OXRTL_ARGS_uint32_t(x.layerVersion, "layerVersion"), \
-	    OXRTL_ARGS_char_FA( \
-	        x.description, "description", XR_MAX_API_LAYER_DESCRIPTION_SIZE)
-#define OXRTL_ARGS_XrExtensionProperties(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char_FA( \
-	        x.extensionName, "extensionName", XR_MAX_EXTENSION_NAME_SIZE), \
-	    OXRTL_ARGS_uint32_t(x.extensionVersion, "extensionVersion")
-#define OXRTL_ARGS_XrApplicationInfo(x, name) \
+	        oxrtlIt.layerName, "layerName", XR_MAX_API_LAYER_NAME_SIZE), \
+	    OXRTL_ARGS_XrVersion(oxrtlIt.specVersion, "specVersion"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.layerVersion, "layerVersion"), \
+	    OXRTL_ARGS_char_FA(oxrtlIt.description, "description", \
+	        XR_MAX_API_LAYER_DESCRIPTION_SIZE)
+#define OXRTL_ARGS_XrExtensionProperties(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_char_FA(oxrtlIt.extensionName, "extensionName", \
+	        XR_MAX_EXTENSION_NAME_SIZE), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.extensionVersion, "extensionVersion")
+#define OXRTL_ARGS_XrApplicationInfo(oxrtlIt, name) \
 	TraceLoggingStruct(5, name), \
-	    OXRTL_ARGS_char_FA(x.applicationName, "applicationName", \
+	    OXRTL_ARGS_char_FA(oxrtlIt.applicationName, "applicationName", \
 	        XR_MAX_APPLICATION_NAME_SIZE), \
-	    OXRTL_ARGS_uint32_t(x.applicationVersion, "applicationVersion"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.applicationVersion, "applicationVersion"), \
 	    OXRTL_ARGS_char_FA( \
-	        x.engineName, "engineName", XR_MAX_ENGINE_NAME_SIZE), \
-	    OXRTL_ARGS_uint32_t(x.engineVersion, "engineVersion"), \
-	    OXRTL_ARGS_XrVersion(x.apiVersion, "apiVersion")
-#define OXRTL_ARGS_XrInstanceCreateInfo(x, name) \
-	TraceLoggingStruct(8, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrInstanceCreateFlags(x.createFlags, "createFlags"), \
-	    OXRTL_ARGS_XrApplicationInfo(x.applicationInfo, "applicationInfo"), \
-	    OXRTL_ARGS_uint32_t(x.enabledApiLayerCount, "enabledApiLayerCount"), \
-	    OXRTL_ARGS_char_P_DA(x.enabledApiLayerNames, "enabledApiLayerNames", \
-	        x.enabledApiLayerCount), \
-	    OXRTL_ARGS_uint32_t(x.enabledExtensionCount, "enabledExtensionCount"), \
-	    OXRTL_ARGS_char_P_DA(x.enabledExtensionNames, "enabledExtensionNames", \
-	        x.enabledExtensionCount)
-#define OXRTL_ARGS_XrInstanceProperties(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrVersion(x.runtimeVersion, "runtimeVersion"), \
+	        oxrtlIt.engineName, "engineName", XR_MAX_ENGINE_NAME_SIZE), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.engineVersion, "engineVersion"), \
+	    OXRTL_ARGS_XrVersion(oxrtlIt.apiVersion, "apiVersion")
+#define OXRTL_ARGS_XrInstanceCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(8, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrInstanceCreateFlags(oxrtlIt.createFlags, "createFlags"), \
+	    OXRTL_ARGS_XrApplicationInfo( \
+	        oxrtlIt.applicationInfo, "applicationInfo"), \
+	    OXRTL_ARGS_uint32_t( \
+	        oxrtlIt.enabledApiLayerCount, "enabledApiLayerCount"), \
+	    OXRTL_ARGS_char_P_DA(oxrtlIt.enabledApiLayerNames, \
+	        "enabledApiLayerNames", oxrtlIt.enabledApiLayerCount), \
+	    OXRTL_ARGS_uint32_t( \
+	        oxrtlIt.enabledExtensionCount, "enabledExtensionCount"), \
+	    OXRTL_ARGS_char_P_DA(oxrtlIt.enabledExtensionNames, \
+	        "enabledExtensionNames", oxrtlIt.enabledExtensionCount)
+#define OXRTL_ARGS_XrInstanceProperties(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrVersion(oxrtlIt.runtimeVersion, "runtimeVersion"), \
 	    OXRTL_ARGS_char_FA( \
-	        x.runtimeName, "runtimeName", XR_MAX_RUNTIME_NAME_SIZE)
-#define OXRTL_ARGS_XrEventDataBuffer(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_uint8_t_FA(x.varying, "varying", 4000)
-#define OXRTL_ARGS_XrSystemGetInfo(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrFormFactor(x.formFactor, "formFactor")
-#define OXRTL_ARGS_XrSystemGraphicsProperties(x, name) \
+	        oxrtlIt.runtimeName, "runtimeName", XR_MAX_RUNTIME_NAME_SIZE)
+#define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_uint8_t_FA(oxrtlIt.varying, "varying", 4000)
+#define OXRTL_ARGS_XrSystemGetInfo(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrFormFactor(oxrtlIt.formFactor, "formFactor")
+#define OXRTL_ARGS_XrSystemGraphicsProperties(oxrtlIt, name) \
 	TraceLoggingStruct(3, name), \
 	    OXRTL_ARGS_uint32_t( \
-	        x.maxSwapchainImageHeight, "maxSwapchainImageHeight"), \
+	        oxrtlIt.maxSwapchainImageHeight, "maxSwapchainImageHeight"), \
 	    OXRTL_ARGS_uint32_t( \
-	        x.maxSwapchainImageWidth, "maxSwapchainImageWidth"), \
-	    OXRTL_ARGS_uint32_t(x.maxLayerCount, "maxLayerCount")
-#define OXRTL_ARGS_XrSystemTrackingProperties(x, name) \
+	        oxrtlIt.maxSwapchainImageWidth, "maxSwapchainImageWidth"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.maxLayerCount, "maxLayerCount")
+#define OXRTL_ARGS_XrSystemTrackingProperties(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), \
-	    OXRTL_ARGS_XrBool32(x.orientationTracking, "orientationTracking"), \
-	    OXRTL_ARGS_XrBool32(x.positionTracking, "positionTracking")
-#define OXRTL_ARGS_XrSystemProperties(x, name) \
-	TraceLoggingStruct(7, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSystemId(x.systemId, "systemId"), \
-	    OXRTL_ARGS_uint32_t(x.vendorId, "vendorId"), \
+	    OXRTL_ARGS_XrBool32( \
+	        oxrtlIt.orientationTracking, "orientationTracking"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.positionTracking, "positionTracking")
+#define OXRTL_ARGS_XrSystemProperties(oxrtlIt, name) \
+	TraceLoggingStruct(7, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSystemId(oxrtlIt.systemId, "systemId"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.vendorId, "vendorId"), \
 	    OXRTL_ARGS_char_FA( \
-	        x.systemName, "systemName", XR_MAX_SYSTEM_NAME_SIZE), \
+	        oxrtlIt.systemName, "systemName", XR_MAX_SYSTEM_NAME_SIZE), \
 	    OXRTL_ARGS_XrSystemGraphicsProperties( \
-	        x.graphicsProperties, "graphicsProperties"), \
+	        oxrtlIt.graphicsProperties, "graphicsProperties"), \
 	    OXRTL_ARGS_XrSystemTrackingProperties( \
-	        x.trackingProperties, "trackingProperties")
-#define OXRTL_ARGS_XrSessionCreateInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSessionCreateFlags(x.createFlags, "createFlags"), \
-	    OXRTL_ARGS_XrSystemId(x.systemId, "systemId")
-#define OXRTL_ARGS_XrVector3f(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_float(x.x, "x"), \
-	    OXRTL_ARGS_float(x.y, "y"), OXRTL_ARGS_float(x.z, "z")
-#define OXRTL_ARGS_XrSpaceVelocity(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSpaceVelocityFlags(x.velocityFlags, "velocityFlags"), \
-	    OXRTL_ARGS_XrVector3f(x.linearVelocity, "linearVelocity"), \
-	    OXRTL_ARGS_XrVector3f(x.angularVelocity, "angularVelocity")
-#define OXRTL_ARGS_XrQuaternionf(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_float(x.x, "x"), \
-	    OXRTL_ARGS_float(x.y, "y"), OXRTL_ARGS_float(x.z, "z"), \
-	    OXRTL_ARGS_float(x.w, "w")
-#define OXRTL_ARGS_XrPosef(x, name) \
+	        oxrtlIt.trackingProperties, "trackingProperties")
+#define OXRTL_ARGS_XrSessionCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSessionCreateFlags(oxrtlIt.createFlags, "createFlags"), \
+	    OXRTL_ARGS_XrSystemId(oxrtlIt.systemId, "systemId")
+#define OXRTL_ARGS_XrVector3f(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
+	    OXRTL_ARGS_float(oxrtlIt.y, "y"), OXRTL_ARGS_float(oxrtlIt.z, "z")
+#define OXRTL_ARGS_XrSpaceVelocity(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSpaceVelocityFlags( \
+	        oxrtlIt.velocityFlags, "velocityFlags"), \
+	    OXRTL_ARGS_XrVector3f(oxrtlIt.linearVelocity, "linearVelocity"), \
+	    OXRTL_ARGS_XrVector3f(oxrtlIt.angularVelocity, "angularVelocity")
+#define OXRTL_ARGS_XrQuaternionf(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
+	    OXRTL_ARGS_float(oxrtlIt.y, "y"), OXRTL_ARGS_float(oxrtlIt.z, "z"), \
+	    OXRTL_ARGS_float(oxrtlIt.w, "w")
+#define OXRTL_ARGS_XrPosef(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), \
-	    OXRTL_ARGS_XrQuaternionf(x.orientation, "orientation"), \
-	    OXRTL_ARGS_XrVector3f(x.position, "position")
-#define OXRTL_ARGS_XrReferenceSpaceCreateInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
+	    OXRTL_ARGS_XrQuaternionf(oxrtlIt.orientation, "orientation"), \
+	    OXRTL_ARGS_XrVector3f(oxrtlIt.position, "position")
+#define OXRTL_ARGS_XrReferenceSpaceCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrReferenceSpaceType( \
-	        x.referenceSpaceType, "referenceSpaceType"), \
-	    OXRTL_ARGS_XrPosef(x.poseInReferenceSpace, "poseInReferenceSpace")
-#define OXRTL_ARGS_XrExtent2Df(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_float(x.width, "width"), \
-	    OXRTL_ARGS_float(x.height, "height")
-#define OXRTL_ARGS_XrActionSpaceCreateInfo(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrAction(x.action, "action"), \
-	    OXRTL_ARGS_XrPath(x.subactionPath, "subactionPath"), \
-	    OXRTL_ARGS_XrPosef(x.poseInActionSpace, "poseInActionSpace")
-#define OXRTL_ARGS_XrSpaceLocation(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSpaceLocationFlags(x.locationFlags, "locationFlags"), \
-	    OXRTL_ARGS_XrPosef(x.pose, "pose")
-#define OXRTL_ARGS_XrViewConfigurationProperties(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
+	        oxrtlIt.referenceSpaceType, "referenceSpaceType"), \
+	    OXRTL_ARGS_XrPosef( \
+	        oxrtlIt.poseInReferenceSpace, "poseInReferenceSpace")
+#define OXRTL_ARGS_XrExtent2Df(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), OXRTL_ARGS_float(oxrtlIt.width, "width"), \
+	    OXRTL_ARGS_float(oxrtlIt.height, "height")
+#define OXRTL_ARGS_XrActionSpaceCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath"), \
+	    OXRTL_ARGS_XrPosef(oxrtlIt.poseInActionSpace, "poseInActionSpace")
+#define OXRTL_ARGS_XrSpaceLocation(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSpaceLocationFlags( \
+	        oxrtlIt.locationFlags, "locationFlags"), \
+	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose")
+#define OXRTL_ARGS_XrViewConfigurationProperties(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_XrViewConfigurationType( \
-	        x.viewConfigurationType, "viewConfigurationType"), \
-	    OXRTL_ARGS_XrBool32(x.fovMutable, "fovMutable")
-#define OXRTL_ARGS_XrViewConfigurationView(x, name) \
-	TraceLoggingStruct(8, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
+	        oxrtlIt.viewConfigurationType, "viewConfigurationType"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.fovMutable, "fovMutable")
+#define OXRTL_ARGS_XrViewConfigurationView(oxrtlIt, name) \
+	TraceLoggingStruct(8, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
 	    OXRTL_ARGS_uint32_t( \
-	        x.recommendedImageRectWidth, "recommendedImageRectWidth"), \
-	    OXRTL_ARGS_uint32_t(x.maxImageRectWidth, "maxImageRectWidth"), \
+	        oxrtlIt.recommendedImageRectWidth, "recommendedImageRectWidth"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.maxImageRectWidth, "maxImageRectWidth"), \
 	    OXRTL_ARGS_uint32_t( \
-	        x.recommendedImageRectHeight, "recommendedImageRectHeight"), \
-	    OXRTL_ARGS_uint32_t(x.maxImageRectHeight, "maxImageRectHeight"), \
-	    OXRTL_ARGS_uint32_t(x.recommendedSwapchainSampleCount, \
+	        oxrtlIt.recommendedImageRectHeight, "recommendedImageRectHeight"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.maxImageRectHeight, "maxImageRectHeight"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.recommendedSwapchainSampleCount, \
 	        "recommendedSwapchainSampleCount"), \
 	    OXRTL_ARGS_uint32_t( \
-	        x.maxSwapchainSampleCount, "maxSwapchainSampleCount")
-#define OXRTL_ARGS_XrSwapchainCreateInfo(x, name) \
-	TraceLoggingStruct(11, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSwapchainCreateFlags(x.createFlags, "createFlags"), \
-	    OXRTL_ARGS_XrSwapchainUsageFlags(x.usageFlags, "usageFlags"), \
-	    OXRTL_ARGS_int64_t(x.format, "format"), \
-	    OXRTL_ARGS_uint32_t(x.sampleCount, "sampleCount"), \
-	    OXRTL_ARGS_uint32_t(x.width, "width"), \
-	    OXRTL_ARGS_uint32_t(x.height, "height"), \
-	    OXRTL_ARGS_uint32_t(x.faceCount, "faceCount"), \
-	    OXRTL_ARGS_uint32_t(x.arraySize, "arraySize"), \
-	    OXRTL_ARGS_uint32_t(x.mipCount, "mipCount")
-#define OXRTL_ARGS_XrSwapchainImageBaseHeader(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrSwapchainImageAcquireInfo(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrSwapchainImageWaitInfo(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrDuration(x.timeout, "timeout")
-#define OXRTL_ARGS_XrSwapchainImageReleaseInfo(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrSessionBeginInfo(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrViewConfigurationType( \
-	        x.primaryViewConfigurationType, "primaryViewConfigurationType")
-#define OXRTL_ARGS_XrFrameWaitInfo(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrFrameState(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrTime(x.predictedDisplayTime, "predictedDisplayTime"), \
-	    OXRTL_ARGS_XrDuration( \
-	        x.predictedDisplayPeriod, "predictedDisplayPeriod"), \
-	    OXRTL_ARGS_XrBool32(x.shouldRender, "shouldRender")
-#define OXRTL_ARGS_XrFrameBeginInfo(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrCompositionLayerBaseHeader(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrCompositionLayerFlags(x.layerFlags, "layerFlags"), \
-	    OXRTL_ARGS_XrSpace(x.space, "space")
-#define OXRTL_ARGS_XrFrameEndInfo(x, name) \
-	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrTime(x.displayTime, "displayTime"), \
-	    OXRTL_ARGS_XrEnvironmentBlendMode( \
-	        x.environmentBlendMode, "environmentBlendMode"), \
-	    OXRTL_ARGS_uint32_t(x.layerCount, "layerCount"), \
-	    OXRTL_ARGS_XrCompositionLayerBaseHeader_P_DA( \
-	        x.layers, "layers", x.layerCount)
-#define OXRTL_ARGS_XrViewLocateInfo(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrViewConfigurationType( \
-	        x.viewConfigurationType, "viewConfigurationType"), \
-	    OXRTL_ARGS_XrTime(x.displayTime, "displayTime"), \
-	    OXRTL_ARGS_XrSpace(x.space, "space")
-#define OXRTL_ARGS_XrViewState(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrViewStateFlags(x.viewStateFlags, "viewStateFlags")
-#define OXRTL_ARGS_XrFovf(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_float(x.angleLeft, "angleLeft"), \
-	    OXRTL_ARGS_float(x.angleRight, "angleRight"), \
-	    OXRTL_ARGS_float(x.angleUp, "angleUp"), \
-	    OXRTL_ARGS_float(x.angleDown, "angleDown")
-#define OXRTL_ARGS_XrView(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), OXRTL_ARGS_XrPosef(x.pose, "pose"), \
-	    OXRTL_ARGS_XrFovf(x.fov, "fov")
-#define OXRTL_ARGS_XrActionSetCreateInfo(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char_FA( \
-	        x.actionSetName, "actionSetName", XR_MAX_ACTION_SET_NAME_SIZE), \
-	    OXRTL_ARGS_char_FA(x.localizedActionSetName, "localizedActionSetName", \
-	        XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE), \
-	    OXRTL_ARGS_uint32_t(x.priority, "priority")
-#define OXRTL_ARGS_XrActionCreateInfo(x, name) \
-	TraceLoggingStruct(7, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_char_FA( \
-	        x.actionName, "actionName", XR_MAX_ACTION_NAME_SIZE), \
-	    OXRTL_ARGS_XrActionType(x.actionType, "actionType"), \
-	    OXRTL_ARGS_uint32_t(x.countSubactionPaths, "countSubactionPaths"), \
-	    OXRTL_ARGS_XrPath_DA( \
-	        x.subactionPaths, "subactionPaths", x.countSubactionPaths), \
-	    OXRTL_ARGS_char_FA(x.localizedActionName, "localizedActionName", \
-	        XR_MAX_LOCALIZED_ACTION_NAME_SIZE)
-#define OXRTL_ARGS_XrActionSuggestedBinding(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrAction(x.action, "action"), \
-	    OXRTL_ARGS_XrPath(x.binding, "binding")
-#define OXRTL_ARGS_XrInteractionProfileSuggestedBinding(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrPath(x.interactionProfile, "interactionProfile"), \
-	    OXRTL_ARGS_uint32_t( \
-	        x.countSuggestedBindings, "countSuggestedBindings"), \
-	    OXRTL_ARGS_XrActionSuggestedBinding_DA(x.suggestedBindings, \
-	        "suggestedBindings", x.countSuggestedBindings)
-#define OXRTL_ARGS_XrSessionActionSetsAttachInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_uint32_t(x.countActionSets, "countActionSets"), \
-	    OXRTL_ARGS_XrActionSet_DA( \
-	        x.actionSets, "actionSets", x.countActionSets)
-#define OXRTL_ARGS_XrInteractionProfileState(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrPath(x.interactionProfile, "interactionProfile")
-#define OXRTL_ARGS_XrActionStateGetInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrAction(x.action, "action"), \
-	    OXRTL_ARGS_XrPath(x.subactionPath, "subactionPath")
-#define OXRTL_ARGS_XrActionStateBoolean(x, name) \
-	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrBool32(x.currentState, "currentState"), \
-	    OXRTL_ARGS_XrBool32(x.changedSinceLastSync, "changedSinceLastSync"), \
-	    OXRTL_ARGS_XrTime(x.lastChangeTime, "lastChangeTime"), \
-	    OXRTL_ARGS_XrBool32(x.isActive, "isActive")
-#define OXRTL_ARGS_XrActionStateFloat(x, name) \
-	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_float(x.currentState, "currentState"), \
-	    OXRTL_ARGS_XrBool32(x.changedSinceLastSync, "changedSinceLastSync"), \
-	    OXRTL_ARGS_XrTime(x.lastChangeTime, "lastChangeTime"), \
-	    OXRTL_ARGS_XrBool32(x.isActive, "isActive")
-#define OXRTL_ARGS_XrVector2f(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_float(x.x, "x"), \
-	    OXRTL_ARGS_float(x.y, "y")
-#define OXRTL_ARGS_XrActionStateVector2f(x, name) \
-	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrVector2f(x.currentState, "currentState"), \
-	    OXRTL_ARGS_XrBool32(x.changedSinceLastSync, "changedSinceLastSync"), \
-	    OXRTL_ARGS_XrTime(x.lastChangeTime, "lastChangeTime"), \
-	    OXRTL_ARGS_XrBool32(x.isActive, "isActive")
-#define OXRTL_ARGS_XrActionStatePose(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrBool32(x.isActive, "isActive")
-#define OXRTL_ARGS_XrActiveActionSet(x, name) \
+	        oxrtlIt.maxSwapchainSampleCount, "maxSwapchainSampleCount")
+#define OXRTL_ARGS_XrSwapchainCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(11, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSwapchainCreateFlags(oxrtlIt.createFlags, "createFlags"), \
+	    OXRTL_ARGS_XrSwapchainUsageFlags(oxrtlIt.usageFlags, "usageFlags"), \
+	    OXRTL_ARGS_int64_t(oxrtlIt.format, "format"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.sampleCount, "sampleCount"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.width, "width"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.height, "height"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.faceCount, "faceCount"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.arraySize, "arraySize"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.mipCount, "mipCount")
+#define OXRTL_ARGS_XrSwapchainImageBaseHeader(oxrtlIt, name) \
 	TraceLoggingStruct(2, name), \
-	    OXRTL_ARGS_XrActionSet(x.actionSet, "actionSet"), \
-	    OXRTL_ARGS_XrPath(x.subactionPath, "subactionPath")
-#define OXRTL_ARGS_XrActionsSyncInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_uint32_t(x.countActiveActionSets, "countActiveActionSets"), \
-	    OXRTL_ARGS_XrActiveActionSet_DA( \
-	        x.activeActionSets, "activeActionSets", x.countActiveActionSets)
-#define OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrAction(x.action, "action")
-#define OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrPath(x.sourcePath, "sourcePath"), \
-	    OXRTL_ARGS_XrInputSourceLocalizedNameFlags( \
-	        x.whichComponents, "whichComponents")
-#define OXRTL_ARGS_XrHapticActionInfo(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrAction(x.action, "action"), \
-	    OXRTL_ARGS_XrPath(x.subactionPath, "subactionPath")
-#define OXRTL_ARGS_XrHapticBaseHeader(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrBaseInStructure(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_XrBaseInStructure_P(x.next, "next")
-#define OXRTL_ARGS_XrBaseOutStructure(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_XrBaseOutStructure_P(x.next, "next")
-#define OXRTL_ARGS_XrOffset2Di(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_int32_t(x.x, "x"), \
-	    OXRTL_ARGS_int32_t(x.y, "y")
-#define OXRTL_ARGS_XrExtent2Di(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_int32_t(x.width, "width"), \
-	    OXRTL_ARGS_int32_t(x.height, "height")
-#define OXRTL_ARGS_XrRect2Di(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrOffset2Di(x.offset, "offset"), \
-	    OXRTL_ARGS_XrExtent2Di(x.extent, "extent")
-#define OXRTL_ARGS_XrSwapchainSubImage(x, name) \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrSwapchainImageAcquireInfo(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrSwapchainImageWaitInfo(oxrtlIt, name) \
 	TraceLoggingStruct(3, name), \
-	    OXRTL_ARGS_XrSwapchain(x.swapchain, "swapchain"), \
-	    OXRTL_ARGS_XrRect2Di(x.imageRect, "imageRect"), \
-	    OXRTL_ARGS_uint32_t(x.imageArrayIndex, "imageArrayIndex")
-#define OXRTL_ARGS_XrCompositionLayerProjectionView(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), OXRTL_ARGS_XrPosef(x.pose, "pose"), \
-	    OXRTL_ARGS_XrFovf(x.fov, "fov"), \
-	    OXRTL_ARGS_XrSwapchainSubImage(x.subImage, "subImage")
-#define OXRTL_ARGS_XrCompositionLayerProjection(x, name) \
-	TraceLoggingStruct(6, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrCompositionLayerFlags(x.layerFlags, "layerFlags"), \
-	    OXRTL_ARGS_XrSpace(x.space, "space"), \
-	    OXRTL_ARGS_uint32_t(x.viewCount, "viewCount"), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrDuration(oxrtlIt.timeout, "timeout")
+#define OXRTL_ARGS_XrSwapchainImageReleaseInfo(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrSessionBeginInfo(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrViewConfigurationType( \
+	        oxrtlIt.primaryViewConfigurationType, \
+	        "primaryViewConfigurationType")
+#define OXRTL_ARGS_XrFrameWaitInfo(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrFrameState(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrTime( \
+	        oxrtlIt.predictedDisplayTime, "predictedDisplayTime"), \
+	    OXRTL_ARGS_XrDuration( \
+	        oxrtlIt.predictedDisplayPeriod, "predictedDisplayPeriod"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.shouldRender, "shouldRender")
+#define OXRTL_ARGS_XrFrameBeginInfo(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrCompositionLayerBaseHeader(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrCompositionLayerFlags(oxrtlIt.layerFlags, "layerFlags"), \
+	    OXRTL_ARGS_XrSpace(oxrtlIt.space, "space")
+#define OXRTL_ARGS_XrFrameEndInfo(oxrtlIt, name) \
+	TraceLoggingStruct(6, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.displayTime, "displayTime"), \
+	    OXRTL_ARGS_XrEnvironmentBlendMode( \
+	        oxrtlIt.environmentBlendMode, "environmentBlendMode"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.layerCount, "layerCount"), \
+	    OXRTL_ARGS_XrCompositionLayerBaseHeader_P_DA( \
+	        oxrtlIt.layers, "layers", oxrtlIt.layerCount)
+#define OXRTL_ARGS_XrViewLocateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrViewConfigurationType( \
+	        oxrtlIt.viewConfigurationType, "viewConfigurationType"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.displayTime, "displayTime"), \
+	    OXRTL_ARGS_XrSpace(oxrtlIt.space, "space")
+#define OXRTL_ARGS_XrViewState(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrViewStateFlags(oxrtlIt.viewStateFlags, "viewStateFlags")
+#define OXRTL_ARGS_XrFovf(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_float(oxrtlIt.angleLeft, "angleLeft"), \
+	    OXRTL_ARGS_float(oxrtlIt.angleRight, "angleRight"), \
+	    OXRTL_ARGS_float(oxrtlIt.angleUp, "angleUp"), \
+	    OXRTL_ARGS_float(oxrtlIt.angleDown, "angleDown")
+#define OXRTL_ARGS_XrView(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose"), \
+	    OXRTL_ARGS_XrFovf(oxrtlIt.fov, "fov")
+#define OXRTL_ARGS_XrActionSetCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_char_FA(oxrtlIt.actionSetName, "actionSetName", \
+	        XR_MAX_ACTION_SET_NAME_SIZE), \
+	    OXRTL_ARGS_char_FA(oxrtlIt.localizedActionSetName, \
+	        "localizedActionSetName", XR_MAX_LOCALIZED_ACTION_SET_NAME_SIZE), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.priority, "priority")
+#define OXRTL_ARGS_XrActionCreateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(7, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_char_FA( \
+	        oxrtlIt.actionName, "actionName", XR_MAX_ACTION_NAME_SIZE), \
+	    OXRTL_ARGS_XrActionType(oxrtlIt.actionType, "actionType"), \
+	    OXRTL_ARGS_uint32_t( \
+	        oxrtlIt.countSubactionPaths, "countSubactionPaths"), \
+	    OXRTL_ARGS_XrPath_DA(oxrtlIt.subactionPaths, "subactionPaths", \
+	        oxrtlIt.countSubactionPaths), \
+	    OXRTL_ARGS_char_FA(oxrtlIt.localizedActionName, "localizedActionName", \
+	        XR_MAX_LOCALIZED_ACTION_NAME_SIZE)
+#define OXRTL_ARGS_XrActionSuggestedBinding(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.binding, "binding")
+#define OXRTL_ARGS_XrInteractionProfileSuggestedBinding(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.interactionProfile, "interactionProfile"), \
+	    OXRTL_ARGS_uint32_t( \
+	        oxrtlIt.countSuggestedBindings, "countSuggestedBindings"), \
+	    OXRTL_ARGS_XrActionSuggestedBinding_DA(oxrtlIt.suggestedBindings, \
+	        "suggestedBindings", oxrtlIt.countSuggestedBindings)
+#define OXRTL_ARGS_XrSessionActionSetsAttachInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.countActionSets, "countActionSets"), \
+	    OXRTL_ARGS_XrActionSet_DA( \
+	        oxrtlIt.actionSets, "actionSets", oxrtlIt.countActionSets)
+#define OXRTL_ARGS_XrInteractionProfileState(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.interactionProfile, "interactionProfile")
+#define OXRTL_ARGS_XrActionStateGetInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath")
+#define OXRTL_ARGS_XrActionStateBoolean(oxrtlIt, name) \
+	TraceLoggingStruct(6, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.currentState, "currentState"), \
+	    OXRTL_ARGS_XrBool32( \
+	        oxrtlIt.changedSinceLastSync, "changedSinceLastSync"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.lastChangeTime, "lastChangeTime"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActionStateFloat(oxrtlIt, name) \
+	TraceLoggingStruct(6, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_float(oxrtlIt.currentState, "currentState"), \
+	    OXRTL_ARGS_XrBool32( \
+	        oxrtlIt.changedSinceLastSync, "changedSinceLastSync"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.lastChangeTime, "lastChangeTime"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrVector2f(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
+	    OXRTL_ARGS_float(oxrtlIt.y, "y")
+#define OXRTL_ARGS_XrActionStateVector2f(oxrtlIt, name) \
+	TraceLoggingStruct(6, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrVector2f(oxrtlIt.currentState, "currentState"), \
+	    OXRTL_ARGS_XrBool32( \
+	        oxrtlIt.changedSinceLastSync, "changedSinceLastSync"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.lastChangeTime, "lastChangeTime"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActionStatePose(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.isActive, "isActive")
+#define OXRTL_ARGS_XrActiveActionSet(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrActionSet(oxrtlIt.actionSet, "actionSet"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath")
+#define OXRTL_ARGS_XrActionsSyncInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_uint32_t( \
+	        oxrtlIt.countActiveActionSets, "countActiveActionSets"), \
+	    OXRTL_ARGS_XrActiveActionSet_DA(oxrtlIt.activeActionSets, \
+	        "activeActionSets", oxrtlIt.countActiveActionSets)
+#define OXRTL_ARGS_XrBoundSourcesForActionEnumerateInfo(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action")
+#define OXRTL_ARGS_XrInputSourceLocalizedNameGetInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.sourcePath, "sourcePath"), \
+	    OXRTL_ARGS_XrInputSourceLocalizedNameFlags( \
+	        oxrtlIt.whichComponents, "whichComponents")
+#define OXRTL_ARGS_XrHapticActionInfo(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrAction(oxrtlIt.action, "action"), \
+	    OXRTL_ARGS_XrPath(oxrtlIt.subactionPath, "subactionPath")
+#define OXRTL_ARGS_XrHapticBaseHeader(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrBaseInStructure(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_XrBaseInStructure_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrBaseOutStructure(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_XrBaseOutStructure_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrOffset2Di(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), OXRTL_ARGS_int32_t(oxrtlIt.x, "x"), \
+	    OXRTL_ARGS_int32_t(oxrtlIt.y, "y")
+#define OXRTL_ARGS_XrExtent2Di(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), OXRTL_ARGS_int32_t(oxrtlIt.width, "width"), \
+	    OXRTL_ARGS_int32_t(oxrtlIt.height, "height")
+#define OXRTL_ARGS_XrRect2Di(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrOffset2Di(oxrtlIt.offset, "offset"), \
+	    OXRTL_ARGS_XrExtent2Di(oxrtlIt.extent, "extent")
+#define OXRTL_ARGS_XrSwapchainSubImage(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrSwapchain(oxrtlIt.swapchain, "swapchain"), \
+	    OXRTL_ARGS_XrRect2Di(oxrtlIt.imageRect, "imageRect"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.imageArrayIndex, "imageArrayIndex")
+#define OXRTL_ARGS_XrCompositionLayerProjectionView(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose"), \
+	    OXRTL_ARGS_XrFovf(oxrtlIt.fov, "fov"), \
+	    OXRTL_ARGS_XrSwapchainSubImage(oxrtlIt.subImage, "subImage")
+#define OXRTL_ARGS_XrCompositionLayerProjection(oxrtlIt, name) \
+	TraceLoggingStruct(6, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrCompositionLayerFlags(oxrtlIt.layerFlags, "layerFlags"), \
+	    OXRTL_ARGS_XrSpace(oxrtlIt.space, "space"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.viewCount, "viewCount"), \
 	    OXRTL_ARGS_XrCompositionLayerProjectionView_DA( \
-	        x.views, "views", x.viewCount)
-#define OXRTL_ARGS_XrCompositionLayerQuad(x, name) \
-	TraceLoggingStruct(8, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrCompositionLayerFlags(x.layerFlags, "layerFlags"), \
-	    OXRTL_ARGS_XrSpace(x.space, "space"), \
-	    OXRTL_ARGS_XrEyeVisibility(x.eyeVisibility, "eyeVisibility"), \
-	    OXRTL_ARGS_XrSwapchainSubImage(x.subImage, "subImage"), \
-	    OXRTL_ARGS_XrPosef(x.pose, "pose"), \
-	    OXRTL_ARGS_XrExtent2Df(x.size, "size")
-#define OXRTL_ARGS_XrEventDataBaseHeader(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next")
-#define OXRTL_ARGS_XrEventDataEventsLost(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_uint32_t(x.lostEventCount, "lostEventCount")
-#define OXRTL_ARGS_XrEventDataInstanceLossPending(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrTime(x.lossTime, "lossTime")
-#define OXRTL_ARGS_XrEventDataSessionStateChanged(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSession(x.session, "session"), \
-	    OXRTL_ARGS_XrSessionState(x.state, "state"), \
-	    OXRTL_ARGS_XrTime(x.time, "time")
-#define OXRTL_ARGS_XrEventDataReferenceSpaceChangePending(x, name) \
-	TraceLoggingStruct(7, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSession(x.session, "session"), \
+	        oxrtlIt.views, "views", oxrtlIt.viewCount)
+#define OXRTL_ARGS_XrCompositionLayerQuad(oxrtlIt, name) \
+	TraceLoggingStruct(8, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrCompositionLayerFlags(oxrtlIt.layerFlags, "layerFlags"), \
+	    OXRTL_ARGS_XrSpace(oxrtlIt.space, "space"), \
+	    OXRTL_ARGS_XrEyeVisibility(oxrtlIt.eyeVisibility, "eyeVisibility"), \
+	    OXRTL_ARGS_XrSwapchainSubImage(oxrtlIt.subImage, "subImage"), \
+	    OXRTL_ARGS_XrPosef(oxrtlIt.pose, "pose"), \
+	    OXRTL_ARGS_XrExtent2Df(oxrtlIt.size, "size")
+#define OXRTL_ARGS_XrEventDataBaseHeader(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next")
+#define OXRTL_ARGS_XrEventDataEventsLost(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_uint32_t(oxrtlIt.lostEventCount, "lostEventCount")
+#define OXRTL_ARGS_XrEventDataInstanceLossPending(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.lossTime, "lossTime")
+#define OXRTL_ARGS_XrEventDataSessionStateChanged(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSession(oxrtlIt.session, "session"), \
+	    OXRTL_ARGS_XrSessionState(oxrtlIt.state, "state"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.time, "time")
+#define OXRTL_ARGS_XrEventDataReferenceSpaceChangePending(oxrtlIt, name) \
+	TraceLoggingStruct(7, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSession(oxrtlIt.session, "session"), \
 	    OXRTL_ARGS_XrReferenceSpaceType( \
-	        x.referenceSpaceType, "referenceSpaceType"), \
-	    OXRTL_ARGS_XrTime(x.changeTime, "changeTime"), \
-	    OXRTL_ARGS_XrBool32(x.poseValid, "poseValid"), \
-	    OXRTL_ARGS_XrPosef(x.poseInPreviousSpace, "poseInPreviousSpace")
-#define OXRTL_ARGS_XrEventDataInteractionProfileChanged(x, name) \
-	TraceLoggingStruct(3, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrSession(x.session, "session")
-#define OXRTL_ARGS_XrHapticVibration(x, name) \
-	TraceLoggingStruct(5, name), OXRTL_ARGS_XrStructureType(x.type, "type"), \
-	    OXRTL_ARGS_void_P(x.next, "next"), \
-	    OXRTL_ARGS_XrDuration(x.duration, "duration"), \
-	    OXRTL_ARGS_float(x.frequency, "frequency"), \
-	    OXRTL_ARGS_float(x.amplitude, "amplitude")
-#define OXRTL_ARGS_XrOffset2Df(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_float(x.x, "x"), \
-	    OXRTL_ARGS_float(x.y, "y")
-#define OXRTL_ARGS_XrRect2Df(x, name) \
-	TraceLoggingStruct(2, name), OXRTL_ARGS_XrOffset2Df(x.offset, "offset"), \
-	    OXRTL_ARGS_XrExtent2Df(x.extent, "extent")
-#define OXRTL_ARGS_XrVector4f(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_float(x.x, "x"), \
-	    OXRTL_ARGS_float(x.y, "y"), OXRTL_ARGS_float(x.z, "z"), \
-	    OXRTL_ARGS_float(x.w, "w")
-#define OXRTL_ARGS_XrColor4f(x, name) \
-	TraceLoggingStruct(4, name), OXRTL_ARGS_float(x.r, "r"), \
-	    OXRTL_ARGS_float(x.g, "g"), OXRTL_ARGS_float(x.b, "b"), \
-	    OXRTL_ARGS_float(x.a, "a")
+	        oxrtlIt.referenceSpaceType, "referenceSpaceType"), \
+	    OXRTL_ARGS_XrTime(oxrtlIt.changeTime, "changeTime"), \
+	    OXRTL_ARGS_XrBool32(oxrtlIt.poseValid, "poseValid"), \
+	    OXRTL_ARGS_XrPosef(oxrtlIt.poseInPreviousSpace, "poseInPreviousSpace")
+#define OXRTL_ARGS_XrEventDataInteractionProfileChanged(oxrtlIt, name) \
+	TraceLoggingStruct(3, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrSession(oxrtlIt.session, "session")
+#define OXRTL_ARGS_XrHapticVibration(oxrtlIt, name) \
+	TraceLoggingStruct(5, name), \
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type"), \
+	    OXRTL_ARGS_void_P(oxrtlIt.next, "next"), \
+	    OXRTL_ARGS_XrDuration(oxrtlIt.duration, "duration"), \
+	    OXRTL_ARGS_float(oxrtlIt.frequency, "frequency"), \
+	    OXRTL_ARGS_float(oxrtlIt.amplitude, "amplitude")
+#define OXRTL_ARGS_XrOffset2Df(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
+	    OXRTL_ARGS_float(oxrtlIt.y, "y")
+#define OXRTL_ARGS_XrRect2Df(oxrtlIt, name) \
+	TraceLoggingStruct(2, name), \
+	    OXRTL_ARGS_XrOffset2Df(oxrtlIt.offset, "offset"), \
+	    OXRTL_ARGS_XrExtent2Df(oxrtlIt.extent, "extent")
+#define OXRTL_ARGS_XrVector4f(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), OXRTL_ARGS_float(oxrtlIt.x, "x"), \
+	    OXRTL_ARGS_float(oxrtlIt.y, "y"), OXRTL_ARGS_float(oxrtlIt.z, "z"), \
+	    OXRTL_ARGS_float(oxrtlIt.w, "w")
+#define OXRTL_ARGS_XrColor4f(oxrtlIt, name) \
+	TraceLoggingStruct(4, name), OXRTL_ARGS_float(oxrtlIt.r, "r"), \
+	    OXRTL_ARGS_float(oxrtlIt.g, "g"), OXRTL_ARGS_float(oxrtlIt.b, "b"), \
+	    OXRTL_ARGS_float(oxrtlIt.a, "a")

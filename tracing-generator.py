@@ -81,18 +81,18 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
 		for xr_type in self.api_base_types:
 			ret += self.genBaseTypeMacro(xr_type) + "\n"
 		for xr_type in self.api_handles:
-			ret += f'#define OXRTL_ARGS_{xr_type.name}(x, name) OXRTL_ARGS_HANDLE(x, name)' + '\n'
+			ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)' + '\n'
 		for xr_type in self.api_flags:
-			ret += f'#define OXRTL_ARGS_{xr_type.name}(x, name) OXRTL_ARGS_{xr_type.type}(x, name)' + '\n'
+			ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
 		return ret
 
 	def genBaseTypeMacro(self, xr_type):
 		handwritten_types = {'XrVersion'}
 		if xr_type.name in handwritten_types:
-			return f"// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_type.name}(x, name)"
+			return f"// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name)"
 		if xr_type.type == 'XR_DEFINE_ATOM':
-			return f'#define OXRTL_ARGS_{xr_type.name}(x, name) OXRTL_ARGS_ATOM(x, name)'
-		return f'#define OXRTL_ARGS_{xr_type.name}(x, name) OXRTL_ARGS_{xr_type.type}(x, name)'
+			return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)'
+		return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)'
 
 	def genEnumMacros(self):
 		ret = ''
@@ -115,7 +115,7 @@ inline const char* ToCString({xr_enum.name} value) {{
 	}}
 }}
 }}
-#define OXRTL_ARGS_{xr_enum.name}(x, name) TraceLoggingValue(OXRTracing::ToCString(x), name)
+#define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, name) TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
 '''
 
 	def genStructMacros(self):
@@ -139,12 +139,12 @@ inline const char* ToCString({xr_enum.name} value) {{
 				else:
 					suffix += '_DA'
 					pointer_count -= 1
-					trailing += f', x.{member.pointer_count_var}'
+					trailing += f', oxrtlIt.{member.pointer_count_var}'
 			if pointer_count > 0:
 				suffix = '_' + ('P' * pointer_count) + suffix
 			member_macros.append(
-				f'OXRTL_ARGS_{member.type}{suffix}(x.{member.name}, "{member.name}"{trailing})')
-		return f'#define OXRTL_ARGS_{xr_struct.name}(x, name) TraceLoggingStruct({len(member_macros)}, name),' + ','.join(member_macros)
+				f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
+		return f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),' + ','.join(member_macros)
 
 	def beginFile(self, genOpts):
 		BoilerplateOutputGenerator.beginFile(self, genOpts)
