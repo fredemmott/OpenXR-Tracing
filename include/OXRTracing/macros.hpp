@@ -104,3 +104,18 @@ inline constexpr const char* ToCString(const ConstCStr* const arr, size_t count)
 // TODO: this is XrEventDataBuffer.varying
 // Ideally we should trace the real data for a subtype of XrEventDataBuffer
 #define OXRTL_ARGS_uint8_t_FA(x, name, count) TraceLoggingValue("binary data", name)
+
+//////////////////////////////////
+///// Structs: special cases /////
+//////////////////////////////////
+
+// This doesn't have 'child' structs, but we still want to log the type
+#define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name) \
+	TraceLoggingStruct(1, name), \
+		OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type")
+#define OXRTL_ARGS_XrEventDataBuffer_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataBuffer((*oxrtlIt), name)
+#define OXRTL_ARGS_XrEventDataBuffer_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrEventDataBuffer_P_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)

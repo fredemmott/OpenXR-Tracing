@@ -134,8 +134,12 @@ inline const char* ToCString({xr_enum.name} value) {{
 '''
 
     def genStructMacros(self):
+        handwritten = {'XrEventDataBuffer'}
         ret = ''
         for xr_struct in self.api_structures:
+            if xr_struct.name in handwritten:
+                ret += f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name)' + '\n'
+                continue;
             ret += self.genStructMacro(xr_struct) + "\n"
         return ret
 

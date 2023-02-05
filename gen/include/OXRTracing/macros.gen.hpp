@@ -1074,15 +1074,7 @@ inline const char* ToCString(XrObjectType value)
 #define OXRTL_ARGS_XrInstanceProperties_P_DA(oxrtlIt, name, size) \
 	TraceLoggingValue(size, "#" name)
 
-#define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name) \
-	TraceLoggingStruct(1, name), \
-	    OXRTL_ARGS_uint8_t_FA(oxrtlIt.varying, "varying", 4000)
-#define OXRTL_ARGS_XrEventDataBuffer_P(oxrtlIt, name) \
-	OXRTL_ARGS_XrEventDataBuffer((*oxrtlIt), name)
-#define OXRTL_ARGS_XrEventDataBuffer_DA(oxrtlIt, name, size) \
-	TraceLoggingValue(size, "#" name)
-#define OXRTL_ARGS_XrEventDataBuffer_P_DA(oxrtlIt, name, size) \
-	TraceLoggingValue(size, "#" name)
+// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name)
 
 #define OXRTL_ARGS_XrSystemGetInfo(oxrtlIt, name) \
 	TraceLoggingStruct(1, name), \
