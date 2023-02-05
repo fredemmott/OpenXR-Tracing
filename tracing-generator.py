@@ -120,17 +120,17 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         values = [value for value in xr_enum.values if value.alias is None]
         return f'''
 namespace OXRTracing {{
-inline const char* ToCString({xr_enum.name} value) {{
+inline std::string to_string({xr_enum.name} value) {{
 	switch(value) {{
 		{newline.join([f'case {x.name}: return "{x.name}";' for x in values])}
 		default:
 			using BasicT = std::underlying_type_t<{xr_enum.name}>;
 			const auto basicValue = static_cast<BasicT>(value);
-			return std::format("Unknown {xr_enum.name}: {{}}", basicValue).c_str();
+			return std::format("Unknown {xr_enum.name}: {{}}", basicValue);
 	}}
 }}
 }}
-#define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, name) TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+#define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, name) TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 '''
 
     def genStructMacros(self):

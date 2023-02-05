@@ -82,7 +82,7 @@
 
 namespace OXRTracing {
   using ConstCStr = const char*;
-inline constexpr const char* ToCString(const ConstCStr* const arr, size_t count)
+inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
 {
   if (count == 0) {
     return "[empty]";
@@ -94,12 +94,12 @@ inline constexpr const char* ToCString(const ConstCStr* const arr, size_t count)
 		}
 		out += arr[i];
 	}
-	return out.c_str();
+	return out;
 }
 } // namespace OXRTracing
 
 #define OXRTL_ARGS_char_P_DA(x, name, count) \
-	TraceLoggingValue(::OXRTracing::ToCString(x, count), name)
+	TraceLoggingValue(::OXRTracing::to_string(x, count).c_str(), name)
 
 // TODO: this is XrEventDataBuffer.varying
 // Ideally we should trace the real data for a subtype of XrEventDataBuffer

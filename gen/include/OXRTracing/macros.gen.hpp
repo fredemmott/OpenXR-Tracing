@@ -95,7 +95,7 @@
 /////////////////////////////////////////////
 
 namespace OXRTracing {
-inline const char* ToCString(XrResult value)
+inline std::string to_string(XrResult value)
 {
 	switch (value) {
 	case XR_SUCCESS:
@@ -271,15 +271,15 @@ inline const char* ToCString(XrResult value)
 	default:
 		using BasicT = std::underlying_type_t<XrResult>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrResult: {}", basicValue).c_str();
+		return std::format("Unknown XrResult: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrResult(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrStructureType value)
+inline std::string to_string(XrStructureType value)
 {
 	switch (value) {
 	case XR_TYPE_UNKNOWN:
@@ -768,15 +768,15 @@ inline const char* ToCString(XrStructureType value)
 	default:
 		using BasicT = std::underlying_type_t<XrStructureType>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrStructureType: {}", basicValue).c_str();
+		return std::format("Unknown XrStructureType: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrStructureType(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrFormFactor value)
+inline std::string to_string(XrFormFactor value)
 {
 	switch (value) {
 	case XR_FORM_FACTOR_HEAD_MOUNTED_DISPLAY:
@@ -786,15 +786,15 @@ inline const char* ToCString(XrFormFactor value)
 	default:
 		using BasicT = std::underlying_type_t<XrFormFactor>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrFormFactor: {}", basicValue).c_str();
+		return std::format("Unknown XrFormFactor: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrFormFactor(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrViewConfigurationType value)
+inline std::string to_string(XrViewConfigurationType value)
 {
 	switch (value) {
 	case XR_VIEW_CONFIGURATION_TYPE_PRIMARY_MONO:
@@ -809,16 +809,15 @@ inline const char* ToCString(XrViewConfigurationType value)
 	default:
 		using BasicT = std::underlying_type_t<XrViewConfigurationType>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrViewConfigurationType: {}", basicValue)
-		    .c_str();
+		return std::format("Unknown XrViewConfigurationType: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrViewConfigurationType(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrEnvironmentBlendMode value)
+inline std::string to_string(XrEnvironmentBlendMode value)
 {
 	switch (value) {
 	case XR_ENVIRONMENT_BLEND_MODE_OPAQUE:
@@ -830,16 +829,15 @@ inline const char* ToCString(XrEnvironmentBlendMode value)
 	default:
 		using BasicT = std::underlying_type_t<XrEnvironmentBlendMode>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrEnvironmentBlendMode: {}", basicValue)
-		    .c_str();
+		return std::format("Unknown XrEnvironmentBlendMode: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrEnvironmentBlendMode(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrReferenceSpaceType value)
+inline std::string to_string(XrReferenceSpaceType value)
 {
 	switch (value) {
 	case XR_REFERENCE_SPACE_TYPE_VIEW:
@@ -855,16 +853,15 @@ inline const char* ToCString(XrReferenceSpaceType value)
 	default:
 		using BasicT = std::underlying_type_t<XrReferenceSpaceType>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrReferenceSpaceType: {}", basicValue)
-		    .c_str();
+		return std::format("Unknown XrReferenceSpaceType: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrReferenceSpaceType(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrActionType value)
+inline std::string to_string(XrActionType value)
 {
 	switch (value) {
 	case XR_ACTION_TYPE_BOOLEAN_INPUT:
@@ -880,15 +877,15 @@ inline const char* ToCString(XrActionType value)
 	default:
 		using BasicT = std::underlying_type_t<XrActionType>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrActionType: {}", basicValue).c_str();
+		return std::format("Unknown XrActionType: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrActionType(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrEyeVisibility value)
+inline std::string to_string(XrEyeVisibility value)
 {
 	switch (value) {
 	case XR_EYE_VISIBILITY_BOTH:
@@ -900,15 +897,15 @@ inline const char* ToCString(XrEyeVisibility value)
 	default:
 		using BasicT = std::underlying_type_t<XrEyeVisibility>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrEyeVisibility: {}", basicValue).c_str();
+		return std::format("Unknown XrEyeVisibility: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrEyeVisibility(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrSessionState value)
+inline std::string to_string(XrSessionState value)
 {
 	switch (value) {
 	case XR_SESSION_STATE_UNKNOWN:
@@ -932,15 +929,15 @@ inline const char* ToCString(XrSessionState value)
 	default:
 		using BasicT = std::underlying_type_t<XrSessionState>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrSessionState: {}", basicValue).c_str();
+		return std::format("Unknown XrSessionState: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrSessionState(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 namespace OXRTracing {
-inline const char* ToCString(XrObjectType value)
+inline std::string to_string(XrObjectType value)
 {
 	switch (value) {
 	case XR_OBJECT_TYPE_UNKNOWN:
@@ -988,12 +985,12 @@ inline const char* ToCString(XrObjectType value)
 	default:
 		using BasicT = std::underlying_type_t<XrObjectType>;
 		const auto basicValue = static_cast<BasicT>(value);
-		return std::format("Unknown XrObjectType: {}", basicValue).c_str();
+		return std::format("Unknown XrObjectType: {}", basicValue);
 	}
 }
 } // namespace OXRTracing
 #define OXRTL_ARGS_XrObjectType(oxrtlIt, name) \
-	TraceLoggingValue(OXRTracing::ToCString(oxrtlIt), name)
+	TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 ///////////////////////////////////////////////
 ///// Generated macros for OpenXR structs /////
