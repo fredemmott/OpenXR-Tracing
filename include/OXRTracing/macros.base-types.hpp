@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <openxr.h>
+
 #include <format>
 #include <string.h>
 
@@ -54,10 +56,14 @@
 	TraceLoggingValue( \
 	    std::format("{:#016x}", reinterpret_cast<const uint64_t>(x)).c_str(), \
 	    name)
+#if (XR_PTR_SIZE == 8)
+#define OXRTL_ARGS_HANDLE(x, name) OXRTL_ARGS_POINTER(x, name)
+#else
 #define OXRTL_ARGS_HANDLE(x, name) \
 	TraceLoggingValue( \
 	    std::format("{:#016x}", static_cast<const uint64_t>(x)).c_str(), \
 	    name)
+#endif
 
 #define OXRTL_ARGS_void_P OXRTL_ARGS_POINTER
 
