@@ -89,3 +89,7 @@ inline constexpr const char* ToCString(const ConstCStr* const arr, size_t count)
 
 #define OXRTL_ARGS_char_P_DA(x, name, count) \
 	TraceLoggingValue(::OXRTracing::ToCString(x, count), name)
+
+// TODO: this is XrEventDataBuffer.varying
+// Ideally we should trace the real data for a subtype of XrEventDataBuffer
+#define OXRTL_ARGS_uint8_t_FA(x, name, count) TraceLoggingValue("binary data", name)
