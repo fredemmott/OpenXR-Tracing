@@ -134,16 +134,13 @@ inline std::string to_string({xr_enum.name} value) {{
 '''
 
     def genStructMacros(self):
-        handwritten = {'XrEventDataBuffer'}
         ret = ''
         for xr_struct in self.api_structures:
-            if xr_struct.name in handwritten:
-                ret += f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name)' + '\n'
-                continue;
             ret += self.genStructMacro(xr_struct) + "\n"
         return ret
 
     def genStructMacro(self, xr_struct):
+        handwritten = {'XrEventDataBuffer'}
         member_macros = []
         for member in xr_struct.members:
             if member.name == 'next':
@@ -167,7 +164,9 @@ inline std::string to_string({xr_enum.name} value) {{
                 suffix = '_' + ('P' * pointer_count) + suffix
             member_macros.append(
                 f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
-        if member_macros:
+        if xr_struct.name in handwritten:
+            struct_def =  f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name)'
+        elif member_macros:
             struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{", ".join(member_macros)}'
         else:
             struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingValue(name)'

@@ -1072,6 +1072,12 @@ inline std::string to_string(XrObjectType value)
 	TraceLoggingValue(size, "#" name)
 
 // EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name)
+#define OXRTL_ARGS_XrEventDataBuffer_P(oxrtlIt, name) \
+	OXRTL_ARGS_XrEventDataBuffer((*oxrtlIt), name)
+#define OXRTL_ARGS_XrEventDataBuffer_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_XrEventDataBuffer_P_DA(oxrtlIt, name, size) \
+	TraceLoggingValue(size, "#" name)
 
 #define OXRTL_ARGS_XrSystemGetInfo(oxrtlIt, name) \
 	TraceLoggingStruct(1, name), \

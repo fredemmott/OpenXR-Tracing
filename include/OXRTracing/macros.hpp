@@ -113,9 +113,3 @@ inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
 #define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name) \
 	TraceLoggingStruct(1, name), \
 		OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type")
-#define OXRTL_ARGS_XrEventDataBuffer_P(oxrtlIt, name) \
-	OXRTL_ARGS_XrEventDataBuffer((*oxrtlIt), name)
-#define OXRTL_ARGS_XrEventDataBuffer_DA(oxrtlIt, name, size) \
-	TraceLoggingValue(size, "#" name)
-#define OXRTL_ARGS_XrEventDataBuffer_P_DA(oxrtlIt, name, size) \
-	TraceLoggingValue(size, "#" name)
