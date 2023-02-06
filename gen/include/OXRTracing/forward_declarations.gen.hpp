@@ -23,7 +23,7 @@
 // SOFTWARE.
 
 #include <OXRTracing.hpp>
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 namespace OXRTracing {
 

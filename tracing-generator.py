@@ -28,7 +28,7 @@ import sys
 # Import dependencies from the OpenXR SDK.
 cur_dir = os.path.abspath(os.path.dirname(__file__))  # nopep8
 base_dir = cur_dir  # nopep8
-sdk_dir = os.path.join(base_dir, 'OpenXR-SDK-Source')  # nopep8
+sdk_dir = os.path.join(base_dir, 'third-party', 'OpenXR-SDK-Source')  # nopep8
 sys.path.append(os.path.join(sdk_dir, 'specification', 'scripts'))  # nopep8
 sys.path.append(os.path.join(sdk_dir, 'src', 'scripts'))  # nopep8
 
@@ -197,7 +197,7 @@ inline std::string to_string({xr_enum.name} value) {{
         write('''
 #pragma once
 
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 #include <format>
 ''', file=self.outFile)
@@ -370,7 +370,7 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
     def beginFile(self, genOpts):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
         content = '''
-#include <openxr.h>
+#include <openxr/openxr.h>
 #include <OXRTracing.hpp>
 
 #include <TraceLoggingActivity.h>
@@ -396,7 +396,7 @@ class ForwardDeclarationsOutputGenerator(BoilerplateOutputGenerator):
     def beginFile(self, genOpts):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
         content = f'''
-#include <openxr.h>
+#include <openxr/openxr.h>
 #include <OXRTracing.hpp>
 
 namespace OXRTracing {{

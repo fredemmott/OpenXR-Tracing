@@ -26,7 +26,7 @@
 
 #include <TraceLoggingProvider.h>
 #include <Windows.h>
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 #include <string>
 

@@ -22,7 +22,7 @@
 
 #include <OXRTracing.hpp>
 #include <loader_interfaces.h>
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>

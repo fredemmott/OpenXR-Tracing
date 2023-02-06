@@ -34,9 +34,8 @@ try {
     '/permissive-'
     '/D', 'WIN32_LEAN_AND_MEAN=1',
     '/D', 'NOMINMAX=1',
-    '/I', "$cwd/OpenXR-SDK-Source/build/include/openxr",
-    '/I', "$cwd/OpenXR-SDK-Source/build/include",
-    '/I', "$cwd/OpenXR-SDK-Source/src/common",
+    '/I', "$cwd/third-party/OpenXR-SDK-Source/src/common",
+    '/I', "$cwd/third-party/OpenXR-SDK/include",
     '/I', "$cwd/gen/include",
     '/I', "$cwd/include"
   )

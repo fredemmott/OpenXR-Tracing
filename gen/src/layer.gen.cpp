@@ -23,7 +23,7 @@
 // SOFTWARE.
 
 #include <OXRTracing.hpp>
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>

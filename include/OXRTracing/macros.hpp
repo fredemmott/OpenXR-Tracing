@@ -24,7 +24,7 @@
 #pragma once
 
 #include <OXRTracing/forward_declarations.hpp>
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 #include <format>
 #include <string.h>

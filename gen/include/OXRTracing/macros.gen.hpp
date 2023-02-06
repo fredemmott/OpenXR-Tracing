@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <openxr.h>
+#include <openxr/openxr.h>
 
 #include <format>
 
