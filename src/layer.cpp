@@ -27,18 +27,9 @@
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>
 
-#pragma comment(lib, "Advapi32.lib")
-
 namespace OXRTracing {
 
-/* PS >
- * [System.Diagnostics.Tracing.EventSource]::new("FredEmmott.OpenXRTracing").guid
- * 0f924f5f-21f0-513d-a2ab-2ede802e0b8f
- */
-TRACELOGGING_DEFINE_PROVIDER(gTraceProvider, "FredEmmott.OpenXRTracing",
-    (0x0f924f5f, 0x21f0, 0x513d, 0xa2, 0xab, 0x2e, 0xde, 0x80, 0x2e, 0x0b,
-        0x8f));
-thread_local XrInstance gXrInstance {};
+thread_local XrInstance gXrInstance{};
 PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr{ nullptr };
 
 } // namespace OXRTracing
