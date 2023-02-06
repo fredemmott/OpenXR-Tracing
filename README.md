@@ -6,6 +6,8 @@ Windows [Trace Logging] ([ETW]) as an OpenXR API layer.
 
 Python: installing from the MS store or `winget` should be fine.
 
+Python is used to generate most of the code of this project, based on the OpenXR specification; the API specification is an XML file, and the OpenXR SDK source includes Python classes for processing this XML file.
+
 ## Building
 
 1. Fetch submodules: `git submodule update --init`
