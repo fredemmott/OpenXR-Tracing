@@ -160,7 +160,7 @@ inline std::string to_string({xr_enum.name} value) {{
         for member in xr_struct.members:
             if member.name == 'next':
                 continue
-            if member.name == 'type' and member.type == "XrStructureType" and self.getRelationGroupForBaseStruct(member.type) is None:
+            if member.name == 'type' and member.type == "XrStructureType" and self.getRelationGroupForBaseStruct(xr_struct.name) is None:
                 continue
             if self.isEmptyStruct(member.type):
                 continue
