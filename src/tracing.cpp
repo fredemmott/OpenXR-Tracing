@@ -109,7 +109,7 @@ std::string to_string(XrActionSet actionSet)
 		return std::format(
 		    "{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(actionSet));
 	}
-	return std::format("{}, ({:#016x})", sCache.mActionSets.at(actionSet),
+	return std::format("{} ({:#016x})", sCache.mActionSets.at(actionSet),
 	    OXRTL_HANDLE_CAST<const uint64_t>(actionSet));
 }
 
