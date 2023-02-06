@@ -26,7 +26,37 @@ Two API layers are generated:
 
 These are identical, except for the name, which is included in the trace data; this allows tracing both sides of another OpenXR API layer.
 
-Each of these layers has its' own DLL and json file in `out\` after building; add the `.json` file to the registry like any other OpenXR API layer. You may want to disable the layer when you're not actively using this layer - it has not been optimized for performance.
+Each of these layers has its' own DLL and json file in `out\` after building; uou may want to disable the layer when you're not actively using this layer - it has not been optimized for performance.
+
+### Enabling the layers
+
+You can manually add the .json file to the registry like any other layer, or use `install.ps1` and `wrap.ps1` as administrator. You might find [list-openxr-layers] handy.
+
+With administrator powershell:
+
+    install.ps1 -Mode First
+
+Or, last:
+
+    install.ps1 -Mode Last
+
+You can also install the layer immediately `Before` or `After` another layer:
+
+    install.ps1 -Mode Before -RelativeTo C:\Path\To\Other\APILayer.json
+
+You can `Enable`, `Disable`, or `Remove` the layer:
+
+    install.ps1 -Mode Disable
+
+You can install both layers, on either side of another layer:
+
+    wrap.ps1 -RelativeTo C:\Path\To\Other\APILayer.json
+
+To change the secondary layer (or any other API layer):
+
+    install.ps1 -Mode Disable -LayerPath (Get-Item out\APILayer_Alternate.json).FullName
+
+### Collecting trace data
 
 To start collecting data, as administrator:
 
@@ -58,6 +88,7 @@ On the other hand, the layer included with the OpenXR SDK source has some advant
 
 This project is [MIT licensed](LICENSE)
 
+[list-openxr-layers]: https://github.com/fredemmott/list-openxr-layers/releases
 [Trace Logging]: https://learn.microsoft.com/en-us/windows/win32/tracelogging/trace-logging-portal
 [ETW]: https://learn.microsoft.com/en-us/windows/win32/etw/about-event-tracing
 [Tabnalysis]: https://apps.microsoft.com/store/detail/tabnalysis/9NQLK2M4RP4J
