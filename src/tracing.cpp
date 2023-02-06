@@ -89,6 +89,30 @@ std::string to_string(const ConstCStr* const arr, size_t count)
 	return out;
 }
 
+std::string to_string(XrAction action)
+{
+	if (!sCache.mActions.contains(action)) {
+		return std::format(
+		    "{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(action));
+	}
+
+	const auto& data = sCache.mActions.at(action);
+	return std::format("{} ({:#016x}) from {}", data.mName,
+	    OXRTL_HANDLE_CAST<const uint64_t>(action), to_string(data.mActionSet));
+
+	return {};
+}
+
+std::string to_string(XrActionSet actionSet)
+{
+	if (!sCache.mActionSets.contains(actionSet)) {
+		return std::format(
+		    "{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(actionSet));
+	}
+	return std::format("{}, ({:#016x})", sCache.mActionSets.at(actionSet),
+	    OXRTL_HANDLE_CAST<const uint64_t>(actionSet));
+}
+
 void xrCreateActionSet_hook(XrResult result, XrInstance instance,
     const XrActionSetCreateInfo* createInfo, XrActionSet* actionSet) noexcept
 {

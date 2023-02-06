@@ -36,6 +36,8 @@ extern thread_local XrInstance gXrInstance;
 extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 
 std::string to_string(XrPath path);
+std::string to_string(XrAction action);
+std::string to_string(XrActionSet actionSet);
 
 using ConstCStr = const char*;
 std::string to_string(const ConstCStr* const arr, size_t count);

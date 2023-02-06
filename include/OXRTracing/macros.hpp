@@ -58,12 +58,14 @@
 	    std::format("{:#016x}", reinterpret_cast<const uint64_t>(x)).c_str(), \
 	    name)
 #if (XR_PTR_SIZE == 8)
-#define OXRTL_ARGS_HANDLE(x, name) OXRTL_ARGS_POINTER(x, name)
+#define OXRTL_HANDLE_CAST reinterpret_cast
 #else
+#define OXRTL_HANDLE_CAST static_cast
+#endif
 #define OXRTL_ARGS_HANDLE(x, name) \
 	TraceLoggingValue( \
-	    std::format("{:#016x}", static_cast<const uint64_t>(x)).c_str(), name)
-#endif
+	    std::format("{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(x)).c_str(), \
+	    name)
 
 #define OXRTL_ARGS_void_P OXRTL_ARGS_POINTER
 
@@ -84,6 +86,10 @@
 	TraceLoggingValue(::OXRTracing::to_string(x, count).c_str(), name)
 
 #define OXRTL_ARGS_XrPath(oxrtlIt, name) \
+	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+#define OXRTL_ARGS_XrAction(oxrtlIt, name) \
+	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+#define OXRTL_ARGS_XrActionSet(oxrtlIt, name) \
 	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 // TODO: this is XrEventDataBuffer.varying

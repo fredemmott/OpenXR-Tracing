@@ -45,9 +45,12 @@
 #define OXRTL_ARGS_XrInstance(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
 #define OXRTL_ARGS_XrSession(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
 #define OXRTL_ARGS_XrSpace(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
-#define OXRTL_ARGS_XrAction(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+// EXCLUDED - HANDWRITTEN:
+// #define OXRTL_ARGS_XrAction(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
 #define OXRTL_ARGS_XrSwapchain(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
-#define OXRTL_ARGS_XrActionSet(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)
+// EXCLUDED - HANDWRITTEN:
+// #define OXRTL_ARGS_XrActionSet(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt,
+// name)
 #define OXRTL_ARGS_XrInstanceCreateFlags(oxrtlIt, name) \
 	OXRTL_ARGS_XrFlags64(oxrtlIt, name)
 #define OXRTL_ARGS_XrSessionCreateFlags(oxrtlIt, name) \

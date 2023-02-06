@@ -94,11 +94,17 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 
 class MacroOutputGenerator(BoilerplateOutputGenerator):
     def genBaseTypeMacros(self):
+        handwritten = {'XrAction', 'XrActionSet'}
+
         ret = ''
         for xr_type in self.api_base_types:
             ret += self.genBaseTypeMacro(xr_type) + "\n"
         for xr_type in self.api_handles:
-            ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)' + '\n'
+            macro = f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)' + '\n'
+            if xr_type.name in handwritten:
+                ret += '// EXCLUDED - HANDWRITTEN:\n// '+macro
+            else:
+                ret += macro
         for xr_type in self.api_flags:
             ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
 
