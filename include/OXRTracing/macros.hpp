@@ -80,24 +80,6 @@
 #define OXRTL_ARGS_char_FA(x, name, maxLen) \
 	TraceLoggingCountedString(x, strnlen_s(x, maxLen), name)
 
-namespace OXRTracing {
-using ConstCStr = const char*;
-inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
-{
-	if (count == 0) {
-		return "[empty]";
-	}
-	std::string out;
-	for (size_t i = 0; i < count; ++i) {
-		if (!out.empty()) {
-			out += ",";
-		}
-		out += arr[i];
-	}
-	return out;
-}
-} // namespace OXRTracing
-
 #define OXRTL_ARGS_char_P_DA(x, name, count) \
 	TraceLoggingValue(::OXRTracing::to_string(x, count).c_str(), name)
 

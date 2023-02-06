@@ -27,7 +27,6 @@ namespace OXRTracing {
 
 std::string to_string(XrPath path)
 {
-
 	thread_local XrInstance sXrInstance{ nullptr };
 	thread_local PFN_xrPathToString sPathToString{ nullptr };
 	thread_local std::unordered_map<XrPath, std::string> sCache;
@@ -67,6 +66,21 @@ std::string to_string(XrPath path)
 	    = std::format("{:#016x} ()", path, std::string_view{ buffer, len });
 	sCache[path] = ret;
 	return ret;
+}
+
+std::string to_string(const ConstCStr* const arr, size_t count)
+{
+	if (count == 0) {
+		return "[empty]";
+	}
+	std::string out;
+	for (size_t i = 0; i < count; ++i) {
+		if (!out.empty()) {
+			out += ",";
+		}
+		out += arr[i];
+	}
+	return out;
 }
 
 } // namespace OXRTracing

@@ -36,4 +36,8 @@ extern thread_local XrInstance gXrInstance;
 extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 
 std::string to_string(XrPath path);
+
+using ConstCStr = const char*;
+std::string to_string(const ConstCStr* const arr, size_t count);
+
 } // namespace OXRTracing
