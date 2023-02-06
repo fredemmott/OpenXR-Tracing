@@ -1,7 +1,7 @@
 param (
-  [Parameter(Mandatory)]
-  [ValidateSet('First','Last','Enable','Disable','Remove')]
-  [string] $Mode
+	[Parameter(Mandatory)]
+	[ValidateSet('First', 'Last', 'Enable', 'Disable', 'Remove')]
+	[string] $Mode
 )
 
 $key = "HKLM:\SOFTWARE\Khronos\OpenXR\1\ApiLayers\Implicit"
@@ -54,14 +54,14 @@ if ($Mode -eq "First") {
 
 foreach ($layer in $layers.Property) {
 	$disabled = $layers.GetValue($layer, $null)
-	if ($disabled -eq $null) {
+	if ($null -eq $disabled) {
 		continue;
 	}
 	if ($layer -eq $this_layer.Path) {
 		continue;
 	}
 
-	$new_layers += @(@{ Path = $layer; Disabled = $disabled})
+	$new_layers += @(@{ Path = $layer; Disabled = $disabled })
 }
 
 if ($Mode -eq "Last") {
