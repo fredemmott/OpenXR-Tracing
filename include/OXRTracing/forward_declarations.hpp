@@ -1,3 +1,4 @@
+
 // MIT License
 //
 // Copyright(c) 2021-2022 Matthieu Bucchianeri
@@ -23,7 +24,16 @@
 
 #pragma once
 
+#include <TraceLoggingProvider.h>
 #include <Windows.h>
-#include <OXRTracing/forward_declarations.hpp>
-#include <OXRTracing/macros.hpp>
-#include <OXRTracing/macros.gen.hpp>
+#include <openxr.h>
+
+#include <string>
+
+namespace OXRTracing {
+TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
+extern thread_local XrInstance gXrInstance;
+extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
+
+std::string to_string(XrPath path);
+} // namespace OXRTracing

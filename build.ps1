@@ -39,7 +39,8 @@ try {
     /Fe:XR_APILAYER_FREDEMMOTT_OXRTracing.dll `
     /LD `
     "$cwd/gen/src/layer.gen.cpp" `
-    "$cwd/src/layer.cpp"
+    "$cwd/src/layer.cpp" `
+    "$cwd/src/tracing.cpp"
 }
 finally {
   Set-Location $cwd

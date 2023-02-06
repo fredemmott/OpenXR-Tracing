@@ -28,12 +28,6 @@
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>
 
-namespace OXRTracing {
-TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
-static thread_local XrInstance gXrInstance{};
-extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
-} // namespace OXRTracing
-
 using namespace OXRTracing;
 
 static PFN_xrDestroyInstance next_xrDestroyInstance{ nullptr };

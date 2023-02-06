@@ -38,7 +38,9 @@ namespace OXRTracing {
 TRACELOGGING_DEFINE_PROVIDER(gTraceProvider, "FredEmmott.OpenXRTracing",
     (0x0f924f5f, 0x21f0, 0x513d, 0xa2, 0xab, 0x2e, 0xde, 0x80, 0x2e, 0x0b,
         0x8f));
+thread_local XrInstance gXrInstance {};
 PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr{ nullptr };
+
 } // namespace OXRTracing
 
 XrResult OXRTracing_xrGetInstanceProcAddr(

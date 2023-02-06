@@ -102,12 +102,14 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         return ret
 
     def genBaseTypeMacro(self, xr_type):
-        handwritten_types = {'XrVersion'}
-        if xr_type.name in handwritten_types:
-            return f"// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name)"
+        handwritten_types = {'XrVersion', 'XrPath'}
         if xr_type.type == 'XR_DEFINE_ATOM':
-            return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)'
-        return f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)'
+            ret = f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)'
+        else:
+            ret = f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)'
+        if xr_type.name in handwritten_types:
+            return '// EXCLUDED - HANDWRITTEN:\n// ' + ret
+        return ret
 
     def genEnumMacros(self):
         ret = ''
@@ -121,13 +123,13 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         return f'''
 namespace OXRTracing {{
 inline std::string to_string({xr_enum.name} value) {{
-	switch(value) {{
-		{newline.join([f'case {x.name}: return "{x.name}";' for x in values])}
-		default:
-			using BasicT = std::underlying_type_t<{xr_enum.name}>;
-			const auto basicValue = static_cast<BasicT>(value);
-			return std::format("Unknown {xr_enum.name}: {{}}", basicValue);
-	}}
+    switch(value) {{
+        {newline.join([f'case {x.name}: return "{x.name}";' for x in values])}
+        default:
+            using BasicT = std::underlying_type_t<{xr_enum.name}>;
+            const auto basicValue = static_cast<BasicT>(value);
+            return std::format("Unknown {xr_enum.name}: {{}}", basicValue);
+    }}
 }}
 }}
 #define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, name) TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
@@ -247,26 +249,26 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
         ret = '''
 XrResult OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance,
-	const char* nameCStr,
-	PFN_xrVoidFunction* function) {
+    const char* nameCStr,
+    PFN_xrVoidFunction* function) {
 
-	*function = nullptr;
-	const auto ret = gXrNextGetInstanceProcAddr(instance, nameCStr, function);
-	if (XR_FAILED(ret) || !*function) {
-		return ret;
-	}
-	const std::string_view name {nameCStr};
+    *function = nullptr;
+    const auto ret = gXrNextGetInstanceProcAddr(instance, nameCStr, function);
+    if (XR_FAILED(ret) || !*function) {
+        return ret;
+    }
+    const std::string_view name {nameCStr};
 '''
         for xr_command in self.getWrappedCommands():
             ret += f'''
 if (name == "{xr_command.name}") {{
-	next_{xr_command.name} = reinterpret_cast<PFN_{xr_command.name}>(*function);
-	*function = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_{xr_command.name});
-	return ret;
+    next_{xr_command.name} = reinterpret_cast<PFN_{xr_command.name}>(*function);
+    *function = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_{xr_command.name});
+    return ret;
 }}
 '''
         ret += '''
-	return ret;
+    return ret;
 }'''
         return ret
 
@@ -351,12 +353,6 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
 
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>
-
-namespace OXRTracing {
-	TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
-	static thread_local XrInstance gXrInstance {};
-	extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
-}
 
 using namespace OXRTracing;
 '''

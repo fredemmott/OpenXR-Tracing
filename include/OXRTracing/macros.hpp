@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <OXRTracing/forward_declarations.hpp>
 #include <openxr.h>
 
 #include <format>
@@ -100,6 +101,8 @@ inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
 
 #define OXRTL_ARGS_char_P_DA(x, name, count) \
 	TraceLoggingValue(::OXRTracing::to_string(x, count).c_str(), name)
+
+#define OXRTL_ARGS_XrPath(oxrtlIt, name) TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 // TODO: this is XrEventDataBuffer.varying
 // Ideally we should trace the real data for a subtype of XrEventDataBuffer

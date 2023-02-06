@@ -32,11 +32,14 @@
 ///// Generated macros for OpenXR base types /////
 //////////////////////////////////////////////////
 
-// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_XrVersion(oxrtlIt, name)
+// EXCLUDED - HANDWRITTEN:
+// #define OXRTL_ARGS_XrVersion(oxrtlIt, name) OXRTL_ARGS_uint64_t(oxrtlIt,
+// name)
 #define OXRTL_ARGS_XrFlags64(oxrtlIt, name) OXRTL_ARGS_uint64_t(oxrtlIt, name)
 #define OXRTL_ARGS_XrSystemId(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)
 #define OXRTL_ARGS_XrBool32(oxrtlIt, name) OXRTL_ARGS_uint32_t(oxrtlIt, name)
-#define OXRTL_ARGS_XrPath(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)
+// EXCLUDED - HANDWRITTEN:
+// #define OXRTL_ARGS_XrPath(oxrtlIt, name) OXRTL_ARGS_ATOM(oxrtlIt, name)
 #define OXRTL_ARGS_XrTime(oxrtlIt, name) OXRTL_ARGS_int64_t(oxrtlIt, name)
 #define OXRTL_ARGS_XrDuration(oxrtlIt, name) OXRTL_ARGS_int64_t(oxrtlIt, name)
 #define OXRTL_ARGS_XrInstance(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)

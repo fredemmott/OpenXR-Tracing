@@ -1,6 +1,5 @@
 // MIT License
 //
-// Copyright(c) 2021-2022 Matthieu Bucchianeri
 // Copyright(c) 2023 Fred Emmott
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,9 +20,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#include <OXRTracing.hpp>
 
-#include <Windows.h>
-#include <OXRTracing/forward_declarations.hpp>
-#include <OXRTracing/macros.hpp>
-#include <OXRTracing/macros.gen.hpp>
+namespace OXRTracing {
+
+std::string to_string(XrPath path)
+{
+
+	thread_local XrInstance sXrInstance{ nullptr };
+	thread_local PFN_xrPathToString sPathToString{ nullptr };
+
+	if (gXrInstance != sXrInstance) {
+		sXrInstance = gXrInstance;
+		sPathToString = nullptr;
+		if (gXrNextGetInstanceProcAddr) {
+			const auto result
+			    = gXrNextGetInstanceProcAddr(gXrInstance, "xrPathToString",
+			        reinterpret_cast<PFN_xrVoidFunction*>(&sPathToString));
+			if (XR_FAILED(result)) {
+				sPathToString = nullptr;
+			}
+		}
+	}
+
+	if (!sXrInstance && sPathToString) {
+		return std::format("{:#016x}", path);
+	}
+
+	char buffer[1024];
+	uint32_t size = std::size(buffer);
+	if (XR_FAILED(sPathToString(sXrInstance, path, size, &size, buffer))
+	    || size < 1) {
+		return std::format("{:#016x}", path);
+	}
+
+	const auto len = size - 1;
+
+	return std::format("{} ({:#016x})", std::string_view{ buffer, len }, path);
+}
+
+} // namespace OXRTracing
