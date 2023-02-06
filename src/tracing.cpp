@@ -43,7 +43,7 @@ namespace OXRTracing {
 std::string to_string(XrPath path)
 {
 	if (!path) {
-		return "[null]";
+		return "XR_NULL_PATH";
 	}
 
 	if (sCache.mXrInstance != gXrInstance) {
