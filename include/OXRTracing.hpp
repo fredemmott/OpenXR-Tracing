@@ -23,7 +23,11 @@
 
 #pragma once
 
+// clang-format off
 #include <Windows.h>
+// clang-format on
+
+#include <OXRTracing/forward_declarations.gen.hpp>
 #include <OXRTracing/forward_declarations.hpp>
-#include <OXRTracing/macros.hpp>
 #include <OXRTracing/macros.gen.hpp>
+#include <OXRTracing/macros.hpp>

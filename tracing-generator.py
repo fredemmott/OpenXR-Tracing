@@ -81,6 +81,13 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
             return len(xr_struct.members) == 2
         return False
 
+    def getWrappedCommands(self):
+        handwritten = ["xrGetInstanceProcAddr", 'xrCreateInstance']
+        skip = handwritten + self.no_trampoline_or_terminator
+        # TODO: self.ext_commands
+        all = self.core_commands
+        return [command for command in all if command.name not in skip]
+
     def outputGeneratedAuthorNote(self):
         pass
 
@@ -214,36 +221,11 @@ inline std::string to_string({xr_enum.name} value) {{
 
 
 class LayerOutputGenerator(BoilerplateOutputGenerator):
-    def makeParametersList(self, cmd):
-        parameters_list = ""
-        for param in cmd.params:
-            if parameters_list:
-                parameters_list += ', '
-            parameters_list += param.cdecl.strip()
-
-        return parameters_list
-
-    def makeArgumentsList(self, cmd):
-        arguments_list = ""
-        for param in cmd.params:
-            if arguments_list:
-                arguments_list += ', '
-            arguments_list += param.name
-
-        return arguments_list
-
-    def getWrappedCommands(self):
-        handwritten = ["xrGetInstanceProcAddr", 'xrCreateInstance']
-        skip = handwritten + self.no_trampoline_or_terminator
-        # TODO: self.ext_commands
-        all = self.core_commands
-        return [command for command in all if command.name not in skip]
-
     def genNextPFNDefinitions(self):
-        ret = ''
+        ret = 'namespace OXRTracing {\n'
         for xr_command in self.getWrappedCommands():
-            ret += f'static PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
-        return ret
+            ret += f'PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
+        return ret + '\n}'
 
     def genXrGetInstanceProcAddr(self):
         ret = '''
@@ -398,6 +380,32 @@ using namespace OXRTracing;
         BoilerplateOutputGenerator.endFile(self)
 
 
+class ForwardDeclarationsOutputGenerator(BoilerplateOutputGenerator):
+    def beginFile(self, genOpts):
+        BoilerplateOutputGenerator.beginFile(self, genOpts)
+        content = f'''
+#include <openxr.h>
+#include <OXRTracing.hpp>
+
+namespace OXRTracing {{
+'''
+        write(content, file=self.outFile)
+
+    def genNextPFNDeclarations(self):
+        ret = ''
+        for xr_command in self.getWrappedCommands():
+            ret += f'extern PFN_{xr_command.name} next_{xr_command.name};' + '\n'
+        return ret
+
+    def endFile(self):
+        content = f'''
+{self.genNextPFNDeclarations()}
+}}
+'''
+        write(content, file=self.outFile)
+        BoilerplateOutputGenerator.endFile(self)
+
+
 def generate(gen, gen_opts):
     registry = Registry(gen, gen_opts)
     registry.loadFile(os.path.join(
@@ -431,6 +439,22 @@ if __name__ == '__main__':
     gen_opts = AutomaticSourceGeneratorOptions(
         conventions=conventions,
         filename='layer.gen.cpp',
+        directory=out_dir,
+        apiname='openxr',
+        profile=None,
+        versions=featuresPat,
+        emitversions=featuresPat,
+        defaultExtensions='openxr',
+        addExtensions=None,
+        removeExtensions=None,
+        emitExtensions=extensionsPat)
+    generate(gen, gen_opts)
+
+    gen = ForwardDeclarationsOutputGenerator(diagFile=None)
+    out_dir = os.path.join(cur_dir, "gen", "include", "OXRTracing")
+    gen_opts = AutomaticSourceGeneratorOptions(
+        conventions=conventions,
+        filename='forward_declarations.gen.hpp',
         directory=out_dir,
         apiname='openxr',
         profile=None,

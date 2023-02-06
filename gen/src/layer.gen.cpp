@@ -30,76 +30,71 @@
 
 using namespace OXRTracing;
 
-static PFN_xrDestroyInstance next_xrDestroyInstance{ nullptr };
-static PFN_xrGetInstanceProperties next_xrGetInstanceProperties{ nullptr };
-static PFN_xrPollEvent next_xrPollEvent{ nullptr };
-static PFN_xrResultToString next_xrResultToString{ nullptr };
-static PFN_xrStructureTypeToString next_xrStructureTypeToString{ nullptr };
-static PFN_xrGetSystem next_xrGetSystem{ nullptr };
-static PFN_xrGetSystemProperties next_xrGetSystemProperties{ nullptr };
-static PFN_xrEnumerateEnvironmentBlendModes
-    next_xrEnumerateEnvironmentBlendModes{ nullptr };
-static PFN_xrCreateSession next_xrCreateSession{ nullptr };
-static PFN_xrDestroySession next_xrDestroySession{ nullptr };
-static PFN_xrEnumerateReferenceSpaces next_xrEnumerateReferenceSpaces{
+namespace OXRTracing {
+PFN_xrDestroyInstance next_xrDestroyInstance{ nullptr };
+PFN_xrGetInstanceProperties next_xrGetInstanceProperties{ nullptr };
+PFN_xrPollEvent next_xrPollEvent{ nullptr };
+PFN_xrResultToString next_xrResultToString{ nullptr };
+PFN_xrStructureTypeToString next_xrStructureTypeToString{ nullptr };
+PFN_xrGetSystem next_xrGetSystem{ nullptr };
+PFN_xrGetSystemProperties next_xrGetSystemProperties{ nullptr };
+PFN_xrEnumerateEnvironmentBlendModes next_xrEnumerateEnvironmentBlendModes{
 	nullptr
 };
-static PFN_xrCreateReferenceSpace next_xrCreateReferenceSpace{ nullptr };
-static PFN_xrGetReferenceSpaceBoundsRect next_xrGetReferenceSpaceBoundsRect{
+PFN_xrCreateSession next_xrCreateSession{ nullptr };
+PFN_xrDestroySession next_xrDestroySession{ nullptr };
+PFN_xrEnumerateReferenceSpaces next_xrEnumerateReferenceSpaces{ nullptr };
+PFN_xrCreateReferenceSpace next_xrCreateReferenceSpace{ nullptr };
+PFN_xrGetReferenceSpaceBoundsRect next_xrGetReferenceSpaceBoundsRect{ nullptr };
+PFN_xrCreateActionSpace next_xrCreateActionSpace{ nullptr };
+PFN_xrLocateSpace next_xrLocateSpace{ nullptr };
+PFN_xrDestroySpace next_xrDestroySpace{ nullptr };
+PFN_xrEnumerateViewConfigurations next_xrEnumerateViewConfigurations{ nullptr };
+PFN_xrGetViewConfigurationProperties next_xrGetViewConfigurationProperties{
 	nullptr
 };
-static PFN_xrCreateActionSpace next_xrCreateActionSpace{ nullptr };
-static PFN_xrLocateSpace next_xrLocateSpace{ nullptr };
-static PFN_xrDestroySpace next_xrDestroySpace{ nullptr };
-static PFN_xrEnumerateViewConfigurations next_xrEnumerateViewConfigurations{
+PFN_xrEnumerateViewConfigurationViews next_xrEnumerateViewConfigurationViews{
 	nullptr
 };
-static PFN_xrGetViewConfigurationProperties
-    next_xrGetViewConfigurationProperties{ nullptr };
-static PFN_xrEnumerateViewConfigurationViews
-    next_xrEnumerateViewConfigurationViews{ nullptr };
-static PFN_xrEnumerateSwapchainFormats next_xrEnumerateSwapchainFormats{
-	nullptr
-};
-static PFN_xrCreateSwapchain next_xrCreateSwapchain{ nullptr };
-static PFN_xrDestroySwapchain next_xrDestroySwapchain{ nullptr };
-static PFN_xrEnumerateSwapchainImages next_xrEnumerateSwapchainImages{
-	nullptr
-};
-static PFN_xrAcquireSwapchainImage next_xrAcquireSwapchainImage{ nullptr };
-static PFN_xrWaitSwapchainImage next_xrWaitSwapchainImage{ nullptr };
-static PFN_xrReleaseSwapchainImage next_xrReleaseSwapchainImage{ nullptr };
-static PFN_xrBeginSession next_xrBeginSession{ nullptr };
-static PFN_xrEndSession next_xrEndSession{ nullptr };
-static PFN_xrRequestExitSession next_xrRequestExitSession{ nullptr };
-static PFN_xrWaitFrame next_xrWaitFrame{ nullptr };
-static PFN_xrBeginFrame next_xrBeginFrame{ nullptr };
-static PFN_xrEndFrame next_xrEndFrame{ nullptr };
-static PFN_xrLocateViews next_xrLocateViews{ nullptr };
-static PFN_xrStringToPath next_xrStringToPath{ nullptr };
-static PFN_xrPathToString next_xrPathToString{ nullptr };
-static PFN_xrCreateActionSet next_xrCreateActionSet{ nullptr };
-static PFN_xrDestroyActionSet next_xrDestroyActionSet{ nullptr };
-static PFN_xrCreateAction next_xrCreateAction{ nullptr };
-static PFN_xrDestroyAction next_xrDestroyAction{ nullptr };
-static PFN_xrSuggestInteractionProfileBindings
+PFN_xrEnumerateSwapchainFormats next_xrEnumerateSwapchainFormats{ nullptr };
+PFN_xrCreateSwapchain next_xrCreateSwapchain{ nullptr };
+PFN_xrDestroySwapchain next_xrDestroySwapchain{ nullptr };
+PFN_xrEnumerateSwapchainImages next_xrEnumerateSwapchainImages{ nullptr };
+PFN_xrAcquireSwapchainImage next_xrAcquireSwapchainImage{ nullptr };
+PFN_xrWaitSwapchainImage next_xrWaitSwapchainImage{ nullptr };
+PFN_xrReleaseSwapchainImage next_xrReleaseSwapchainImage{ nullptr };
+PFN_xrBeginSession next_xrBeginSession{ nullptr };
+PFN_xrEndSession next_xrEndSession{ nullptr };
+PFN_xrRequestExitSession next_xrRequestExitSession{ nullptr };
+PFN_xrWaitFrame next_xrWaitFrame{ nullptr };
+PFN_xrBeginFrame next_xrBeginFrame{ nullptr };
+PFN_xrEndFrame next_xrEndFrame{ nullptr };
+PFN_xrLocateViews next_xrLocateViews{ nullptr };
+PFN_xrStringToPath next_xrStringToPath{ nullptr };
+PFN_xrPathToString next_xrPathToString{ nullptr };
+PFN_xrCreateActionSet next_xrCreateActionSet{ nullptr };
+PFN_xrDestroyActionSet next_xrDestroyActionSet{ nullptr };
+PFN_xrCreateAction next_xrCreateAction{ nullptr };
+PFN_xrDestroyAction next_xrDestroyAction{ nullptr };
+PFN_xrSuggestInteractionProfileBindings
     next_xrSuggestInteractionProfileBindings{ nullptr };
-static PFN_xrAttachSessionActionSets next_xrAttachSessionActionSets{ nullptr };
-static PFN_xrGetCurrentInteractionProfile next_xrGetCurrentInteractionProfile{
+PFN_xrAttachSessionActionSets next_xrAttachSessionActionSets{ nullptr };
+PFN_xrGetCurrentInteractionProfile next_xrGetCurrentInteractionProfile{
 	nullptr
 };
-static PFN_xrGetActionStateBoolean next_xrGetActionStateBoolean{ nullptr };
-static PFN_xrGetActionStateFloat next_xrGetActionStateFloat{ nullptr };
-static PFN_xrGetActionStateVector2f next_xrGetActionStateVector2f{ nullptr };
-static PFN_xrGetActionStatePose next_xrGetActionStatePose{ nullptr };
-static PFN_xrSyncActions next_xrSyncActions{ nullptr };
-static PFN_xrEnumerateBoundSourcesForAction
-    next_xrEnumerateBoundSourcesForAction{ nullptr };
-static PFN_xrGetInputSourceLocalizedName next_xrGetInputSourceLocalizedName{
+PFN_xrGetActionStateBoolean next_xrGetActionStateBoolean{ nullptr };
+PFN_xrGetActionStateFloat next_xrGetActionStateFloat{ nullptr };
+PFN_xrGetActionStateVector2f next_xrGetActionStateVector2f{ nullptr };
+PFN_xrGetActionStatePose next_xrGetActionStatePose{ nullptr };
+PFN_xrSyncActions next_xrSyncActions{ nullptr };
+PFN_xrEnumerateBoundSourcesForAction next_xrEnumerateBoundSourcesForAction{
 	nullptr
 };
-static PFN_xrApplyHapticFeedback next_xrApplyHapticFeedback{ nullptr };
-static PFN_xrStopHapticFeedback next_xrStopHapticFeedback{ nullptr };
+PFN_xrGetInputSourceLocalizedName next_xrGetInputSourceLocalizedName{ nullptr };
+PFN_xrApplyHapticFeedback next_xrApplyHapticFeedback{ nullptr };
+PFN_xrStopHapticFeedback next_xrStopHapticFeedback{ nullptr };
+
+} // namespace OXRTracing
 
 XrResult OXRTracing_xrDestroyInstance(XrInstance instance)
 {

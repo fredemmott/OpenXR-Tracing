@@ -30,35 +30,25 @@ std::string to_string(XrPath path)
 	if (!path) {
 		return "[null]";
 	}
-	thread_local XrInstance sXrInstance{ nullptr };
-	thread_local PFN_xrPathToString sPathToString{ nullptr };
+	thread_local XrInstance sXrInstance{};
 	thread_local std::unordered_map<XrPath, std::string> sCache;
 
 	if (gXrInstance != sXrInstance) {
-		sXrInstance = gXrInstance;
-		sPathToString = nullptr;
 		sCache.clear();
-		if (gXrNextGetInstanceProcAddr) {
-			const auto result
-			    = gXrNextGetInstanceProcAddr(gXrInstance, "xrPathToString",
-			        reinterpret_cast<PFN_xrVoidFunction*>(&sPathToString));
-			if (XR_FAILED(result)) {
-				sPathToString = nullptr;
-			}
-		}
+		sXrInstance = gXrInstance;
 	}
 
 	if (sCache.contains(path)) {
 		return sCache.at(path);
 	}
 
-	if (!sXrInstance && sPathToString) {
+	if (!(sXrInstance && next_xrPathToString)) {
 		return std::format("{:#016x}", path);
 	}
 
 	char buffer[1024];
 	uint32_t size = std::size(buffer);
-	if (XR_FAILED(sPathToString(sXrInstance, path, size, &size, buffer))
+	if (XR_FAILED(next_xrPathToString(sXrInstance, path, size, &size, buffer))
 	    || size < 1) {
 		return std::format("{:#016x}", path);
 	}
