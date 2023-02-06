@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WindowsPerformanceRecorder Version="1.0" Author="Microsoft Corporation" Copyright="Microsoft Corporation" Company="Microsoft Corporation">
   <Profiles>
-    <EventCollector Id="EventCollector_FredEmmott.OpenXRTracing" Name="FredEmmott.OpenXRTracing">
+    <EventCollector Id="EventCollector" Name="Event Collector">
       <BufferSize Value="64" />
       <Buffers Value="4" />
     </EventCollector>
 
     <EventProvider Id="EventProvider_FredEmmott.OpenXRTracing" Name="0f924f5f-21f0-513d-a2ab-2ede802e0b8f" />
+    <EventProvider Id="EventProvider_FredEmmott.OpenXRTracing.Alternate" Name="002f5359-fd69-56b8-a91f-26443c30187d" />
 
-    <Profile Id="FredEmmott.OpenXRTracing.Verbose.File" Name="FredEmmott.OpenXRTracing" Description="FredEmmott.OpenXRTracing" LoggingMode="File" DetailLevel="Verbose">
+    <Profile Id="FredEmmott.OpenXRTracing.Verbose.File" Name="FredEmmott.OpenXRTracing" Description="FredEmmott.OpenXRTracing" LoggingMode="File" DetailLevel="Verbose" Default="true">
       <Collectors>
-        <EventCollectorId Value="EventCollector_FredEmmott.OpenXRTracing">
+        <EventCollectorId Value="EventCollector">
           <EventProviders>
             <EventProviderId Value="EventProvider_FredEmmott.OpenXRTracing" />
+            <EventProviderId Value="EventProvider_FredEmmott.OpenXRTracing.Alternate" />
           </EventProviders>
         </EventCollectorId>
       </Collectors>
     </Profile>
-
-    <Profile Id="FredEmmott.OpenXRTracing.Light.File" Name="FredEmmott.OpenXRTracing" Description="FredEmmott.OpenXRTracing" Base="FredEmmott.OpenXRTracing.Verbose.File" LoggingMode="File" DetailLevel="Light" />
-    <Profile Id="FredEmmott.OpenXRTracing.Verbose.Memory" Name="FredEmmott.OpenXRTracing" Description="FredEmmott.OpenXRTracing" Base="FredEmmott.OpenXRTracing.Verbose.File" LoggingMode="Memory" DetailLevel="Verbose" />
-    <Profile Id="FredEmmott.OpenXRTracing.Light.Memory" Name="FredEmmott.OpenXRTracing" Description="FredEmmott.OpenXRTracing" Base="FredEmmott.OpenXRTracing.Verbose.File" LoggingMode="Memory" DetailLevel="Light" />
-
   </Profiles>
 </WindowsPerformanceRecorder>
