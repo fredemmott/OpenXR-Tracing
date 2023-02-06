@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <OXRTracing.hpp>
+#include <unordered_map>
 
 namespace OXRTracing {
 
@@ -29,10 +30,12 @@ std::string to_string(XrPath path)
 
 	thread_local XrInstance sXrInstance{ nullptr };
 	thread_local PFN_xrPathToString sPathToString{ nullptr };
+	thread_local std::unordered_map<XrPath, std::string> sCache;
 
 	if (gXrInstance != sXrInstance) {
 		sXrInstance = gXrInstance;
 		sPathToString = nullptr;
+		sCache.clear();
 		if (gXrNextGetInstanceProcAddr) {
 			const auto result
 			    = gXrNextGetInstanceProcAddr(gXrInstance, "xrPathToString",
@@ -41,6 +44,10 @@ std::string to_string(XrPath path)
 				sPathToString = nullptr;
 			}
 		}
+	}
+
+	if (sCache.contains(path)) {
+		return sCache.at(path);
 	}
 
 	if (!sXrInstance && sPathToString) {
@@ -56,7 +63,10 @@ std::string to_string(XrPath path)
 
 	const auto len = size - 1;
 
-	return std::format("{} ({:#016x})", std::string_view{ buffer, len }, path);
+	const auto ret
+	    = std::format("{:#016x} ()", path, std::string_view{ buffer, len });
+	sCache[path] = ret;
+	return ret;
 }
 
 } // namespace OXRTracing
