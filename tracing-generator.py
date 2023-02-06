@@ -167,7 +167,7 @@ inline std::string to_string({xr_enum.name} value) {{
             member_macros.append(
                 f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
         if xr_struct.name in handwritten:
-            struct_def =  f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name)'
+            struct_def = f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name)'
         elif member_macros:
             struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{", ".join(member_macros)}'
         else:
@@ -280,6 +280,32 @@ if (name == "{xr_command.name}") {{
             ret += self.genWrapper(xr_command)
         return ret
 
+    def genTraceStruct(self, name, xr_param, top_level=True):
+        struct_name = xr_param.type
+        xr_struct = next(
+            struct for struct in self.api_structures if struct_name == struct.name)
+        ret = ''
+        for member in xr_struct.members:
+            if top_level and not member.is_array:
+                continue
+            if member.is_static_array:
+                continue
+            pointer_count = member.pointer_count - 1
+            suffix = '' if pointer_count == 0 else '_' + ('P' * pointer_count)
+            ret += f'''
+{{
+	using Ti = decltype({xr_param.name}->{member.pointer_count_var});
+	for (Ti i = 0; i < {xr_param.name}->{member.pointer_count_var}; ++i) {{
+    	auto it = {xr_param.name}->{member.name}[i];
+		TraceLoggingWriteTagged(
+    		localActivity,
+    		"{name}_{member.name}",
+   			OXRTL_ARGS_{member.type}{suffix}(it, "element"));
+    }}
+}}
+'''
+        return ret
+
     def genWrapper(self, xr_command):
         # TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
         # to make different logs depending on the XrType
@@ -314,11 +340,13 @@ if (name == "{xr_command.name}") {{
             if param.is_const:
                 trace_in.append(trace_arg)
                 if is_struct:
-                    trace_next_in.append(param.name)
+                    trace_next_in.append(self.genTraceStruct(
+                        f'{xr_command.name}_{param.name}', param))
                 continue
             trace_out.append(trace_arg)
             if is_struct:
-                trace_next_out.append(param.name)
+                trace_next_out.append(self.genTraceStruct(
+                    f'{xr_command.name}_{param.name}', param))
 
         instance_state_pre = ''
         instance_state_post = ''
@@ -336,9 +364,9 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {instance_state_pre}
   TraceLoggingActivity<gTraceProvider> localActivity;
   TraceLoggingWriteStart(localActivity, {', '.join(trace_in)});
-  {newline.join([f'//XRTracing::TraceNext(localActivity, "{xr_command.name}_{x}", {x});' for x in trace_next_in])}
+  {newline.join(trace_next_in)}
   const auto ret = next_{xr_command.name}({', '.join(arguments)});
-  {newline.join([f'//XRTracing::TraceNext(localActivity, "{xr_command.name}_{x}", {x});' for x in trace_next_out])}
+  {newline.join(trace_next_out)}
   TraceLoggingWriteStop(localActivity, {', '.join(trace_out)});
   {instance_state_post}
   return ret;
