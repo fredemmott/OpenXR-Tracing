@@ -36,6 +36,6 @@ To finish collecting data and write an ETL file:
 
 If you're looking for an event log rather than profiling information, I recommend [Tabnalysis].
 
-[TraceLogging]: https://learn.microsoft.com/en-us/windows/win32/tracelogging/trace-logging-portal
+[Trace Logging]: https://learn.microsoft.com/en-us/windows/win32/tracelogging/trace-logging-portal
 [ETW]: https://learn.microsoft.com/en-us/windows/win32/etw/about-event-tracing
 [Tabnalysis]: https://apps.microsoft.com/store/detail/tabnalysis/9NQLK2M4RP4J
