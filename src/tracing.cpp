@@ -69,7 +69,7 @@ std::string to_string(XrPath path)
 	const auto len = size - 1;
 
 	const auto ret
-	    = std::format("{:#016x} ({})", path, std::string_view{ buffer, len });
+	    = std::format("{} ({:#016x})", std::string_view{ buffer, len }, path);
 	sPathCache[path] = ret;
 	return ret;
 }
