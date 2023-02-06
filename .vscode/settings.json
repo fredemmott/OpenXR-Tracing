@@ -5,5 +5,6 @@
 		"future": "cpp",
 		"system_error": "cpp",
 		"xlocale": "cpp"
-	}
+	},
+	"editor.formatOnSave": true
 }
