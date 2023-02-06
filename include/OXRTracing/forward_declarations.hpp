@@ -40,4 +40,9 @@ std::string to_string(XrPath path);
 using ConstCStr = const char*;
 std::string to_string(const ConstCStr* const arr, size_t count);
 
+void xrCreateActionSet_hook(XrResult result, XrInstance instance,
+    const XrActionSetCreateInfo* createInfo, XrActionSet* actionSet) noexcept;
+void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
+    const XrActionCreateInfo* createInfo, XrAction* action);
+
 } // namespace OXRTracing

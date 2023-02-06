@@ -289,6 +289,7 @@ if (name == "{xr_command.name}") {{
         return ret
 
     def genWrapper(self, xr_command):
+        hooked = {"xrCreateActionSet", "xrCreateAction"}
         # TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
         # to make different logs depending on the XrType
         newline = "\n"
@@ -341,6 +342,10 @@ if (gXrInstance == {xr_command.params[0].name}) {{
 '''
             else:
                 instance_state_pre = f'gXrInstance = {xr_command.params[0].name};'
+        hook = ''
+        if xr_command.name in hooked:
+            hook = f'{xr_command.name}_hook(ret, ' + \
+                ', '.join(arguments) + ');\n'
         return f'''
 XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {instance_state_pre}
@@ -349,6 +354,7 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {newline.join(trace_next_in)}
   const auto ret = next_{xr_command.name}({', '.join(arguments)});
   {newline.join(trace_next_out)}
+  {hook}
   TraceLoggingWriteStop(localActivity, {', '.join(trace_out)});
   {instance_state_post}
   return ret;

@@ -23,6 +23,21 @@
 #include <OXRTracing.hpp>
 #include <unordered_map>
 
+namespace {
+struct ActionInfo {
+	std::string mName;
+	XrActionSet mActionSet{};
+};
+
+struct Cache {
+	XrInstance mXrInstance{};
+	std::unordered_map<XrPath, std::string> mPaths;
+	std::unordered_map<XrActionSet, std::string> mActionSets;
+	std::unordered_map<XrAction, ActionInfo> mActions;
+};
+thread_local Cache sCache{};
+} // namespace
+
 namespace OXRTracing {
 
 std::string to_string(XrPath path)
@@ -30,25 +45,23 @@ std::string to_string(XrPath path)
 	if (!path) {
 		return "[null]";
 	}
-	thread_local XrInstance sXrInstance{};
-	thread_local std::unordered_map<XrPath, std::string> sCache;
 
-	if (gXrInstance != sXrInstance) {
-		sCache.clear();
-		sXrInstance = gXrInstance;
+	if (sCache.mXrInstance != gXrInstance) {
+		sCache = { gXrInstance };
 	}
 
-	if (sCache.contains(path)) {
-		return sCache.at(path);
+	auto& sPathCache = sCache.mPaths;
+	if (sPathCache.contains(path)) {
+		return sPathCache.at(path);
 	}
 
-	if (!(sXrInstance && next_xrPathToString)) {
+	if (!(gXrInstance && next_xrPathToString)) {
 		return std::format("{:#016x}", path);
 	}
 
 	char buffer[1024];
 	uint32_t size = std::size(buffer);
-	if (XR_FAILED(next_xrPathToString(sXrInstance, path, size, &size, buffer))
+	if (XR_FAILED(next_xrPathToString(gXrInstance, path, size, &size, buffer))
 	    || size < 1) {
 		return std::format("{:#016x}", path);
 	}
@@ -57,7 +70,7 @@ std::string to_string(XrPath path)
 
 	const auto ret
 	    = std::format("{:#016x} ({})", path, std::string_view{ buffer, len });
-	sCache[path] = ret;
+	sPathCache[path] = ret;
 	return ret;
 }
 
@@ -74,6 +87,36 @@ std::string to_string(const ConstCStr* const arr, size_t count)
 		out += arr[i];
 	}
 	return out;
+}
+
+void xrCreateActionSet_hook(XrResult result, XrInstance instance,
+    const XrActionSetCreateInfo* createInfo, XrActionSet* actionSet) noexcept
+{
+	if (!XR_SUCCEEDED(result)) {
+		return;
+	}
+
+	if (instance != sCache.mXrInstance) {
+		sCache = { instance };
+	}
+
+	sCache.mActionSets[*actionSet] = createInfo->actionSetName;
+}
+
+void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
+    const XrActionCreateInfo* createInfo, XrAction* action)
+{
+	if (!XR_SUCCEEDED(result)) {
+		return;
+	}
+	if (gXrInstance != sCache.mXrInstance) {
+		sCache = { gXrInstance };
+	}
+
+	sCache.mActions[*action] = {
+		.mName = createInfo->actionName,
+		.mActionSet = actionSet,
+	};
 }
 
 } // namespace OXRTracing

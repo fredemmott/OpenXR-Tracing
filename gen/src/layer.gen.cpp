@@ -763,6 +763,8 @@ XrResult OXRTracing_xrCreateActionSet(XrInstance instance,
 
 	const auto ret = next_xrCreateActionSet(instance, createInfo, actionSet);
 
+	xrCreateActionSet_hook(ret, instance, createInfo, actionSet);
+
 	TraceLoggingWriteStop(localActivity, "xrCreateActionSet",
 	    OXRTL_ARGS_XrResult(ret, "XrResult"),
 	    OXRTL_ARGS_XrActionSet((*actionSet), "actionSet"));
@@ -805,6 +807,8 @@ XrResult OXRTracing_xrCreateAction(XrActionSet actionSet,
 	}
 
 	const auto ret = next_xrCreateAction(actionSet, createInfo, action);
+
+	xrCreateAction_hook(ret, actionSet, createInfo, action);
 
 	TraceLoggingWriteStop(localActivity, "xrCreateAction",
 	    OXRTL_ARGS_XrResult(ret, "XrResult"),
