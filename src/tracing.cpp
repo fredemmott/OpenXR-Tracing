@@ -143,4 +143,18 @@ void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
 	};
 }
 
+void xrStringToPath_hook(
+    XrResult result, XrInstance instance, const char* pathString, XrPath* path)
+{
+	if (!XR_SUCCEEDED(result)) {
+		return;
+	}
+
+	if (gXrInstance != sCache.mXrInstance) {
+		sCache = { gXrInstance };
+	}
+
+	sCache.mPaths[*path] = std::format("{} ({:#016x})", pathString, *path);
+}
+
 } // namespace OXRTracing

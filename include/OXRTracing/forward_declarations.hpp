@@ -45,5 +45,7 @@ void xrCreateActionSet_hook(XrResult result, XrInstance instance,
     const XrActionSetCreateInfo* createInfo, XrActionSet* actionSet) noexcept;
 void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
     const XrActionCreateInfo* createInfo, XrAction* action);
+void xrStringToPath_hook(
+    XrResult result, XrInstance instance, const char* pathString, XrPath* path);
 
 } // namespace OXRTracing

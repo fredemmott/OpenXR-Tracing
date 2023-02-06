@@ -295,7 +295,7 @@ if (name == "{xr_command.name}") {{
         return ret
 
     def genWrapper(self, xr_command):
-        hooked = {"xrCreateActionSet", "xrCreateAction"}
+        hooked = {"xrCreateActionSet", "xrCreateAction", "xrStringToPath"}
         # TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
         # to make different logs depending on the XrType
         newline = "\n"
