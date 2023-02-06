@@ -27,6 +27,9 @@ namespace OXRTracing {
 
 std::string to_string(XrPath path)
 {
+	if (!path) {
+		return "[null]";
+	}
 	thread_local XrInstance sXrInstance{ nullptr };
 	thread_local PFN_xrPathToString sPathToString{ nullptr };
 	thread_local std::unordered_map<XrPath, std::string> sCache;
