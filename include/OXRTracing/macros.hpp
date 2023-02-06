@@ -62,8 +62,7 @@
 #else
 #define OXRTL_ARGS_HANDLE(x, name) \
 	TraceLoggingValue( \
-	    std::format("{:#016x}", static_cast<const uint64_t>(x)).c_str(), \
-	    name)
+	    std::format("{:#016x}", static_cast<const uint64_t>(x)).c_str(), name)
 #endif
 
 #define OXRTL_ARGS_void_P OXRTL_ARGS_POINTER
@@ -82,12 +81,12 @@
 	TraceLoggingCountedString(x, strnlen_s(x, maxLen), name)
 
 namespace OXRTracing {
-  using ConstCStr = const char*;
+using ConstCStr = const char*;
 inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
 {
-  if (count == 0) {
-    return "[empty]";
-  }
+	if (count == 0) {
+		return "[empty]";
+	}
 	std::string out;
 	for (size_t i = 0; i < count; ++i) {
 		if (!out.empty()) {
@@ -102,11 +101,13 @@ inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
 #define OXRTL_ARGS_char_P_DA(x, name, count) \
 	TraceLoggingValue(::OXRTracing::to_string(x, count).c_str(), name)
 
-#define OXRTL_ARGS_XrPath(oxrtlIt, name) TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+#define OXRTL_ARGS_XrPath(oxrtlIt, name) \
+	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
 
 // TODO: this is XrEventDataBuffer.varying
 // Ideally we should trace the real data for a subtype of XrEventDataBuffer
-#define OXRTL_ARGS_uint8_t_FA(x, name, count) TraceLoggingValue("binary data", name)
+#define OXRTL_ARGS_uint8_t_FA(x, name, count) \
+	TraceLoggingValue("binary data", name)
 
 //////////////////////////////////
 ///// Structs: special cases /////
@@ -115,4 +116,4 @@ inline constexpr std::string to_string(const ConstCStr* const arr, size_t count)
 // This doesn't have 'child' structs, but we still want to log the type
 #define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name) \
 	TraceLoggingStruct(1, name), \
-		OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type")
+	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type")
