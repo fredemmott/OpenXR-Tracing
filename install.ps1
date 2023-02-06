@@ -1,23 +1,46 @@
 param (
 	[Parameter(Mandatory)]
-	[ValidateSet('First', 'Last', 'Enable', 'Disable', 'Remove')]
+	[ValidateSet('First', 'Last', 'Enable', 'Disable', 'Remove', 'Before', 'After')]
 	[string] $Mode,
 	[Parameter(Mandatory = $False)]
-	[string] $LayerPath
+	[string] $LayerPath,
+	[Parameter(Mandatory = $False)]
+	[string] $RelativeTo
 )
-
-$key = "HKLM:\SOFTWARE\Khronos\OpenXR\1\ApiLayers\Implicit"
-if (-not (Test-Path $key)) {
-	New-Item -ItemPath $key -Frce
-}
-
-$layers = Get-Item $key
 
 if ("${LayerPath}" -eq "") {
 	$LayerPath = (Get-Item out/APILayer.json).FullName
 }
 
+if (-not (Test-Path $LayerPath)) {
+	Write-Host "LayerPath '${LayerPath}' does not exist."
+	return 1
+}
+
+if ($Mode -eq "Before" -or $Mode -eq "After") {
+	if ("${RelativeTo}" -eq "") {
+		Write-Host "Specify -RelativeTo if specifying -Mode Before or -Mode After."
+		return 1
+	}
+}
+
+
+$key = "HKLM:\SOFTWARE\Khronos\OpenXR\1\ApiLayers\Implicit"
+$layers = Get-Item $key
+
+if (-not (Test-Path $key)) {
+	New-Item -ItemPath $key -Frce
+}
+
 $have_this_layer = $null -ne $layers.GetValue($LayerPath, $null)
+
+if ("${RelativeTo}" -ne "") {
+	$have_relative_layer = $null -ne $layers.GetValue($RelativeTo, $null)
+	if (-not $have_relative_layer) {
+		Write-Host "-RelativeTo '${RelativeTo}' is not in the registry."
+		return 1
+	}
+}
 
 switch ($Mode) {
 	"Disable" {
@@ -66,7 +89,16 @@ foreach ($layer in $layers.Property) {
 		continue;
 	}
 
+	$relative = $RelativeTo -eq $layer
+	if ($relative -and $Mode -eq "Before") {
+		$new_layers += $this_layer
+	}
+
 	$new_layers += @(@{ Path = $layer; Disabled = $disabled })
+
+	if ($relative -and $Mode -eq "After") {
+		$new_layers += $this_layer
+	}
 }
 
 if ($Mode -eq "Last") {
