@@ -210,15 +210,27 @@ inline std::string to_string({xr_enum.name} value) {{
 {{
     using Ti = decltype(oxrtlIt.{xr_member.pointer_count_var});
     for (Ti i = 0; i < oxrtlIt.{xr_member.pointer_count_var}; ++i) {{
-        const auto& it = {'*' * (xr_member.pointer_count - 1)}oxrtlIt.{xr_member.name}[i];
         OXRTL_DUMP_{xr_member.type}(
             oxrtlActivity,
             oxrtlName "_{xr_member.name}",
             "element",
-            it);
+            ({'*' * (xr_member.pointer_count - 1)}oxrtlIt.{xr_member.name}[i]));
     }}
 }}
 '''.strip().replace('\n', '\\\n')
+
+    def genChildStructCase(self, xr_struct):
+        type_param = [it for it in xr_struct.members if it.name == "type"][0]
+        xr_type_value = type_param.values
+        return f'''
+case {xr_type_value}:
+    OXRTL_DUMP_{xr_struct.name}(
+            oxrtlActivity,
+            oxrtlName,
+            "{xr_type_value}",
+            (*reinterpret_cast<const {xr_struct.name}*>(&oxrtlIt)));
+    break;
+'''.strip()
 
     def genDumpStructMacro(self, xr_struct):
         complex_fields = []
@@ -229,16 +241,37 @@ inline std::string to_string({xr_enum.name} value) {{
         ret = f'#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
         if complex_fields:
             ret += "\\\n".join(complex_fields)
-        else:
-            ret += "\n"
-        ret += f'''
-#define OXRTL_DUMP_{xr_struct.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt) \\
-    TraceLoggingWriteTagged( \\
-        oxrtlActivity, \\
-        oxrtlName, \\
-        OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlValueName)); \\
+        ret += "\n"
+        ret += f'#define OXRTL_DUMP_{xr_struct.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
+        dump_base = f'''
+    TraceLoggingWriteTagged(
+        oxrtlActivity,
+        oxrtlName,
+        OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlValueName));
     OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt);
-'''
+'''.strip()
+        relations = self.getRelationGroupForBaseStruct(xr_struct.name)
+        if relations is None:
+            ret += dump_base.replace('\n', '\\\n')
+            return ret
+        descendants = []
+        to_visit = relations.child_struct_names
+        while to_visit:
+            name = to_visit.pop()
+            struct = self.getStruct(name)
+            descendants.append(struct)
+            relations = self.getRelationGroupForBaseStruct(name)
+            if relations:
+                to_visit += relations.child_struct_names
+        ret += f'''
+switch(oxrtlIt.type) {{
+{''.join([
+self.genChildStructCase(xr_struct)
+for xr_struct in descendants
+])}
+  default:
+    {dump_base}
+}}'''.strip().replace('\n', '\\\n')
         return ret
 
     def beginFile(self, genOpts):
@@ -330,8 +363,6 @@ OXRTL_DUMP_{struct_name}(
 
     def genWrapper(self, xr_command):
         hooked = {"xrCreateActionSet", "xrCreateAction", "xrStringToPath"}
-        # TODO: Check self.getRelationGroupForBaseStruct() is empty; if not, we want runtime logic (not macros)
-        # to make different logs depending on the XrType
         newline = "\n"
 
         parameters = []
