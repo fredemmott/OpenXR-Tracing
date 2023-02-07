@@ -49,7 +49,7 @@ switch ($Mode) {
 			return;
 		}
 		Set-ItemProperty -Path $key -Name $LayerPath -Value 1
-		Write-Host "Enabled layer ${LayerPath}."
+		Write-Host "Disabled layer ${LayerPath}."
 		return;
 	}
 	"Enable" {
