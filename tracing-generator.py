@@ -177,10 +177,12 @@ inline std::string to_string({xr_enum.name} value) {{
                 if member.is_static_array:
                     suffix += '_FA'
                     trailing += f', {member.static_array_sizes[0]}'
-                else:
+                elif member.type == 'char':
                     suffix += '_DA'
                     pointer_count -= 1
                     trailing += f', oxrtlIt.{member.pointer_count_var}'
+                else:
+                    continue
             if pointer_count > 0:
                 suffix = '_' + ('P' * pointer_count) + suffix
             member_macros.append(
