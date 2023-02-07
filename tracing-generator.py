@@ -92,10 +92,6 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 
 
 class MacroOutputGenerator(BoilerplateOutputGenerator):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._counter = 0
-
     def genBaseTypeMacros(self):
         handwritten = {'XrAction', 'XrActionSet'}
 
@@ -212,8 +208,7 @@ inline std::string to_string({xr_enum.name} value) {{
 
     def genDumpDynamicArrayMember(self, xr_member):
         index_type = f'decltype(oxrtlIt.{xr_member.pointer_count_var})'
-        self._counter += 1
-        i = f'oxrtlIndex_{self._counter}'
+        i = f'{xr_member.type}_i'
 
         return f'''
 {{
