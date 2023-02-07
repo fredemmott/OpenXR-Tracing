@@ -84,8 +84,7 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
     def getWrappedCommands(self):
         handwritten = ["xrGetInstanceProcAddr", 'xrCreateInstance']
         skip = handwritten + self.no_trampoline_or_terminator
-        # TODO: self.ext_commands
-        all = self.core_commands
+        all = self.core_commands + self.ext_commands
         return [command for command in all if command.name not in skip]
 
     def outputGeneratedAuthorNote(self):
@@ -493,7 +492,41 @@ def generate(gen, gen_opts):
 if __name__ == '__main__':
     conventions = OpenXRConventions()
     featuresPat = 'XR_VERSION_1_0'
-    extensionsPat = "^$"
+    # Extensions with TODOs currently generate invalidate C++ code
+    #
+    # Prefix patterns are just here for convenience, because the generator is
+    # compatible with all their *current* extensions; future extensions might
+    # break compatibility, or be unsuitable.
+    extensionsPat = '^' + ('|'.join([
+        'XR_EXT_active_action_set_priority',
+        'XR_EXT_dpad_binding',
+        # SKIPPED - let's not add noise: 'XR_ext_debug_utils',
+        'XR_EXT_eye_gaze_interaction',
+        'XR_EXT_hand_tracking',
+        'XR_EXT_hp_mixed_reality_controller',
+        'XR_EXT_palm_pose',
+        'XR_EXT_samsung_odyssey_controller',
+        'XR_EXT_performance_settings',
+        'XR_EXT_thermal_query',
+        'XR_EXT_view_configuration_depth_range',
+        'XR_KHR_binding_modification',
+        'XR_KHR_composition_layer.+',
+        # TODO: 'XR_KHR_visibility_mask',
+        'XR_AMALENCE_.+',
+        'XR_EPIC_.+',
+        # TODO: 'XR_HTC.+',
+        # TODO: 'XR_FB.+',
+        'XR_META_.+',
+        'XR_ML_.+',
+        'XR_MND_.+',
+        # TODO: 'XR_MSFT_.+',
+        # TODO: 'XR_OCULUS_.+',
+        'XR_ULTRALEAP_.+',
+        'XR_VALVE_.+',
+        'XR_VARJO_.+',
+        'XR_HTCX_.+',
+        'XR_MNDX_.+',
+    ])) + '$'
 
     gen = MacroOutputGenerator(diagFile=None)
     out_dir = os.path.join(cur_dir, "gen", "include", "OXRTracing")
