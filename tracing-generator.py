@@ -108,10 +108,17 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         for xr_type in self.api_flags:
             ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
 
-        for xr_type in self.api_base_types:
+        for xr_type in (self.api_base_types + self.api_handles):
             ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
-        for xr_type in self.api_handles:
-            ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
+
+        for xr_type in (self.api_base_types + self.api_handles):
+            ret += f'''
+#define OXRTL_DUMP_{xr_type.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
+    TraceLoggingWriteTagged(
+        oxrtlActivity,
+        oxrtlName,
+        OXRTL_ARGS_{xr_type.name}(oxrtlIt, oxrtlValueName));
+'''.strip().replace('\n', '\\\n') + '\n'
         return ret
 
     def genBaseTypeMacro(self, xr_type):
@@ -190,7 +197,49 @@ inline std::string to_string({xr_enum.name} value) {{
 #define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, name) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), name)
 #define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
+{self.genDumpStructMacro(xr_struct)}
 '''
+
+    def genDumpComplexMember(self, xr_member):
+        if xr_member.is_array and not xr_member.is_static_array:
+            return self.genDumpDynamicArrayMember(xr_member)
+        return None
+
+    def genDumpDynamicArrayMember(self, xr_member):
+        return f'''
+{{
+    using Ti = decltype(oxrtlIt.{xr_member.pointer_count_var});
+    for (Ti i = 0; i < oxrtlIt.{xr_member.pointer_count_var}; ++i) {{
+        const auto& it = {'*' * (xr_member.pointer_count - 1)}oxrtlIt.{xr_member.name}[i];
+        OXRTL_DUMP_{xr_member.type}(
+            oxrtlActivity,
+            oxrtlName "_{xr_member.name}",
+            "element",
+            it);
+    }}
+}}
+'''.strip().replace('\n', '\\\n')
+
+    def genDumpStructMacro(self, xr_struct):
+        complex_fields = []
+        for member in xr_struct.members:
+            member_dumper = self.genDumpComplexMember(member)
+            if member_dumper is not None:
+                complex_fields.append(member_dumper.strip())
+        ret = f'#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
+        if complex_fields:
+            ret += "\\\n".join(complex_fields)
+        else:
+            ret += "\n"
+        ret += f'''
+#define OXRTL_DUMP_{xr_struct.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt) \\
+    TraceLoggingWriteTagged( \\
+        oxrtlActivity, \\
+        oxrtlName, \\
+        OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlValueName)); \\
+    OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt);
+'''
+        return ret
 
     def beginFile(self, genOpts):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
@@ -268,31 +317,16 @@ if (name == "{xr_command.name}") {{
             ret += self.genWrapper(xr_command)
         return ret
 
-    def genTraceStruct(self, name, xr_param, top_level=True):
+    def genTraceStruct(self, command_name, xr_param, top_level=True):
         struct_name = xr_param.type
-        xr_struct = next(
-            struct for struct in self.api_structures if struct_name == struct.name)
-        ret = ''
-        for member in xr_struct.members:
-            if top_level and not member.is_array:
-                continue
-            if member.is_static_array:
-                continue
-            pointer_count = member.pointer_count - 1
-            suffix = '' if pointer_count == 0 else '_' + ('P' * pointer_count)
-            ret += f'''
-{{
-	using Ti = decltype({xr_param.name}->{member.pointer_count_var});
-	for (Ti i = 0; i < {xr_param.name}->{member.pointer_count_var}; ++i) {{
-    	auto it = {xr_param.name}->{member.name}[i];
-		TraceLoggingWriteTagged(
-    		localActivity,
-    		"{name}_{member.name}",
-   			OXRTL_ARGS_{member.type}{suffix}(it, "element"));
-    }}
-}}
-'''
-        return ret
+        return f'''
+OXRTL_DUMP_{struct_name}(
+    localActivity,
+    "{command_name}",
+    "{xr_param.name}",
+    (*{xr_param.name})
+);
+'''.strip()
 
     def genWrapper(self, xr_command):
         hooked = {"xrCreateActionSet", "xrCreateAction", "xrStringToPath"}
@@ -329,13 +363,13 @@ if (name == "{xr_command.name}") {{
             if param.is_const:
                 trace_in.append(trace_arg)
                 if is_struct:
-                    trace_next_in.append(self.genTraceStruct(
-                        f'{xr_command.name}_{param.name}', param))
+                    trace_next_in.append(
+                        self.genTraceStruct(xr_command.name, param))
                 continue
             trace_out.append(trace_arg)
             if is_struct:
                 trace_next_out.append(self.genTraceStruct(
-                    f'{xr_command.name}_{param.name}', param))
+                    xr_command.name, param))
 
         instance_state_pre = ''
         instance_state_post = ''
