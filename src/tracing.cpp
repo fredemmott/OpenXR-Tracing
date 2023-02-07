@@ -23,6 +23,8 @@
 #include <OXRTracing.hpp>
 #include <unordered_map>
 
+namespace OXRTracing {
+
 namespace {
 struct ActionInfo {
 	std::string mName;
@@ -36,9 +38,15 @@ struct Cache {
 	std::unordered_map<XrAction, ActionInfo> mActions;
 };
 thread_local Cache sCache{};
-} // namespace
 
-namespace OXRTracing {
+static inline void ValidateCache(XrInstance instance = gXrInstance)
+{
+	if (sCache.mXrInstance != instance) {
+		sCache = { instance };
+	}
+}
+
+} // namespace
 
 std::string to_string(XrPath path)
 {
@@ -46,9 +54,7 @@ std::string to_string(XrPath path)
 		return "XR_NULL_PATH";
 	}
 
-	if (sCache.mXrInstance != gXrInstance) {
-		sCache = { gXrInstance };
-	}
+	ValidateCache();
 
 	auto& sPathCache = sCache.mPaths;
 	if (sPathCache.contains(path)) {
@@ -120,9 +126,7 @@ void xrCreateActionSet_hook(XrResult result, XrInstance instance,
 		return;
 	}
 
-	if (instance != sCache.mXrInstance) {
-		sCache = { instance };
-	}
+	ValidateCache(instance);
 
 	sCache.mActionSets[*actionSet] = createInfo->actionSetName;
 }
@@ -133,9 +137,8 @@ void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
 	if (!XR_SUCCEEDED(result)) {
 		return;
 	}
-	if (gXrInstance != sCache.mXrInstance) {
-		sCache = { gXrInstance };
-	}
+
+	ValidateCache();
 
 	sCache.mActions[*action] = {
 		.mName = createInfo->actionName,
@@ -150,9 +153,7 @@ void xrStringToPath_hook(
 		return;
 	}
 
-	if (gXrInstance != sCache.mXrInstance) {
-		sCache = { gXrInstance };
-	}
+	ValidateCache(instance);
 
 	sCache.mPaths[*path] = std::format("{} ({:#016x})", pathString, *path);
 }
