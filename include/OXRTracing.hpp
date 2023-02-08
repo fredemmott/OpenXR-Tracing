@@ -34,5 +34,6 @@
 
 #include <OXRTracing/forward_declarations.gen.hpp>
 #include <OXRTracing/forward_declarations.hpp>
-#include <OXRTracing/macros.gen.hpp>
+
 #include <OXRTracing/macros.hpp>
+#include <OXRTracing/macros.gen.hpp>

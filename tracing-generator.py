@@ -50,6 +50,25 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
         self.api_constants = []
         self._fixed_array_limit = 16
 
+    def hasNextDumper(self, xr_struct):
+        if not [member for member in xr_struct.members if member.name == 'next']:
+            return False
+        nexts = self.getNextStructRelationGroupForBaseStruct(xr_struct.name)
+        if nexts is not None:
+            return True
+        for group in self._struct_relation_groups.values():
+            if xr_struct.name in group.child_struct_names:
+                # We should be iterating over the parent, so
+                # don't double-print, and hopefully save some
+                # cl.exe memory...
+                return False
+        return True
+
+    def getNextDumperDecl(self, xr_struct):
+        if not self.hasNextDumper(xr_struct):
+            return None
+        return f'inline void OXRTL_DUMP_{xr_struct.name}_NEXT(::TraceLoggingActivity<::OXRTracing::gTraceProvider>& oxrtlActivity, const char*, const {xr_struct.name}& oxrtlIt)'
+
     def genEnum(self, enum_info, name, alias):
         super().genEnum(enum_info, name, alias)
         if alias:
@@ -226,6 +245,13 @@ inline std::string to_string({xr_enum.name} value) {{
             ret += self.genStructMacro(xr_struct) + "\n"
         return ret
 
+    def genStructNextDumpers(self):
+        ret = ''
+        for xr_struct in self.api_structures:
+            if self.hasNextDumper(xr_struct):
+                ret += self.genStructNextDumper(xr_struct) + "\n"
+        return ret
+
     def genStructMacro(self, xr_struct):
         handwritten = {'XrEventDataBuffer'}
         member_macros = []
@@ -240,7 +266,7 @@ inline std::string to_string({xr_enum.name} value) {{
                 continue
             suffix = ''
             trailing = ''
-            value = f'oxrtlIt.{member.name}'
+            value = f'(oxrtlIt.{member.name})'
             pointer_count = member.pointer_count
             if member.is_array:
                 if member.is_static_array:
@@ -270,26 +296,19 @@ inline std::string to_string({xr_enum.name} value) {{
             struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName) TraceLoggingValue(oxrtlName)'
         return f'''
 {struct_def}
-{self.genDumpNextMacro(xr_struct)}
 {self.genDumpStructMacro(xr_struct)}
 '''
 
-    def genDumpNextMacro(self, xr_struct):
-        if not [member for member in xr_struct.members if member.name == 'next']:
+    def genStructNextDumper(self, xr_struct):
+        func_decl = self.getNextDumperDecl(xr_struct)
+        if not func_decl:
             return ''
-        ret = f'#define OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)'
         nexts = self.getNextStructRelationGroupForBaseStruct(xr_struct.name)
         if nexts is not None:
             nexts = nexts.child_struct_names.copy()
         else:
-            for group in self._struct_relation_groups.values():
-                if xr_struct.name in group.child_struct_names:
-                    # We should be iterating over the parent, so
-                    # don't double-print, and hopefully save some
-                    # cl.exe memory...
-                    return ret
             nexts = []
-        it = f'oxrtl{xr_struct.name}_NextIt'
+        it = f'oxrtlNextIt_{xr_struct.name}'
         cases = []
         if nexts:
             for name in nexts:
@@ -300,44 +319,48 @@ inline std::string to_string({xr_enum.name} value) {{
                     p for p in child_struct.members if p.name == 'type'][0]
                 xr_type_value = type_param.values
                 cases.append(f'''
-    case {xr_type_value}:
-        OXRTL_DUMP_{child_struct.name}(
-            oxrtlActivity,
-            "{child_struct.name}_next",
-            "{xr_type_value}",
-            (*reinterpret_cast<const {child_struct.name}*>({it})));
+    case {xr_type_value}: {{
+            const auto {it}_as_{child_struct.name} = *reinterpret_cast<const {child_struct.name}*>({it});
+            OXRTL_DUMP_{child_struct.name}(
+                oxrtlActivity,
+                "{child_struct.name}_next",
+                "{xr_type_value}",
+                {it}_as_{child_struct.name});
+        }}
         continue;
 '''.strip())
 
         if not cases:
-            ret += f'''
-for (
-    auto {it} = reinterpret_cast<const XrBaseInStructure*>(oxrtlIt.next);
-    {it};
-    {it} = reinterpret_cast<const XrBaseInStructure*>({it}->next)) {{
-    TraceLoggingWriteTagged(
-        oxrtlActivity,
-        "{xr_struct.name}_next",
-        OXRTL_ARGS_XrStructureType({it}->type, "type"));
-}}
-'''.strip()
-            return ret.replace('\n', '\\\n')
-        ret += f'''
-for (
-    auto {it} = reinterpret_cast<const XrBaseInStructure*>(oxrtlIt.next);
-    {it};
-    {it} = reinterpret_cast<const XrBaseInStructure*>({it}->next)) {{
-    switch ({it}->type) {{
-        {' '.join(cases)}
-        default:
-            TraceLoggingWriteTagged(
-                oxrtlActivity,
-                "{xr_struct.name}_next",
-                OXRTL_ARGS_XrStructureType({it}->type, "type"));
+            return f'''
+{func_decl} {{
+    for (
+        auto {it} = reinterpret_cast<const XrBaseInStructure*>(oxrtlIt.next);
+        {it};
+        {it} = reinterpret_cast<const XrBaseInStructure*>({it}->next)) {{
+        TraceLoggingWriteTagged(
+            oxrtlActivity,
+            "{xr_struct.name}_next",
+            OXRTL_ARGS_XrStructureType(({it}->type), "type"));
     }}
 }}
 '''.strip()
-        return ret.replace('\n', '\\\n')
+        return f'''
+{func_decl} {{
+    for (
+        auto {it} = reinterpret_cast<const XrBaseInStructure*>(oxrtlIt.next);
+        {it};
+        {it} = reinterpret_cast<const XrBaseInStructure*>({it}->next)) {{
+        switch ({it}->type) {{
+            {' '.join(cases)}
+            default:
+                TraceLoggingWriteTagged(
+                    oxrtlActivity,
+                    "{xr_struct.name}_next",
+                    OXRTL_ARGS_XrStructureType(({it}->type), "type"));
+        }}
+    }}
+}}
+'''.strip()
 
     def isBinaryMember(self, xr_member):
         if not xr_member.is_array:
@@ -423,9 +446,9 @@ case {xr_type_value}:
             if member_dumper is not None:
                 complex_fields.append(member_dumper.strip())
         ret = f'#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
-        if [it for it in xr_struct.members if it.name == 'next']:
+        if self.hasNextDumper(xr_struct):
             ret += '\\\n' + \
-                f'OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)'
+                f'OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt);'
         if complex_fields:
             ret += "\\\n".join(complex_fields)
         ret += "\n"
@@ -469,6 +492,7 @@ for xr_struct in descendants
 // clang-format off
 #include <Windows.h>
 #include <Unknwn.h>
+#include <TraceLoggingActivity.h>
 // clang-format on
 
 #define XR_USE_PLATFORM_WIN32 1
@@ -476,6 +500,10 @@ for xr_struct in descendants
 #include <openxr/openxr_platform.h>
 
 #include <format>
+
+#include <OXRTracing/macros.hpp>
+#include <OXRTracing/forward_declarations.hpp>
+#include <OXRTracing/forward_declarations.gen.hpp>
 ''', file=self.outFile)
 
     def endFile(self):
@@ -503,6 +531,12 @@ for xr_struct in descendants
 ///////////////////////////////////////////////
 
 {self.genStructMacros()}
+
+//////////////////////////////////////////////////////
+///// Generated `next dumpers for OpenXR structs /////
+//////////////////////////////////////////////////////
+
+{self.genStructNextDumpers()}
 '''
         write(contents, file=self.outFile)
         BoilerplateOutputGenerator.endFile(self)
@@ -676,6 +710,9 @@ class ForwardDeclarationsOutputGenerator(BoilerplateOutputGenerator):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
         content = f'''
 #include <OXRTracing.hpp>
+#include <OXRTracing/forward_declarations.hpp>
+
+#include <TraceLoggingActivity.h>
 
 namespace OXRTracing {{
 '''
@@ -685,6 +722,14 @@ namespace OXRTracing {{
         ret = ''
         for xr_command in self.getWrappedCommands():
             ret += f'extern PFN_{xr_command.name} next_{xr_command.name};' + '\n'
+        return ret
+
+    def genDumpingFunctionDeclarations(self):
+        ret = ''
+        for xr_struct in self.api_structures:
+            decl = self.getNextDumperDecl(xr_struct)
+            if decl:
+                ret += decl + ';\n'
         return ret
 
     def genTracingFunctionDeclarations(self):
@@ -700,6 +745,8 @@ namespace OXRTracing {{
         content = f'''
 {self.genNextPFNDeclarations()}
 }}
+
+{self.genDumpingFunctionDeclarations()}
 
 {self.genTracingFunctionDeclarations()}
 '''
