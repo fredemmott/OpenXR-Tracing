@@ -41,6 +41,29 @@ from automatic_source_generator import AutomaticSourceOutputGenerator, Automatic
 class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
     '''Common generator utilities and formatting.'''
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._next_structs = {}
+
+    def genStructUnion(self, type_info, type_category, type_name, alias):
+        super().genStructUnion(type_info, type_category, type_name, alias)
+        if type_category != "struct":
+            return
+        next_of = type_info.elem.get('structextends')
+        if not next_of:
+            return
+        group = self._next_structs.get(next_of)
+        if not group:
+            group = self.StructRelationGroup(
+                generic_struct_name=next_of,
+                child_struct_names=[]
+            )
+            self._next_structs[next_of] = group
+        group.child_struct_names.append(type_name)
+
+    def getNextStructRelationGroupForBaseStruct(self, name):
+        return self._next_structs.get(name)
+
     def outputGeneratedHeaderWarning(self):
         warning = '''// *********** THIS FILE IS GENERATED - DO NOT EDIT ***********'''
         write(warning, file=self.outFile)
@@ -198,8 +221,76 @@ inline std::string to_string({xr_enum.name} value) {{
 #define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, name) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), name)
 #define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
 #define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
+{self.genDumpNextMacro(xr_struct)}
 {self.genDumpStructMacro(xr_struct)}
 '''
+
+    def genDumpNextMacro(self, xr_struct):
+        ret = f'#define OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)'
+        if not [member for member in xr_struct.members if member.name == 'next']:
+            return ret
+        nexts = self.getNextStructRelationGroupForBaseStruct(xr_struct.name)
+        if nexts is not None:
+            nexts = nexts.child_struct_names.copy()
+        else:
+            nexts = []
+        for parent_name in self._struct_relation_groups:
+            group = self.getRelationGroupForBaseStruct(parent_name)
+            if xr_struct.name not in group.child_struct_names:
+                continue
+            parent_nexts = self.getNextStructRelationGroupForBaseStruct(
+                group.generic_struct_name)
+            if parent_nexts:
+                nexts += parent_nexts.child_struct_names
+        it = f'oxrtl{xr_struct.name}_NextIt'
+        cases = []
+        if nexts:
+            for name in nexts:
+                child_struct = self.getStruct(name)
+                if not child_struct:
+                    continue
+                type_param = [
+                    p for p in child_struct.members if p.name == 'type'][0]
+                xr_type_value = type_param.values
+                cases.append(f'''
+    case {xr_type_value}:
+        OXRTL_DUMP_{child_struct.name}(
+            oxrtlActivity,
+            "{child_struct.name}_next",
+            "{xr_type_value}",
+            (*reinterpret_cast<const {child_struct.name}*>({it})));
+        continue;
+'''.strip())
+
+        if not cases:
+            ret += f'''
+for (
+    auto {it} = reinterpret_cast<const XrBaseInStructure*>(oxrtlIt.next);
+    {it};
+    {it} = reinterpret_cast<const XrBaseInStructure*>({it}->next)) {{
+    TraceLoggingWriteTagged(
+        oxrtlActivity,
+        "{xr_struct.name}_next",
+        OXRTL_ARGS_XrStructureType({it}->type, "type"));
+}}
+'''.strip()
+            return ret.replace('\n', '\\\n')
+        ret += f'''
+for (
+    auto {it} = reinterpret_cast<const XrBaseInStructure*>(oxrtlIt.next);
+    {it};
+    {it} = reinterpret_cast<const XrBaseInStructure*>({it}->next)) {{
+    switch ({it}->type) {{
+        {' '.join(cases)}
+        default:
+            TraceLoggingWriteTagged(
+                oxrtlActivity,
+                "{xr_struct.name}_next",
+                OXRTL_ARGS_XrStructureType({it}->type, "type"));
+    }}
+}}
+'''.strip()
+        return ret.replace('\n', '\\\n')
 
     def genDumpComplexMember(self, xr_member):
         if xr_member.is_array and not xr_member.is_static_array:
@@ -241,7 +332,10 @@ case {xr_type_value}:
             member_dumper = self.genDumpComplexMember(member)
             if member_dumper is not None:
                 complex_fields.append(member_dumper.strip())
-        ret = f'#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
+        ret = f'''
+#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
+    OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)
+'''.strip().replace('\n', '\\\n')
         if complex_fields:
             ret += "\\\n".join(complex_fields)
         ret += "\n"
@@ -258,7 +352,7 @@ case {xr_type_value}:
             ret += dump_base.replace('\n', '\\\n')
             return ret
         descendants = []
-        to_visit = relations.child_struct_names
+        to_visit = relations.child_struct_names.copy()
         while to_visit:
             name = to_visit.pop()
             struct = self.getStruct(name)
@@ -501,25 +595,14 @@ if __name__ == '__main__':
     # Prefix patterns are just here for convenience, because the generator is
     # compatible with all their *current* extensions; future extensions might
     # break compatibility, or be unsuitable.
-    extensionsPat = '^' + ('|'.join([
-        'XR_EXT_active_action_set_priority',
-        'XR_EXT_dpad_binding',
-        # SKIPPED - let's not add noise: 'XR_ext_debug_utils',
-        'XR_EXT_eye_gaze_interaction',
-        'XR_EXT_hand_tracking',
-        'XR_EXT_hp_mixed_reality_controller',
-        'XR_EXT_palm_pose',
-        'XR_EXT_samsung_odyssey_controller',
-        'XR_EXT_performance_settings',
-        'XR_EXT_thermal_query',
-        'XR_EXT_view_configuration_depth_range',
-        'XR_KHR_binding_modification',
-        'XR_KHR_composition_layer.+',
-        # TODO: 'XR_KHR_visibility_mask',
+    extensionsPat = '^(' + ('|'.join([
+        'XR_EXT_.+',
+        'XR_KHR_.+',
         'XR_AMALENCE_.+',
         'XR_EPIC_.+',
         # TODO: 'XR_HTC.+',
         # TODO: 'XR_FB.+',
+        'XR_FB_spatial_entity',  # required, otherwise the OpenXR scripts omit XrUuidExt
         'XR_META_.+',
         'XR_ML_.+',
         'XR_MND_.+',
@@ -530,7 +613,27 @@ if __name__ == '__main__':
         'XR_VARJO_.+',
         'XR_HTCX_.+',
         'XR_MNDX_.+',
-    ])) + '$'
+    ])) + ')$'
+    excludeExtensionsPat = '^(' + ('|'.join([
+        # Skip other platform APIs
+        '.+android.+',
+        'XR_KHR_loader.+',
+        # Skip all graphics APIs
+        #
+        # These could be handled, just doesn't seem worth dealing with the various types
+        # defined in external SDKs and headers.
+        '.+vulkan.*',
+        '.+D3D11.*',
+        '.+D3D12.*',
+        '.+opengl.*',
+        '.+_egl_.+',
+        # Skip debugging/profiling extensions
+        'XR_EXT_debug_utils',
+        'XR_KHR_convert_timespec_time',
+        'XR_KHR_win32_convert_performance_counter_time',
+        # TODO: extensions that currently don't work due to bugs in OpenXR-Tracing
+        'XR_KHR_visibility_mask',
+    ])) + ')$'
 
     gen = MacroOutputGenerator(diagFile=None)
     out_dir = os.path.join(cur_dir, "gen", "include", "OXRTracing")
@@ -543,8 +646,8 @@ if __name__ == '__main__':
         versions=featuresPat,
         emitversions=featuresPat,
         defaultExtensions='openxr',
-        addExtensions=None,
-        removeExtensions=None,
+        addExtensions=extensionsPat,
+        removeExtensions=excludeExtensionsPat,
         emitExtensions=extensionsPat)
     generate(gen, gen_opts)
 
@@ -559,8 +662,8 @@ if __name__ == '__main__':
         versions=featuresPat,
         emitversions=featuresPat,
         defaultExtensions='openxr',
-        addExtensions=None,
-        removeExtensions=None,
+        addExtensions=extensionsPat,
+        removeExtensions=excludeExtensionsPat,
         emitExtensions=extensionsPat)
     generate(gen, gen_opts)
 
@@ -575,7 +678,7 @@ if __name__ == '__main__':
         versions=featuresPat,
         emitversions=featuresPat,
         defaultExtensions='openxr',
-        addExtensions=None,
-        removeExtensions=None,
+        addExtensions=extensionsPat,
+        removeExtensions=excludeExtensionsPat,
         emitExtensions=extensionsPat)
     generate(gen, gen_opts)

@@ -1,5 +1,6 @@
 param(
   [switch] $SkipCodegen = $false,
+  [switch] $SkipCompile = $false,
   [switch] $Clang = $false
 )
 
@@ -14,6 +15,10 @@ if (-not $SkipCodegen) {
 
 foreach ($generated in Get-ChildItem -Path gen -Recurse -Include *.cpp, *.hpp) {
   clang-format -i $generated.FullName
+}
+
+if ($SkipCompile) {
+  return
 }
 
 $cwd = Get-Location
