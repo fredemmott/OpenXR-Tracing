@@ -48,6 +48,7 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
         self.ConstantData = namedtuple('ConstantData',
                                        ['name', 'value'])
         self.api_constants = []
+        self._fixed_array_limit = 16
 
     def genEnum(self, enum_info, name, alias):
         super().genEnum(enum_info, name, alias)
@@ -239,20 +240,22 @@ inline std::string to_string({xr_enum.name} value) {{
                 continue
             if self.isEmptyStruct(member.type):
                 continue
+            if self.isBinaryMember(member):
+                continue
             suffix = ''
             trailing = ''
             pointer_count = member.pointer_count
             if member.is_array:
                 if member.is_static_array:
                     if self.isStruct(member.type):
+                        size = self.getFixedArraySize(member)
+                        if size > self._fixed_array_limit:
+                            member_macros.append(
+                                f'TraceLoggingValue("array<{member.type},{size}>", oxrtlName "_{member.name}")')
                         continue  # handled by complex member dumping
                     suffix += '_FA'
                     trailing += f', {member.static_array_sizes[0]}'
                 elif member.type == 'char':
-                    if member.name == 'buffer':
-                        member_macros.append(
-                            'OXRTL_ARGS_POINTER(oxrtlIt.buffer, "buffer")')
-                        continue
                     suffix += '_DA'
                     pointer_count -= 1
                     trailing += f', oxrtlIt.{member.pointer_count_var}'
@@ -336,7 +339,20 @@ for (
 '''.strip()
         return ret.replace('\n', '\\\n')
 
+    def isBinaryMember(self, xr_member):
+        if not xr_member.is_array:
+            return False
+        if xr_member.type == 'uint8_t':
+            return True
+        if xr_member.type != 'char':
+            return False
+        if xr_member.name in {'buffer', 'varying', 'bytes'}:
+            return True
+        return False
+
     def genDumpComplexMember(self, xr_member):
+        if self.isBinaryMember(xr_member):
+            return None
         if xr_member.is_array:
             if xr_member.is_static_array:
                 if not self.isStruct(xr_member.type):
@@ -347,13 +363,17 @@ for (
             return self.genDumpDynamicArrayMember(xr_member)
         return None
 
-    def genDumpFixedArrayMember(self, xr_member):
+    def getFixedArraySize(self, xr_member):
         size = xr_member.static_array_sizes[0]
         constant = list([it for it in self.api_constants if it.name == size])
         if constant:
             size = constant[0].value
-        size = int(size)
-        if size > 128:
+        return int(size)
+
+    def genDumpFixedArrayMember(self, xr_member):
+        size = self.getFixedArraySize(xr_member)
+        if size > self._fixed_array_limit:
+            # Shown as a simple field instead
             return None
 
         ret = ''
