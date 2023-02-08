@@ -35,7 +35,9 @@ struct Cache {
 	XrInstance mXrInstance{};
 	std::unordered_map<XrPath, std::string> mPaths;
 	std::unordered_map<XrActionSet, std::string> mActionSets;
-	std::unordered_map<XrAction, ActionInfo> mActions;
+	std::unordered_map<XrAction, std::string> mActions;
+
+	std::unordered_map<XrSpace, std::string> mSpaces;
 };
 thread_local Cache sCache{};
 
@@ -46,6 +48,11 @@ static inline void ValidateCache(XrInstance instance = gXrInstance)
 	}
 }
 
+constexpr XrPosef XR_POSEF_IDENTITY{
+	.orientation = { 0.f, 0.f, 0.f, 1.f },
+	.position = { 0.f, 0.f, 0.f },
+};
+
 } // namespace
 
 std::string to_string(XrPath path)
@@ -54,30 +61,11 @@ std::string to_string(XrPath path)
 		return "XR_NULL_PATH";
 	}
 
-	ValidateCache();
-
-	auto& sPathCache = sCache.mPaths;
-	if (sPathCache.contains(path)) {
-		return sPathCache.at(path);
-	}
-
-	if (!(gXrInstance && next_xrPathToString)) {
+	if (!sCache.mPaths.contains(path)) {
 		return std::format("{:#016x}", path);
 	}
 
-	char buffer[1024];
-	uint32_t size = std::size(buffer);
-	if (XR_FAILED(next_xrPathToString(gXrInstance, path, size, &size, buffer))
-	    || size < 1) {
-		return std::format("{:#016x}", path);
-	}
-
-	const auto len = size - 1;
-
-	const auto ret
-	    = std::format("{} ({:#016x})", std::string_view{ buffer, len }, path);
-	sPathCache[path] = ret;
-	return ret;
+	return sCache.mPaths.at(path);
 }
 
 std::string to_string(const ConstCStr* const arr, size_t count)
@@ -102,11 +90,7 @@ std::string to_string(XrAction action)
 		    "{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(action));
 	}
 
-	const auto& data = sCache.mActions.at(action);
-	return std::format("{} ({:#016x}) from {}", data.mName,
-	    OXRTL_HANDLE_CAST<const uint64_t>(action), to_string(data.mActionSet));
-
-	return {};
+	return sCache.mActions.at(action);
 }
 
 std::string to_string(XrActionSet actionSet)
@@ -115,8 +99,17 @@ std::string to_string(XrActionSet actionSet)
 		return std::format(
 		    "{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(actionSet));
 	}
-	return std::format("{} ({:#016x})", sCache.mActionSets.at(actionSet),
-	    OXRTL_HANDLE_CAST<const uint64_t>(actionSet));
+
+	return sCache.mActionSets.at(actionSet);
+}
+
+std::string to_string(XrSpace space)
+{
+	if (!sCache.mSpaces.contains(space)) {
+		return std::format(
+		    "{:#016x}", OXRTL_HANDLE_CAST<const uint64_t>(space));
+	}
+	return sCache.mSpaces.at(space);
 }
 
 void xrCreateActionSet_hook(XrResult result, XrInstance instance,
@@ -128,7 +121,9 @@ void xrCreateActionSet_hook(XrResult result, XrInstance instance,
 
 	ValidateCache(instance);
 
-	sCache.mActionSets[*actionSet] = createInfo->actionSetName;
+	sCache.mActionSets[*actionSet]
+	    = std::format("{} {:#016x}", createInfo->actionSetName,
+	        OXRTL_HANDLE_CAST<const uint64_t>(*actionSet));
 }
 
 void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
@@ -140,10 +135,9 @@ void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
 
 	ValidateCache();
 
-	sCache.mActions[*action] = {
-		.mName = createInfo->actionName,
-		.mActionSet = actionSet,
-	};
+	sCache.mActions[*action]
+	    = std::format("{} ({:#016x}) from {}", createInfo->actionName,
+	        OXRTL_HANDLE_CAST<const uint64_t>(*action), to_string(actionSet));
 }
 
 void xrStringToPath_hook(
@@ -156,6 +150,51 @@ void xrStringToPath_hook(
 	ValidateCache(instance);
 
 	sCache.mPaths[*path] = std::format("{} ({:#016x})", pathString, *path);
+}
+
+void xrCreateActionSpace_hook(XrResult result, XrSession session,
+    const XrActionSpaceCreateInfo* createInfo, XrSpace* space)
+{
+	if (!XR_SUCCEEDED(result)) {
+		return;
+	}
+
+	ValidateCache();
+
+	if (!createInfo->subactionPath) {
+		sCache.mSpaces[*space] = std::format("actionSpace {} - ({:#016x})",
+		    to_string(createInfo->action),
+		    OXRTL_HANDLE_CAST<const uint64_t>(*space));
+		return;
+	}
+	sCache.mSpaces[*space] = std::format("actionSpace {} @ {} - ({:#016x})",
+	    to_string(createInfo->action), to_string(createInfo->subactionPath),
+	    OXRTL_HANDLE_CAST<const uint64_t>(*space));
+}
+
+void xrCreateReferenceSpace_hook(XrResult result, XrSession session,
+    const XrReferenceSpaceCreateInfo* createInfo, XrSpace* space)
+{
+	if (!XR_SUCCEEDED(result)) {
+		return;
+	}
+
+	ValidateCache();
+
+	const auto& pose = createInfo->poseInReferenceSpace;
+	if (memcmp(&pose, &XR_POSEF_IDENTITY, sizeof(XrPosef)) == 0) {
+		sCache.mSpaces[*space] = std::format("{} ({:#016x})",
+		    to_string(createInfo->referenceSpaceType),
+		    OXRTL_HANDLE_CAST<const uint64_t>(*space));
+		return;
+	}
+
+	const auto& o = pose.orientation;
+	const auto& p = pose.position;
+	sCache.mSpaces[*space]
+	    = std::format("{} @ o({}, {}, {}, {}) p({}, {}, {}) - ({:#016x})",
+	        to_string(createInfo->referenceSpaceType), o.x, o.y, o.z, o.w, p.x,
+	        p.y, p.z, OXRTL_HANDLE_CAST<const uint64_t>(*space));
 }
 
 } // namespace OXRTracing

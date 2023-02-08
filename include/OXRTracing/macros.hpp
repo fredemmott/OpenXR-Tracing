@@ -91,9 +91,9 @@
 	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
 #define OXRTL_ARGS_XrActionSet(oxrtlIt, name) \
 	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+#define OXRTL_ARGS_XrSpace(oxrtlIt, name) \
+	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
 
-// TODO: this is XrEventDataBuffer.varying
-// Ideally we should trace the real data for a subtype of XrEventDataBuffer
 #define OXRTL_ARGS_uint8_t_FA(x, name, count) \
 	TraceLoggingValue("binary data", name)
 

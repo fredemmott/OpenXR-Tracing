@@ -116,7 +116,7 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 
 class MacroOutputGenerator(BoilerplateOutputGenerator):
     def genBaseTypeMacros(self):
-        handwritten = {'XrAction', 'XrActionSet'}
+        handwritten = {'XrAction', 'XrActionSet', 'XrSpace'}
 
         ret = ''
         for xr_type in self.api_base_types:
@@ -459,7 +459,8 @@ OXRTL_DUMP_{struct_name}(
 '''.strip()
 
     def genWrapper(self, xr_command):
-        hooked = {"xrCreateActionSet", "xrCreateAction", "xrStringToPath"}
+        hooked = {"xrCreateActionSet", "xrCreateAction",
+                  "xrStringToPath", "xrCreateActionSpace", "xrCreateReferenceSpace"}
         newline = "\n"
 
         parameters = []

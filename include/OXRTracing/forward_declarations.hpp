@@ -37,6 +37,7 @@ extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 std::string to_string(XrPath path);
 std::string to_string(XrAction action);
 std::string to_string(XrActionSet actionSet);
+std::string to_string(XrSpace space);
 
 using ConstCStr = const char*;
 std::string to_string(const ConstCStr* const arr, size_t count);
@@ -47,5 +48,9 @@ void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
     const XrActionCreateInfo* createInfo, XrAction* action);
 void xrStringToPath_hook(
     XrResult result, XrInstance instance, const char* pathString, XrPath* path);
+void xrCreateActionSpace_hook(XrResult result, XrSession session,
+    const XrActionSpaceCreateInfo* createInfo, XrSpace* space);
+void xrCreateReferenceSpace_hook(XrResult result, XrSession session,
+    const XrReferenceSpaceCreateInfo* createInfo, XrSpace* space);
 
 } // namespace OXRTracing
