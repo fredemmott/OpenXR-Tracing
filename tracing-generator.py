@@ -177,9 +177,6 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
             ret += f'#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)' + '\n'
 
         for xr_type in (self.api_base_types + self.api_handles):
-            ret += f'#define OXRTL_ARGS_{xr_type.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)' + '\n'
-
-        for xr_type in (self.api_base_types + self.api_handles):
             ret += f'''
 #define OXRTL_DUMP_{xr_type.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
     TraceLoggingWriteTagged(
@@ -275,16 +272,14 @@ inline std::string to_string({xr_enum.name} value) {{
         return f'''
 {struct_def}
 #define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, oxrtlName) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), oxrtlName)
-#define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, oxrtlName, size) TraceLoggingValue(size, "#" oxrtlName)
-#define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, oxrtlName, size) TraceLoggingValue(size, "#" oxrtlName)
 {self.genDumpNextMacro(xr_struct)}
 {self.genDumpStructMacro(xr_struct)}
 '''
 
     def genDumpNextMacro(self, xr_struct):
-        ret = f'#define OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)'
         if not [member for member in xr_struct.members if member.name == 'next']:
-            return ret
+            return ''
+        ret = f'#define OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)'
         nexts = self.getNextStructRelationGroupForBaseStruct(xr_struct.name)
         if nexts is not None:
             nexts = nexts.child_struct_names.copy()
@@ -429,10 +424,10 @@ case {xr_type_value}:
             member_dumper = self.genDumpComplexMember(member)
             if member_dumper is not None:
                 complex_fields.append(member_dumper.strip())
-        ret = f'''
-#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
-    OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)
-'''.strip().replace('\n', '\\\n')
+        ret = f'#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
+        if [it for it in xr_struct.members if it.name == 'next']:
+            ret += '\\\n' + \
+                f'OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt)'
         if complex_fields:
             ret += "\\\n".join(complex_fields)
         ret += "\n"
