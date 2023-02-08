@@ -45,7 +45,7 @@ try {
     '/I', "$cwd/include"
   )
   $sources = @(
-    "$cwd/gen/src/layer.gen.cpp",
+    "$cwd/gen/src/layer.gen.0.cpp",
     "$cwd/src/layer.cpp",
     "$cwd/src/tracing.cpp"
   )

@@ -115,8 +115,9 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
         for xr_struct in self.api_structures:
             if xr_struct.name != name:
                 continue
-            # 'next' and 'type'
-            return len(xr_struct.members) == 2
+            members = [it for it in xr_struct.members if it.name !=
+                       'next' and it.name != 'type']
+            return not members
         return False
 
     def getWrappedCommands(self):
@@ -509,13 +510,22 @@ for xr_struct in descendants
 
 
 class LayerOutputGenerator(BoilerplateOutputGenerator):
+    def __init__(self, file_number, file_count, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._file_number = file_number
+        self._file_count = file_count
+
     def genNextPFNDefinitions(self):
+        if self._file_number != 0:
+            return ''
         ret = 'namespace OXRTracing {\n'
         for xr_command in self.getWrappedCommands():
             ret += f'PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};' + '\n'
         return ret + '\n}'
 
     def genXrGetInstanceProcAddr(self):
+        if self._file_number != 0:
+            return ''
         ret = '''
 XrResult OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance,
@@ -542,10 +552,15 @@ if (name == "{xr_command.name}") {{
 }'''
         return ret
 
+    def shouldIncludeFunction(self, name):
+        return (hash(name) % self._file_count) == self._file_number
+
     def genWrappers(self):
         ret = ''
         for xr_command in self.getWrappedCommands():
             if xr_command.name in self.no_trampoline_or_terminator:
+                continue
+            if not self.shouldIncludeFunction(xr_command.name):
                 continue
             ret += self.genWrapper(xr_command)
         return ret
@@ -673,10 +688,21 @@ namespace OXRTracing {{
             ret += f'extern PFN_{xr_command.name} next_{xr_command.name};' + '\n'
         return ret
 
+    def genTracingFunctionDeclarations(self):
+        ret = ''
+        for xr_command in self.getWrappedCommands():
+            parameters = []
+            for param in xr_command.params:
+                parameters.append(param.cdecl.strip())
+            ret += f'XrResult OXRTracing_{xr_command.name}({", ".join(parameters)});' + '\n'
+        return ret
+
     def endFile(self):
         content = f'''
 {self.genNextPFNDeclarations()}
 }}
+
+{self.genTracingFunctionDeclarations()}
 '''
         write(content, file=self.outFile)
         BoilerplateOutputGenerator.endFile(self)
@@ -728,21 +754,29 @@ if __name__ == '__main__':
         emitExtensions=extensionsPat)
     generate(gen, gen_opts)
 
-    gen = LayerOutputGenerator(diagFile=None)
-    out_dir = os.path.join(cur_dir, "gen", "src")
-    gen_opts = AutomaticSourceGeneratorOptions(
-        conventions=conventions,
-        filename='layer.gen.cpp',
-        directory=out_dir,
-        apiname='openxr',
-        profile=None,
-        versions=featuresPat,
-        emitversions=featuresPat,
-        defaultExtensions='openxr',
-        addExtensions=extensionsPat,
-        removeExtensions=excludeExtensionsPat,
-        emitExtensions=extensionsPat)
-    generate(gen, gen_opts)
+    # I added support for splitting into multiple files to try and stop
+    # cl.exe failing with 'fatal error C1060: compiler is out of heap space'
+    #
+    # Didn't work for now, but might help in the future, so keeping the code in.
+    #
+    # It just hates xrEndFrame
+    file_count = 1
+    for file_number in range(0, file_count):
+        gen = LayerOutputGenerator(file_number, file_count, diagFile=None)
+        out_dir = os.path.join(cur_dir, "gen", "src")
+        gen_opts = AutomaticSourceGeneratorOptions(
+            conventions=conventions,
+            filename=f'layer.gen.{file_number}.cpp',
+            directory=out_dir,
+            apiname='openxr',
+            profile=None,
+            versions=featuresPat,
+            emitversions=featuresPat,
+            defaultExtensions='openxr',
+            addExtensions=extensionsPat,
+            removeExtensions=excludeExtensionsPat,
+            emitExtensions=extensionsPat)
+        generate(gen, gen_opts)
 
     gen = ForwardDeclarationsOutputGenerator(diagFile=None)
     out_dir = os.path.join(cur_dir, "gen", "include", "OXRTracing")
