@@ -446,11 +446,11 @@ case {xr_type_value}:
             if member_dumper is not None:
                 complex_fields.append(member_dumper.strip())
         ret = f'#define OXRTL_DUMP_{xr_struct.name}_COMPLEX_FIELDS(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
+        if complex_fields:
+            ret += "\\\n".join(complex_fields)
         if self.hasNextDumper(xr_struct):
             ret += '\\\n' + \
                 f'OXRTL_DUMP_{xr_struct.name}_NEXT(oxrtlActivity, oxrtlName, oxrtlIt);'
-        if complex_fields:
-            ret += "\\\n".join(complex_fields)
         ret += "\n"
         ret += f'#define OXRTL_DUMP_{xr_struct.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)'
         dump_base = f'''
