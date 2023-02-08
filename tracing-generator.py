@@ -149,8 +149,6 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         for name in names:
             macros.append(
                 f'#define OXRTL_ARGS_{name}(x, name) TraceLoggingValue(x, name)')
-            macros.append(
-                f'#define OXRTL_ARGS_{name}_P(x, name) OXRTL_ARGS_{name}((*x), name)')
         for name in names:
             macros.append(f'''
 #define OXRTL_DUMP_{name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
@@ -242,6 +240,7 @@ inline std::string to_string({xr_enum.name} value) {{
                 continue
             suffix = ''
             trailing = ''
+            value = f'oxrtlIt.{member.name}'
             pointer_count = member.pointer_count
             if member.is_array:
                 if member.is_static_array:
@@ -260,9 +259,9 @@ inline std::string to_string({xr_enum.name} value) {{
                 else:
                     continue
             if pointer_count > 0:
-                suffix = '_' + ('P' * pointer_count) + suffix
+                value = f"({'*' * pointer_count}{value})"
             member_macros.append(
-                f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
+                f'OXRTL_ARGS_{member.type}{suffix}({value}, "{member.name}"{trailing})')
         if xr_struct.name in handwritten:
             struct_def = f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName)'
         elif member_macros:
@@ -271,7 +270,6 @@ inline std::string to_string({xr_enum.name} value) {{
             struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName) TraceLoggingValue(oxrtlName)'
         return f'''
 {struct_def}
-#define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, oxrtlName) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), oxrtlName)
 {self.genDumpNextMacro(xr_struct)}
 {self.genDumpStructMacro(xr_struct)}
 '''
@@ -604,7 +602,7 @@ OXRTL_DUMP_{struct_name}(
                 trace_in.append(trace_arg)
                 continue
             is_struct = self.isStruct(param.type)
-            if is_struct or param.type == "char":
+            if param.type == "char":
                 trace_arg = f'OXRTL_ARGS_{param.type}_P({param.name}, "{param.name}")'
             else:
                 trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'

@@ -30,9 +30,6 @@ Copy-Item -Force .\APILayer.json out\APILayer.json
 try {
   Set-Location out
   $compiler = 'cl.exe'
-  if ($Clang) {
-    $compiler = 'clang-cl.exe'
-  }
   $baseArgs = @(
     '/std:c++20'
     '/Zc:__cplusplus'
@@ -44,6 +41,12 @@ try {
     '/I', "$cwd/gen/include",
     '/I', "$cwd/include"
   )
+  $trailingArgs = @()
+  if ($Clang) {
+    $compiler = 'clang-cl.exe'
+    $trailingArgs += '/clang:-fmacro-backtrace-limit=0'
+  }
+
   $sources = @(
     "$cwd/gen/src/layer.gen.0.cpp",
     "$cwd/src/layer.cpp",
@@ -51,7 +54,7 @@ try {
   )
 
   $objs = $sources | % { $_ -replace '^.+/([^/]+).cpp', '$1.obj' }
-  & $compiler @baseArgs -c $sources
+  & $compiler @baseArgs -c $sources @trailingArgs
   if ($LastExitCode -ne 0) {
     return $LastExitCode
   }
