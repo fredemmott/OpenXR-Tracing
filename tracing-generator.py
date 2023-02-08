@@ -289,6 +289,12 @@ inline std::string to_string({xr_enum.name} value) {{
         if nexts is not None:
             nexts = nexts.child_struct_names.copy()
         else:
+            for group in self._struct_relation_groups.values():
+                if xr_struct.name in group.child_struct_names:
+                    # We should be iterating over the parent, so
+                    # don't double-print, and hopefully save some
+                    # cl.exe memory...
+                    return ret
             nexts = []
         it = f'oxrtl{xr_struct.name}_NextIt'
         cases = []
