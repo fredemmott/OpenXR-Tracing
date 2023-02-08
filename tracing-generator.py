@@ -32,6 +32,7 @@ sdk_dir = os.path.join(base_dir, 'third-party', 'OpenXR-SDK-Source')  # nopep8
 sys.path.append(os.path.join(sdk_dir, 'specification', 'scripts'))  # nopep8
 sys.path.append(os.path.join(sdk_dir, 'src', 'scripts'))  # nopep8
 
+from collections import namedtuple
 from xrconventions import OpenXRConventions
 from generator import write
 from reg import Registry
@@ -44,6 +45,19 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._next_structs = {}
+        self.ConstantData = namedtuple('ConstantData',
+                                       ['name', 'value'])
+        self.api_constants = []
+
+    def genEnum(self, enum_info, name, alias):
+        super().genEnum(enum_info, name, alias)
+        if alias:
+            return
+        if enum_info.elem.get('extends'):
+            return
+        self.api_constants.append(self.ConstantData(
+            name=name,
+            value=enum_info.elem.get('value')))
 
     def genStructUnion(self, type_info, type_category, type_name, alias):
         super().genStructUnion(type_info, type_category, type_name, alias)
@@ -115,6 +129,36 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 
 
 class MacroOutputGenerator(BoilerplateOutputGenerator):
+    def genPlatformTypeMacros(self):
+        names = {
+            'float',
+            'int8_t',
+            'uint8_t',
+            'int16_t',
+            'uint16_t',
+            'int32_t',
+            'uint32_t',
+            'int64_t',
+            'uint64_t',
+            'size_t',
+            'uintptr_t',
+        }
+        macros = []
+        for name in names:
+            macros.append(
+                f'#define OXRTL_ARGS_{name}(x, name) TraceLoggingValue(x, name)')
+            macros.append(
+                f'#define OXRTL_ARGS_{name}_P(x, name) OXRTL_ARGS_{name}((*x), name)')
+        for name in names:
+            macros.append(f'''
+#define OXRTL_DUMP_{name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
+    TraceLoggingWriteTagged(
+        oxrtlActivity,
+        oxrtlName,
+        OXRTL_ARGS_{name}(oxrtlIt, oxrtlValueName));
+'''.strip().replace('\n', '\\\n'))
+        return '\n'.join(macros)
+
     def genBaseTypeMacros(self):
         handwritten = {'XrAction', 'XrActionSet', 'XrSpace'}
 
@@ -174,8 +218,10 @@ inline std::string to_string({xr_enum.name} value) {{
     }}
 }}
 }}
-#define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, name) TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), name)
-'''
+#define OXRTL_ARGS_{xr_enum.name}(oxrtlIt, oxrtlName) TraceLoggingValue(OXRTracing::to_string(oxrtlIt).c_str(), oxrtlName)
+#define OXRTL_DUMP_{xr_enum.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt) \\
+  TraceLoggingWriteTagged(oxrtlActivity, oxrtlName, OXRTL_ARGS_{xr_enum.name}(oxrtlIt, oxrtlValueName));
+'''.strip()
 
     def genStructMacros(self):
         ret = ''
@@ -198,9 +244,15 @@ inline std::string to_string({xr_enum.name} value) {{
             pointer_count = member.pointer_count
             if member.is_array:
                 if member.is_static_array:
+                    if self.isStruct(member.type):
+                        continue  # handled by complex member dumping
                     suffix += '_FA'
                     trailing += f', {member.static_array_sizes[0]}'
                 elif member.type == 'char':
+                    if member.name == 'buffer':
+                        member_macros.append(
+                            'OXRTL_ARGS_POINTER(oxrtlIt.buffer, "buffer")')
+                        continue
                     suffix += '_DA'
                     pointer_count -= 1
                     trailing += f', oxrtlIt.{member.pointer_count_var}'
@@ -211,16 +263,16 @@ inline std::string to_string({xr_enum.name} value) {{
             member_macros.append(
                 f'OXRTL_ARGS_{member.type}{suffix}(oxrtlIt.{member.name}, "{member.name}"{trailing})')
         if xr_struct.name in handwritten:
-            struct_def = f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name)'
+            struct_def = f'// EXCLUDED - HANDWRITTEN: #define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName)'
         elif member_macros:
-            struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingStruct({len(member_macros)}, name),{", ".join(member_macros)}'
+            struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName) TraceLoggingStruct({len(member_macros)}, oxrtlName),{", ".join(member_macros)}'
         else:
-            struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, name) TraceLoggingValue(name)'
+            struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName) TraceLoggingValue(oxrtlName)'
         return f'''
 {struct_def}
-#define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, name) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), name)
-#define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
-#define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, name, size) TraceLoggingValue(size, "#" name)
+#define OXRTL_ARGS_{xr_struct.name}_P(oxrtlIt, oxrtlName) OXRTL_ARGS_{xr_struct.name}((*oxrtlIt), oxrtlName)
+#define OXRTL_ARGS_{xr_struct.name}_DA(oxrtlIt, oxrtlName, size) TraceLoggingValue(size, "#" oxrtlName)
+#define OXRTL_ARGS_{xr_struct.name}_P_DA(oxrtlIt, oxrtlName, size) TraceLoggingValue(size, "#" oxrtlName)
 {self.genDumpNextMacro(xr_struct)}
 {self.genDumpStructMacro(xr_struct)}
 '''
@@ -234,14 +286,6 @@ inline std::string to_string({xr_enum.name} value) {{
             nexts = nexts.child_struct_names.copy()
         else:
             nexts = []
-        for parent_name in self._struct_relation_groups:
-            group = self.getRelationGroupForBaseStruct(parent_name)
-            if xr_struct.name not in group.child_struct_names:
-                continue
-            parent_nexts = self.getNextStructRelationGroupForBaseStruct(
-                group.generic_struct_name)
-            if parent_nexts:
-                nexts += parent_nexts.child_struct_names
         it = f'oxrtl{xr_struct.name}_NextIt'
         cases = []
         if nexts:
@@ -293,9 +337,35 @@ for (
         return ret.replace('\n', '\\\n')
 
     def genDumpComplexMember(self, xr_member):
-        if xr_member.is_array and not xr_member.is_static_array:
+        if xr_member.is_array:
+            if xr_member.is_static_array:
+                if not self.isStruct(xr_member.type):
+                    return None  # Handled by simple dumping
+                return self.genDumpFixedArrayMember(xr_member)
+            if xr_member.type == 'char':
+                return None  # Handled by simple dumping
             return self.genDumpDynamicArrayMember(xr_member)
         return None
+
+    def genDumpFixedArrayMember(self, xr_member):
+        size = xr_member.static_array_sizes[0]
+        constant = list([it for it in self.api_constants if it.name == size])
+        if constant:
+            size = constant[0].value
+        size = int(size)
+        if size > 128:
+            return None
+
+        ret = ''
+        for i in range(0, size - 1):
+            ret += f'''
+OXRTL_DUMP_{xr_member.type}(
+    oxrtlActivity,
+    oxrtlName "_{xr_member.name}",
+    "#{i}",
+    ({'*' * (xr_member.pointer_count - 1)}oxrtlIt.{xr_member.name}[{i}]));
+'''.strip().replace('\n', '\\\n')
+        return ret
 
     def genDumpDynamicArrayMember(self, xr_member):
         index_type = f'decltype(oxrtlIt.{xr_member.pointer_count_var})'
@@ -376,13 +446,26 @@ for xr_struct in descendants
         write('''
 #pragma once
 
+// clang-format off
+#include <Windows.h>
+#include <Unknwn.h>
+// clang-format on
+
+#define XR_USE_PLATFORM_WIN32 1
 #include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
 
 #include <format>
 ''', file=self.outFile)
 
     def endFile(self):
         contents = f'''
+///////////////////////////////////////////////
+///// Generated macros for platform types /////
+///////////////////////////////////////////////
+
+{self.genPlatformTypeMacros()}
+
 //////////////////////////////////////////////////
 ///// Generated macros for OpenXR base types /////
 //////////////////////////////////////////////////
@@ -533,7 +616,6 @@ XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
     def beginFile(self, genOpts):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
         content = '''
-#include <openxr/openxr.h>
 #include <OXRTracing.hpp>
 
 #include <TraceLoggingActivity.h>
@@ -559,7 +641,6 @@ class ForwardDeclarationsOutputGenerator(BoilerplateOutputGenerator):
     def beginFile(self, genOpts):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
         content = f'''
-#include <openxr/openxr.h>
 #include <OXRTracing.hpp>
 
 namespace OXRTracing {{
@@ -591,30 +672,7 @@ def generate(gen, gen_opts):
 if __name__ == '__main__':
     conventions = OpenXRConventions()
     featuresPat = 'XR_VERSION_1_0'
-    # Extensions with TODOs currently generate invalidate C++ code
-    #
-    # Prefix patterns are just here for convenience, because the generator is
-    # compatible with all their *current* extensions; future extensions might
-    # break compatibility, or be unsuitable.
-    extensionsPat = '^(' + ('|'.join([
-        'XR_EXT_.+',
-        'XR_KHR_.+',
-        'XR_AMALENCE_.+',
-        'XR_EPIC_.+',
-        # TODO: 'XR_HTC.+',
-        # TODO: 'XR_FB.+',
-        'XR_FB_spatial_entity',  # required, otherwise the OpenXR scripts omit XrUuidExt
-        'XR_META_.+',
-        'XR_ML_.+',
-        'XR_MND_.+',
-        # TODO: 'XR_MSFT_.+',
-        # TODO: 'XR_OCULUS_.+',
-        'XR_ULTRALEAP_.+',
-        'XR_VALVE_.+',
-        'XR_VARJO_.+',
-        'XR_HTCX_.+',
-        'XR_MNDX_.+',
-    ])) + ')$'
+    extensionsPat = '.*'
     excludeExtensionsPat = '^(' + ('|'.join([
         # Skip other platform APIs
         '.+android.+',
@@ -632,8 +690,6 @@ if __name__ == '__main__':
         'XR_EXT_debug_utils',
         'XR_KHR_convert_timespec_time',
         'XR_KHR_win32_convert_performance_counter_time',
-        # TODO: extensions that currently don't work due to bugs in OpenXR-Tracing
-        'XR_KHR_visibility_mask',
     ])) + ')$'
 
     gen = MacroOutputGenerator(diagFile=None)

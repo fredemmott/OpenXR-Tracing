@@ -25,7 +25,12 @@
 
 // clang-format off
 #include <Windows.h>
+#include <Unknwn.h>
 // clang-format on
+
+#define XR_USE_PLATFORM_WIN32 1
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>
 
 #include <OXRTracing/forward_declarations.gen.hpp>
 #include <OXRTracing/forward_declarations.hpp>

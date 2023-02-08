@@ -29,24 +29,6 @@
 #include <format>
 #include <string.h>
 
-///////////////////////////
-///// Primitive types /////
-///////////////////////////
-
-#define OXRTL_ARGS_float(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_int8_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_uint8_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_int16_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_uint16_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_int32_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_uint32_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_int64_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_uint64_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_size_t(x, name) TraceLoggingValue(x, name)
-#define OXRTL_ARGS_uintptr_t(x, name) TraceLoggingValue(x, name)
-
-#define OXRTL_ARGS_char_P(x, name) TraceLoggingValue(x, name)
-
 //////////////////////
 ///// Base types /////
 //////////////////////
@@ -69,6 +51,9 @@
 
 #define OXRTL_ARGS_void_P OXRTL_ARGS_POINTER
 
+#define OXRTL_ARGS_IUnknown(x, name) OXRTL_ARGS_POINTER((&x), name)
+#define OXRTL_ARGS_IUnknown_P(x, name) OXRTL_ARGS_POINTER(x, name)
+
 /////////////////////////////////////
 ///// Base types: special cases /////
 /////////////////////////////////////
@@ -78,6 +63,8 @@
 	                      XR_VERSION_MINOR(x), XR_VERSION_PATCH(x)) \
 	                      .c_str(), \
 	    name)
+
+#define OXRTL_ARGS_char_P(x, name) TraceLoggingValue(x, name)
 
 #define OXRTL_ARGS_char_FA(x, name, maxLen) \
 	TraceLoggingCountedString(x, strnlen_s(x, maxLen), name)
