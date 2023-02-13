@@ -34,12 +34,12 @@ PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr{ nullptr };
 
 } // namespace OXRTracing
 
-XrResult OXRTracing_xrGetInstanceProcAddr(
+XrResult XRAPI_CALL OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance, const char* name, PFN_xrVoidFunction* function);
 
 using namespace OXRTracing;
 
-static XrResult OXRTracing_xrCreateApiLayerInstance(
+static XrResult XRAPI_CALL OXRTracing_xrCreateApiLayerInstance(
     const XrInstanceCreateInfo* createInfo,
     const struct XrApiLayerCreateInfo* layerCreateInfo, XrInstance* instance)
 {

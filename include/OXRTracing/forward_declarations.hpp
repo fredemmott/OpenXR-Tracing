@@ -34,10 +34,13 @@ TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
 extern thread_local XrInstance gXrInstance;
 extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 
-std::string to_string(XrPath path);
-std::string to_string(XrAction action);
-std::string to_string(XrActionSet actionSet);
-std::string to_string(XrSpace space);
+/* These are <type>_to_string because in 32-bit builds,
+ * OpenXR handles are just type aliases to uint64_t, so
+ * we can't use standard overload resolution. */
+std::string XrAction_to_string(XrAction action);
+std::string XrActionSet_to_string(XrActionSet actionSet);
+std::string XrPath_to_string(XrPath path);
+std::string XrSpace_to_string(XrSpace space);
 
 using ConstCStr = const char*;
 std::string to_string(const ConstCStr* const arr, size_t count);

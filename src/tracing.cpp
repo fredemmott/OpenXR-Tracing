@@ -55,19 +55,6 @@ constexpr XrPosef XR_POSEF_IDENTITY{
 
 } // namespace
 
-std::string to_string(XrPath path)
-{
-	if (!path) {
-		return "XR_NULL_PATH";
-	}
-
-	if (!sCache.mPaths.contains(path)) {
-		return std::format("{:#016x}", path);
-	}
-
-	return sCache.mPaths.at(path);
-}
-
 std::string to_string(const ConstCStr* const arr, size_t count)
 {
 	if (count == 0) {
@@ -83,7 +70,20 @@ std::string to_string(const ConstCStr* const arr, size_t count)
 	return out;
 }
 
-std::string to_string(XrAction action)
+std::string XrPath_to_string(XrPath path)
+{
+	if (!path) {
+		return "XR_NULL_PATH";
+	}
+
+	if (!sCache.mPaths.contains(path)) {
+		return std::format("{:#016x}", path);
+	}
+
+	return sCache.mPaths.at(path);
+}
+
+std::string XrAction_to_string(XrAction action)
 {
 	if (!sCache.mActions.contains(action)) {
 		return std::format(
@@ -93,7 +93,7 @@ std::string to_string(XrAction action)
 	return sCache.mActions.at(action);
 }
 
-std::string to_string(XrActionSet actionSet)
+std::string XrActionSet_to_string(XrActionSet actionSet)
 {
 	if (!sCache.mActionSets.contains(actionSet)) {
 		return std::format(
@@ -103,7 +103,7 @@ std::string to_string(XrActionSet actionSet)
 	return sCache.mActionSets.at(actionSet);
 }
 
-std::string to_string(XrSpace space)
+std::string XrSpace_to_string(XrSpace space)
 {
 	if (!sCache.mSpaces.contains(space)) {
 		return std::format(
@@ -135,9 +135,9 @@ void xrCreateAction_hook(XrResult result, XrActionSet actionSet,
 
 	ValidateCache();
 
-	sCache.mActions[*action]
-	    = std::format("{} ({:#016x}) from {}", createInfo->actionName,
-	        OXRTL_HANDLE_CAST<const uint64_t>(*action), to_string(actionSet));
+	sCache.mActions[*action] = std::format("{} ({:#016x}) from {}",
+	    createInfo->actionName, OXRTL_HANDLE_CAST<const uint64_t>(*action),
+	    XrActionSet_to_string(actionSet));
 }
 
 void xrStringToPath_hook(
@@ -163,12 +163,13 @@ void xrCreateActionSpace_hook(XrResult result, XrSession session,
 
 	if (!createInfo->subactionPath) {
 		sCache.mSpaces[*space] = std::format("actionSpace {} - ({:#016x})",
-		    to_string(createInfo->action),
+		    XrAction_to_string(createInfo->action),
 		    OXRTL_HANDLE_CAST<const uint64_t>(*space));
 		return;
 	}
 	sCache.mSpaces[*space] = std::format("actionSpace {} @ {} - ({:#016x})",
-	    to_string(createInfo->action), to_string(createInfo->subactionPath),
+	    XrAction_to_string(createInfo->action),
+	    XrPath_to_string(createInfo->subactionPath),
 	    OXRTL_HANDLE_CAST<const uint64_t>(*space));
 }
 

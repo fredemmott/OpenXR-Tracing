@@ -73,13 +73,15 @@
 	TraceLoggingValue(::OXRTracing::to_string(x, count).c_str(), name)
 
 #define OXRTL_ARGS_XrPath(oxrtlIt, name) \
-	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+	TraceLoggingValue(::OXRTracing::XrPath_to_string(oxrtlIt).c_str(), name)
 #define OXRTL_ARGS_XrAction(oxrtlIt, name) \
-	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+	TraceLoggingValue(::OXRTracing::XrAction_to_string(oxrtlIt).c_str(), name)
 #define OXRTL_ARGS_XrActionSet(oxrtlIt, name) \
-	TraceLoggingValue(::OXRTracing::to_string(oxrtlIt).c_str(), name)
+	TraceLoggingValue( \
+	    ::OXRTracing::XrActionSet_to_string(oxrtlIt).c_str(), name)
 #define OXRTL_ARGS_XrSpace(oxrtlIt, oxrtlName) \
-	TraceLoggingValue((::OXRTracing::to_string(oxrtlIt).c_str()), oxrtlName)
+	TraceLoggingValue( \
+	    (::OXRTracing::XrSpace_to_string(oxrtlIt).c_str()), oxrtlName)
 
 #define OXRTL_ARGS_uint8_t_FA(x, name, count) \
 	TraceLoggingValue("binary data", name)

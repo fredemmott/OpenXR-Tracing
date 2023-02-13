@@ -11,12 +11,15 @@ Python is used to generate most of the code of this project, based on the OpenXR
 ## Building
 
 1. Fetch submodules: `git submodule update --init`
-2. Open an x64 developer powershell (or an x64 command prompt, then run `powershell`)
+2. Open visual studio developer powershell
+   - you can also open a command prompt, then run `powershell`
+   - use an x64 powershell/prompt for a 64-bit build, or an x86 powershell/prompt for a 32-bit build
 3. Run `./build.ps1`
 
 `build.ps1` supports two flags:
 - `-Clang`: use `clang-cl.exe` instead of `cl.exe`
 - `-SkipCodegen`: don't create or update the `gen/` directory
+- `-SkipCompile`: create or update the `gen/` directory, but don't build
 
 ## Usage
 

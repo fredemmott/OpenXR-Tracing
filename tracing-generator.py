@@ -560,7 +560,7 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
         if self._file_number != 0:
             return ''
         ret = '''
-XrResult OXRTracing_xrGetInstanceProcAddr(
+XrResult XRAPI_CALL OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance,
     const char* nameCStr,
     PFN_xrVoidFunction* function) {
@@ -667,7 +667,7 @@ if (gXrInstance == {xr_command.params[0].name}) {{
             hook = f'{xr_command.name}_hook(ret, ' + \
                 ', '.join(arguments) + ');\n'
         return f'''
-XrResult OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
+XrResult XRAPI_CALL OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   {instance_state_pre}
   TraceLoggingActivity<gTraceProvider> localActivity;
   TraceLoggingWriteStart(localActivity, {', '.join(trace_in)});
@@ -738,7 +738,7 @@ namespace OXRTracing {{
             parameters = []
             for param in xr_command.params:
                 parameters.append(param.cdecl.strip())
-            ret += f'XrResult OXRTracing_{xr_command.name}({", ".join(parameters)});' + '\n'
+            ret += f'XrResult XRAPI_CALL OXRTracing_{xr_command.name}({", ".join(parameters)});' + '\n'
         return ret
 
     def endFile(self):
