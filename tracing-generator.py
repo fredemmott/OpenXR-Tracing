@@ -765,7 +765,6 @@ if __name__ == '__main__':
         # These could be handled, just doesn't seem worth dealing with the various types
         # defined in external SDKs and headers.
         '.+vulkan.*',
-        '.+D3D12.*',
         '.+opengl.*',
         '.+_egl_.+',
         # Skip debugging/profiling extensions

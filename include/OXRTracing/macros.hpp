@@ -95,9 +95,9 @@
 	TraceLoggingStruct(1, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type")
 
-//////////////////////////////
-///// External API types /////
-//////////////////////////////
+/////////////////////////////
+///// Windows API types /////
+/////////////////////////////
 
 #define OXRTL_ARGS_D3D_FEATURE_LEVEL(oxrtlIt, oxrtlName) \
 	TraceLoggingValue( \
@@ -108,7 +108,22 @@
 	    std::format("{:#016x}", std::bit_cast<uint64_t>(oxrtlIt)).c_str(), \
 	    oxrtlName)
 
+///////////////////////////
+///// D3D11 API types /////
+///////////////////////////
+
 #define OXRTL_ARGS_ID3D11Device(oxrtlIt, oxrtlName) \
 	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
 #define OXRTL_ARGS_ID3D11Texture2D(oxrtlIt, oxrtlName) \
+	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
+
+///////////////////////////
+///// D3D12 API types /////
+///////////////////////////
+
+#define OXRTL_ARGS_ID3D12CommandQueue(oxrtlIt, oxrtlName) \
+	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
+#define OXRTL_ARGS_ID3D12Device(oxrtlIt, oxrtlName) \
+	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
+#define OXRTL_ARGS_ID3D12Resource(oxrtlIt, oxrtlName) \
 	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)

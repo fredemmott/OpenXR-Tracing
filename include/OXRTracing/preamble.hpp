@@ -30,9 +30,11 @@
 
 #include <TraceLoggingProvider.h>
 #include <d3d11.h>
+#include <d3d12.h>
 
 #define XR_USE_PLATFORM_WIN32 1
 #define XR_USE_GRAPHICS_API_D3D11 1
+#define XR_USE_GRAPHICS_API_D3D12 1
 
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>
