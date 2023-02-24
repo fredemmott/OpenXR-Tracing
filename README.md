@@ -10,11 +10,10 @@ Python is used to generate most of the code of this project, based on the OpenXR
 
 ## Building
 
-1. Fetch submodules: `git submodule update --init`
-2. Open visual studio developer powershell
-   - you can also open a command prompt, then run `powershell`
-   - use an x64 powershell/prompt for a 64-bit build, or an x86 powershell/prompt for a 32-bit build
-3. Run `./build.ps1`
+1. Open "x64 Native Tools Command Prompt for VS 2022" (or "x86 Native Tools ...."); **DO NOT** use "Developer Powershell for VS xxxx" or "Developer Command Prompt for VS xxxx"
+2. `cd /path/to/your/checkout`
+3. Fetch submodules: `git submodule update --init`
+4. Run `pwsh ./build.ps1`
 
 `build.ps1` supports two flags:
 - `-Clang`: use `clang-cl.exe` instead of `cl.exe`
