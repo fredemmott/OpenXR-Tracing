@@ -136,7 +136,7 @@
 #define OXRTL_ARGS_VkAllocationCallbacks(oxrtlIt, oxrtlName) \
 	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
 #define OXRTL_ARGS_VkComponentSwizzle OXRTL_ARGS_uint64_t
-#define OXRTL_ARGS_VkDevice OXRTL_ARGS_HANDLE
+#define OXRTL_ARGS_VkDevice OXRTL_ARGS_POINTER
 #define OXRTL_ARGS_VkDeviceCreateInfo(oxrtlIt, oxrtlName) \
 	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
 #define OXRTL_ARGS_VkFilter OXRTL_ARGS_uint32_t
@@ -144,10 +144,10 @@
 #define OXRTL_ARGS_VkImage OXRTL_ARGS_HANDLE
 #define OXRTL_ARGS_VkImageCreateFlags OXRTL_ARGS_uint64_t
 #define OXRTL_ARGS_VkImageUsageFlags OXRTL_ARGS_uint64_t
-#define OXRTL_ARGS_VkInstance OXRTL_ARGS_HANDLE
+#define OXRTL_ARGS_VkInstance OXRTL_ARGS_POINTER
 #define OXRTL_ARGS_VkInstanceCreateInfo(oxrtlIt, oxrtlName) \
 	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
-#define OXRTL_ARGS_VkPhysicalDevice OXRTL_ARGS_HANDLE
+#define OXRTL_ARGS_VkPhysicalDevice OXRTL_ARGS_POINTER
 #define OXRTL_ARGS_VkResult OXRTL_ARGS_uint32_t
 #define OXRTL_ARGS_VkSamplerAddressMode OXRTL_ARGS_uint32_t
 #define OXRTL_ARGS_VkSamplerMipmapMode OXRTL_ARGS_uint32_t
