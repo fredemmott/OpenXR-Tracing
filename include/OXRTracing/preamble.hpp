@@ -22,6 +22,12 @@
 
 #pragma once
 
+#define XR_USE_PLATFORM_WIN32 1
+#define XR_USE_GRAPHICS_API_D3D11 1
+#define XR_USE_GRAPHICS_API_D3D12 1
+#define XR_USE_GRAPHICS_API_VULKAN 1
+#define VK_USE_PLATFORM_WIN32_KHR 1
+
 // clang-format off
 // Order matters for Windows headers
 #include <Windows.h>
@@ -32,9 +38,7 @@
 #include <d3d11.h>
 #include <d3d12.h>
 
-#define XR_USE_PLATFORM_WIN32 1
-#define XR_USE_GRAPHICS_API_D3D11 1
-#define XR_USE_GRAPHICS_API_D3D12 1
+#include <vulkan/vulkan.h>
 
 #include <openxr/openxr.h>
 #include <openxr/openxr_platform.h>

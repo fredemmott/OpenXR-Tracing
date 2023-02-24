@@ -167,7 +167,7 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         macros = []
         for name in names:
             macros.append(
-                f'#define OXRTL_ARGS_{name}(x, name) TraceLoggingValue(x, name)')
+                f'#define OXRTL_ARGS_{name}(oxrtlIt, oxrtlName) TraceLoggingValue((static_cast<{name}>(oxrtlIt)), oxrtlName)')
         for name in names:
             macros.append(f'''
 #define OXRTL_DUMP_{name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
@@ -764,7 +764,6 @@ if __name__ == '__main__':
         #
         # These could be handled, just doesn't seem worth dealing with the various types
         # defined in external SDKs and headers.
-        '.+vulkan.*',
         '.+opengl.*',
         '.+_egl_.+',
         # Skip debugging/profiling extensions

@@ -38,6 +38,7 @@ try {
     '/D', 'NOMINMAX=1',
     '/I', "$cwd/third-party/OpenXR-SDK-Source/src/common",
     '/I', "$cwd/third-party/OpenXR-SDK/include",
+    '/I', "$cwd/third-party/Vulkan-Headers/include",
     '/I', "$cwd/gen/include",
     '/I', "$cwd/include"
   )

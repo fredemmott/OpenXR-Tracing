@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <OXRTracing/preamble.hpp>
+
 #include <OXRTracing/forward_declarations.gen.hpp>
 #include <OXRTracing/forward_declarations.hpp>
 
