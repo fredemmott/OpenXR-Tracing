@@ -23,9 +23,7 @@
 
 #pragma once
 
-#include <TraceLoggingProvider.h>
-#include <Windows.h>
-#include <openxr/openxr.h>
+#include <OXRTracing/preamble.hpp>
 
 #include <string>
 

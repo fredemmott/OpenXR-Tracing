@@ -1,6 +1,5 @@
 // MIT License
 //
-// Copyright(c) 2021-2022 Matthieu Bucchianeri
 // Copyright(c) 2023 Fred Emmott
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,8 +22,17 @@
 
 #pragma once
 
-#include <OXRTracing/forward_declarations.gen.hpp>
-#include <OXRTracing/forward_declarations.hpp>
+// clang-format off
+// Order matters for Windows headers
+#include <Windows.h>
+#include <Unknwn.h>
+// clang-format on
 
-#include <OXRTracing/macros.gen.hpp>
-#include <OXRTracing/macros.hpp>
+#include <TraceLoggingProvider.h>
+#include <d3d11.h>
+
+#define XR_USE_PLATFORM_WIN32 1
+#define XR_USE_GRAPHICS_API_D3D11 1
+
+#include <openxr/openxr.h>
+#include <openxr/openxr_platform.h>

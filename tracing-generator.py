@@ -489,21 +489,12 @@ for xr_struct in descendants
         write('''
 #pragma once
 
-// clang-format off
-#include <Windows.h>
-#include <Unknwn.h>
-#include <TraceLoggingActivity.h>
-// clang-format on
-
-#define XR_USE_PLATFORM_WIN32 1
-#include <openxr/openxr.h>
-#include <openxr/openxr_platform.h>
-
-#include <format>
-
+#include <OXRTracing/preamble.hpp>
 #include <OXRTracing/macros.hpp>
 #include <OXRTracing/forward_declarations.hpp>
 #include <OXRTracing/forward_declarations.gen.hpp>
+
+#include <format>
 ''', file=self.outFile)
 
     def endFile(self):
@@ -709,8 +700,8 @@ class ForwardDeclarationsOutputGenerator(BoilerplateOutputGenerator):
     def beginFile(self, genOpts):
         BoilerplateOutputGenerator.beginFile(self, genOpts)
         content = f'''
-#include <OXRTracing.hpp>
 #include <OXRTracing/forward_declarations.hpp>
+#include <OXRTracing/preamble.hpp>
 
 #include <TraceLoggingActivity.h>
 
@@ -774,7 +765,6 @@ if __name__ == '__main__':
         # These could be handled, just doesn't seem worth dealing with the various types
         # defined in external SDKs and headers.
         '.+vulkan.*',
-        '.+D3D11.*',
         '.+D3D12.*',
         '.+opengl.*',
         '.+_egl_.+',

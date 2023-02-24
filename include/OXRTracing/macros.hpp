@@ -24,10 +24,10 @@
 #pragma once
 
 #include <OXRTracing/forward_declarations.hpp>
-#include <openxr/openxr.h>
+#include <OXRTracing/preamble.hpp>
 
+#include <cstring>
 #include <format>
-#include <string.h>
 
 //////////////////////
 ///// Base types /////
@@ -94,3 +94,21 @@
 #define OXRTL_ARGS_XrEventDataBuffer(oxrtlIt, name) \
 	TraceLoggingStruct(1, name), \
 	    OXRTL_ARGS_XrStructureType(oxrtlIt.type, "type")
+
+//////////////////////////////
+///// External API types /////
+//////////////////////////////
+
+#define OXRTL_ARGS_D3D_FEATURE_LEVEL(oxrtlIt, oxrtlName) \
+	TraceLoggingValue( \
+	    std::format("{:#04x}", static_cast<uint16_t>(oxrtlIt)).c_str(), \
+	    oxrtlName)
+#define OXRTL_ARGS_LUID(oxrtlIt, oxrtlName) \
+	TraceLoggingValue( \
+	    std::format("{:#016x}", std::bit_cast<uint64_t>(oxrtlIt)).c_str(), \
+	    oxrtlName)
+
+#define OXRTL_ARGS_ID3D11Device(oxrtlIt, oxrtlName) \
+	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
+#define OXRTL_ARGS_ID3D11Texture2D(oxrtlIt, oxrtlName) \
+	OXRTL_ARGS_POINTER((&oxrtlIt), oxrtlName)
