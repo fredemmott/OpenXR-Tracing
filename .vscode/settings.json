@@ -86,5 +86,6 @@
 		"xutility": "cpp"
 	},
 	"editor.formatOnSave": true,
-	"cmake.sourceDirectory": "${workspaceFolder}/third-party/OpenXR-SDK"
+	"cmake.sourceDirectory": "${workspaceFolder}/third-party/OpenXR-SDK",
+	"cmake.configureOnOpen": false
 }
