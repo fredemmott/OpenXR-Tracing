@@ -279,8 +279,8 @@ inline std::string to_string({xr_enum.name} value) {{
                     suffix += '_FA'
                     trailing += f', {member.static_array_sizes[0]}'
                 elif member.type == 'char':
-                    suffix += '_DA'
-                    pointer_count -= 1
+                    suffix += '_P_DA'
+                    pointer_count -= 2
                     trailing += f', oxrtlIt.{member.pointer_count_var}'
                 else:
                     continue

@@ -40,20 +40,28 @@ XrResult XRAPI_CALL OXRTracing_xrGetInstanceProcAddr(
 using namespace OXRTracing;
 
 static XrResult XRAPI_CALL OXRTracing_xrCreateApiLayerInstance(
-    const XrInstanceCreateInfo* createInfo,
-    const struct XrApiLayerCreateInfo* layerCreateInfo, XrInstance* instance)
+    const XrInstanceCreateInfo* info,
+    const struct XrApiLayerCreateInfo* layerInfo, XrInstance* instance)
 {
-	auto nextLayerCreateInfo = *layerCreateInfo;
-	nextLayerCreateInfo.nextInfo = layerCreateInfo->nextInfo->next;
+	TraceLoggingActivity<gTraceProvider> localActivity;
+	TraceLoggingWriteStart(localActivity, "xrCreateApiLayerInstance",
+	    OXRTL_ARGS_XrInstanceCreateInfo((*info), "info"));
 
-	const auto ret = layerCreateInfo->nextInfo->nextCreateApiLayerInstance(
-	    createInfo, &nextLayerCreateInfo, instance);
+	auto nextLayerCreateInfo = *layerInfo;
+	nextLayerCreateInfo.nextInfo = layerInfo->nextInfo->next;
+
+	const auto ret = layerInfo->nextInfo->nextCreateApiLayerInstance(
+	    info, &nextLayerCreateInfo, instance);
+
+	TraceLoggingWriteStop(localActivity, "xrCreateApiLayerInstance",
+	    OXRTL_ARGS_XrResult(ret, "XrResult"),
+	    OXRTL_ARGS_XrInstance((*instance), "instance"));
+
 	if (XR_FAILED(ret)) {
 		return ret;
 	}
 
-	gXrNextGetInstanceProcAddr
-	    = layerCreateInfo->nextInfo->nextGetInstanceProcAddr;
+	gXrNextGetInstanceProcAddr = layerInfo->nextInfo->nextGetInstanceProcAddr;
 
 	return ret;
 }
