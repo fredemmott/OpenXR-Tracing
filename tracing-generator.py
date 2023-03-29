@@ -70,6 +70,8 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
         return f'inline void OXRTL_DUMP_{xr_struct.name}_NEXT(::TraceLoggingActivity<::OXRTracing::gTraceProvider>& oxrtlActivity, const char*, const {xr_struct.name}& oxrtlIt)'
 
     def genEnum(self, enum_info, name, alias):
+        # genEnum() is called for C constants
+        # genGroup() is called for a group of C constants (a C enum)
         super().genEnum(enum_info, name, alias)
         if alias:
             return
@@ -78,6 +80,20 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
         self.api_constants.append(self.ConstantData(
             name=name,
             value=enum_info.elem.get('value')))
+
+    def genGroup(self, group_info, name, alias):
+        super().genGroup(group_info, name, alias)
+        if alias:
+            return
+        elem = group_info.elem
+        if elem.get('supported') == 'disabled':
+            return
+        if elem.get('type') not in ('enum', 'bitmask'):
+            return
+        for enum in elem.findall('enum'):
+            self.api_constants.append(self.ConstantData(
+                name=enum.get('name'),
+                value=enum.get('value')))
 
     def genStructUnion(self, type_info, type_category, type_name, alias):
         super().genStructUnion(type_info, type_category, type_name, alias)
