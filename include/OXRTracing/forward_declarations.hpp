@@ -42,6 +42,7 @@ std::string XrSpace_to_string(XrSpace space);
 
 using ConstCStr = const char*;
 std::string to_string(const ConstCStr* const arr, size_t count);
+std::string to_string(ConstCStr str, size_t count);
 
 void xrCreateActionSet_hook(XrResult result, XrInstance instance,
     const XrActionSetCreateInfo* createInfo, XrActionSet* actionSet) noexcept;

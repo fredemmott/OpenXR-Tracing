@@ -70,6 +70,8 @@ std::string to_string(const ConstCStr* const arr, size_t count)
 	return out;
 }
 
+std::string to_string(ConstCStr str, size_t count) { return { str, count }; }
+
 std::string XrPath_to_string(XrPath path)
 {
 	if (!path) {
