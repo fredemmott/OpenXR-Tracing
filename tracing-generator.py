@@ -404,9 +404,9 @@ inline std::string to_string({xr_enum.name} value) {{
 
     def getFixedArraySize(self, xr_member):
         size = xr_member.static_array_sizes[0]
-        constant = list([it for it in self.api_constants if it.name == size])
-        if constant:
-            size = constant[0].value
+        for xr_constant in self.api_constants:
+            if xr_constant.name == size:
+                return int(xr_constant.value)
         return int(size)
 
     def genDumpFixedArrayMember(self, xr_member):
