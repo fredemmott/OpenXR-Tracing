@@ -760,6 +760,7 @@ if __name__ == '__main__':
         # Skip other platform APIs
         '.+android.+',
         'XR_KHR_loader.+',
+        'XR_ML_.+',  # Magic Leap
         # Skip all graphics APIs
         #
         # These could be handled, just doesn't seem worth dealing with the various types
