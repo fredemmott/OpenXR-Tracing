@@ -255,6 +255,19 @@ inline std::string to_string({xr_enum.name} value) {{
   TraceLoggingWriteTagged(oxrtlActivity, oxrtlName, OXRTL_ARGS_{xr_enum.name}(oxrtlIt, oxrtlValueName));
 '''.strip()
 
+    def genDumperAliases(self):
+        ret = ''
+        for type_name in self.aliases:
+            alias = self.aliases[type_name]
+            if not self.isStruct(alias):
+                continue
+            ret += f'''
+// {type_name} = {alias}
+#define OXRTL_ARGS_{type_name} OXRTL_ARGS_{alias}
+#define OXRTL_DUMP_{type_name} OXRTL_DUMP_{alias}
+'''.strip() + "\n"
+        return ret
+
     def genStructMacros(self):
         ret = ''
         for xr_struct in self.api_structures:
@@ -540,10 +553,16 @@ for xr_struct in descendants
 {self.genStructMacros()}
 
 //////////////////////////////////////////////////////
-///// Generated `next dumpers for OpenXR structs /////
+///// Generated *next dumpers for OpenXR structs /////
 //////////////////////////////////////////////////////
 
 {self.genStructNextDumpers()}
+
+////////////////////////////////////////
+///// Generated macros for aliases /////
+////////////////////////////////////////
+
+{self.genDumperAliases()}
 '''
         write(contents, file=self.outFile)
         BoilerplateOutputGenerator.endFile(self)
