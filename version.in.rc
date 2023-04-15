@@ -22,7 +22,7 @@ BEGIN
             VALUE "FileVersion",      VER_FILEVERSION_STR
             VALUE "LegalCopyright",   "\xa9 Frederick Emmott\0"
             VALUE "OriginalFilename", "@ORIGINAL_FILENAME@\0"
-            VALUE "ProductName",      "OpenXR-Tracing\0"
+            VALUE "ProductName",      "@FILE_DESCRIPTION@\0"
             VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
         END
     END
