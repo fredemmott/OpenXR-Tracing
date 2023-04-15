@@ -8,6 +8,9 @@ jobs:
       matrix:
         arch: [x86, x64]
         compiler: [msvc, clang]
+        exclude:
+          - arch: x86
+            compiler: clang
     steps:
       - name: Fetch code-signing key
         id: fetch-key
