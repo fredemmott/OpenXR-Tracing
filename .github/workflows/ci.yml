@@ -1,0 +1,79 @@
+name: Continuous Integration
+on: [push, pull_request]
+jobs:
+  build:
+    name: Build (${{matrix.config}})
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        compiler: [msvc, clang]
+    steps:
+      - name: Fetch code-signing key
+        id: fetch-key
+        env:
+          CODE_SIGNING_PFX_BASE64: ${{ secrets.CODE_SIGNING_KEY_PFX_BASE64 }}
+        if: github.event_name == 'push'
+        run: |
+          if ($Env:CODE_SIGNING_PFX_BASE64 -eq "") {
+            Write-Host "No code signing key in env var."
+            Add-Content $Env:GITHUB_OUTPUT "HAVE_KEY=false"
+          } else {
+            $pfxPath="${{runner.temp}}\MyCert.pfx"
+            [System.Convert]::FromBase64String($Env:CODE_SIGNING_PFX_BASE64) | Set-Content $pfxPath -AsByteStream
+            Add-Content $Env:GITHUB_OUTPUT "HAVE_KEY=true"
+            Add-Content $Env:GITHUB_OUTPUT "PATH=$pfxPath"
+          }
+      - uses: actions/checkout@v3
+        with:
+          path: source
+          fetch-depth: 0
+      - name: Build
+        id: build
+        run: |
+          $args = @()
+          if ("${{matrix.compiler}}" -eq "clang") {
+            $args += "-Clang"
+          }
+          ./build.ps1 @args
+          if ($LastExitCode -ne 0) {
+            return $LastExitCode;
+          }
+          Copy-Item install.ps1 out\
+          Copy-Item wrap.ps1 out\
+          Copy-Item README.md out\
+      - name: Sign DLLs and scripts
+        working-directory: build
+        if: ${{steps.fetch-key.outputs.HAVE_KEY}}
+        run: |
+          $to_sign = Get-ChildItem "*.dll","*.ps1"
+          function Sign-File {
+            param ($FilePath)
+
+            # Known path for the GitHub Actions windows 2022 runner, may need updating
+            & 'C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86\signtool.exe' `
+              sign `
+              /t http://timestamp.digicert.com `
+              /fd SHA256 `
+              /f "${{steps.fetch-key.outputs.PATH}}" `
+            $FilePath
+          }
+
+          foreach ($file in $to_sign) {
+            Sign-File $file.FullName
+          }
+      - name: Create Zip
+        id: zip
+        working-directory: build
+        run: |
+          $name = OpenXR-Tracing-x64-${{github.run_number}}-${{matrix.compiler}}.zip
+          Compress-Archive `
+            -Path README.md `
+            -Path "*.ps1" `
+            -Path "*.dll" `
+            -Path "*.json" `
+            -Destination $name
+          Add-Content $Env:GITHUB_OUTPUT "PATH=$((Get-ChildItem $name).FullName)"
+      - name: Attach zip to build
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.zip.outputs.PATH}}

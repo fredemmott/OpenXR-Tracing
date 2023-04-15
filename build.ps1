@@ -34,6 +34,7 @@ try {
     '/std:c++20'
     '/Zc:__cplusplus'
     '/permissive-'
+    '/MD',
     '/D', 'WIN32_LEAN_AND_MEAN=1',
     '/D', 'NOMINMAX=1',
     '/I', "$cwd/third-party/OpenXR-SDK-Source/src/common",
