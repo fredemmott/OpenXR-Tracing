@@ -2,7 +2,7 @@ param(
   [switch] $SkipCodegen = $false,
   [switch] $SkipCompile = $false,
   [switch] $Clang = $false,
-  $Version
+  $Version = '0.0.0.1'
 )
 
 $ErrorActionPreference = "Stop"
@@ -57,9 +57,6 @@ try {
   )
 
   $Arch = $Env:VSCMD_ARG_TGT_ARCH
-  if ("$Version" -eq "") {
-    $Version = '0.0.0.1'
-  }
   Write-Host "Using version '$Version' for metadata"
   $base = (Get-Content $cwd/version.in.rc) `
     -replace '@VER_FILEVERSION_STR@',$Version `

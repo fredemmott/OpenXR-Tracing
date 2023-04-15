@@ -48,7 +48,7 @@ jobs:
           } else {
             $args += @("-Version","0.0.0.${{github.run_number}}")
           }
-          .\build.ps1 @args
+          powershell .\build.ps1 @args
           if ($LastExitCode -ne 0) {
             return $LastExitCode;
           }
