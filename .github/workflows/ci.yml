@@ -29,12 +29,13 @@ jobs:
           fetch-depth: 0
       - name: Build
         id: build
+        working-directory: source
         run: |
           $args = @()
           if ("${{matrix.compiler}}" -eq "clang") {
             $args += "-Clang"
           }
-          ./build.ps1 @args
+          .\build.ps1 @args
           if ($LastExitCode -ne 0) {
             return $LastExitCode;
           }
@@ -42,7 +43,7 @@ jobs:
           Copy-Item wrap.ps1 out\
           Copy-Item README.md out\
       - name: Sign DLLs and scripts
-        working-directory: build
+        working-directory: source\out
         if: ${{steps.fetch-key.outputs.HAVE_KEY}}
         run: |
           $to_sign = Get-ChildItem "*.dll","*.ps1"
@@ -63,7 +64,7 @@ jobs:
           }
       - name: Create Zip
         id: zip
-        working-directory: build
+        working-directory: source\out
         run: |
           $name = OpenXR-Tracing-x64-${{github.run_number}}-${{matrix.compiler}}.zip
           Compress-Archive `
