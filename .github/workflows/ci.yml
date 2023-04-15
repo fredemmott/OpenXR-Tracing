@@ -51,7 +51,7 @@ jobs:
           Copy-Item README.md out\
       - name: Sign DLLs and scripts
         working-directory: source\out
-        if: ${{steps.fetch-key.outputs.HAVE_KEY}}
+        if: ${{steps.fetch-key.outputs.HAVE_KEY == 'true' }}
         run: |
           $to_sign = Get-ChildItem "*.dll","*.ps1"
           function Sign-File {
@@ -63,7 +63,7 @@ jobs:
               /t http://timestamp.digicert.com `
               /fd SHA256 `
               /f "${{steps.fetch-key.outputs.PATH}}" `
-            $FilePath
+              $FilePath
           }
 
           foreach ($file in $to_sign) {
