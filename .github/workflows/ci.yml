@@ -78,3 +78,15 @@ jobs:
             source/out/*.dll
             source/out/*.ps1
             source/out/*.json
+  release:
+    name: "Create draft release"
+    needs: [build]
+    runs-on: windows-2022
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{runner.temp}}/artifacts
+      - name: Display downloaded files
+        run: Get-ChildItem -Recurse
+        working-directory: ${{runner.temp}}/artifacts
