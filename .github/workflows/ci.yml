@@ -54,7 +54,6 @@ jobs:
           }
           Copy-Item install.ps1 out\
           Copy-Item wrap.ps1 out\
-          Copy-Item README.md out\
       - name: Sign DLLs and scripts
         working-directory: source\out
         if: ${{steps.fetch-key.outputs.HAVE_KEY == 'true' }}
@@ -80,13 +79,15 @@ jobs:
         with:
           name: OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}
           path: |
-            source/out/README.md
+            source/README.md
+            source/LICENSE
             source/out/*.dll
             source/out/*.ps1
             source/out/*.json
   release:
-    name: "Create draft release"
+    name: Create draft release
     needs: [build]
+    if: github.ref_type == 'tag'
     runs-on: windows-2022
     steps:
       - name: Download build artifacts
@@ -96,3 +97,24 @@ jobs:
       - name: Display downloaded files
         run: Get-ChildItem -Recurse
         working-directory: ${{runner.temp}}/artifacts
+      - name: Create zips
+        id: zips
+        working-directory: ${{runner.temp}}/artifacts
+        run: |
+          foreach ($dir in Get-ChildItem -Directory) {
+            Push-Location $dir
+            $out_name = $dir.Name -Replace '-GHA-.*','-${{github.ref_name}}.zip'
+            Compress-Archive `
+              -Path * `
+              -DestinationPath ..\$out_name
+            Pop-Location
+          }
+          $dir_path= (Get-Location).Path -replace '\\','/'
+          Add-Content $Env:GITHUB_OUTPUT "DIR_PATH=$dir_path"
+      - name: Create draft release
+        id: create-release
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        with:
+          draft: true
+          files: |
+            ${{ steps.zips.outputs.DIR_PATH }}/*.zip
