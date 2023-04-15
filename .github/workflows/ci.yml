@@ -27,6 +27,9 @@ jobs:
         with:
           path: source
           fetch-depth: 0
+      - name: Fetch submodules
+        working-directory: source
+        run: git submodule update --init
       - name: Build
         id: build
         working-directory: source
