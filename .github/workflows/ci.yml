@@ -2,7 +2,7 @@ name: Continuous Integration
 on: [push, pull_request]
 jobs:
   build:
-    name: Build (${{matrix.config}})
+    name: Build (${{matrix.compiler}})
     runs-on: windows-2022
     strategy:
       matrix:
