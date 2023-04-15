@@ -69,16 +69,12 @@ jobs:
           foreach ($file in $to_sign) {
             Sign-File $file.FullName
           }
-      - name: Create Zip
-        id: zip
-        working-directory: source\out
-        run: |
-          $name = "OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}.zip"
-          Compress-Archive `
-            -Path README.md,"*.ps1","*.dll","*.json" `
-            -Destination $name
-          Add-Content $Env:GITHUB_OUTPUT "PATH=$((Get-ChildItem $name).FullName)"
-      - name: Attach zip to build
+      - name: Attach files to build
         uses: actions/upload-artifact@v3
         with:
-          name: ${{steps.zip.outputs.PATH}}
+          name: OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}
+          path: |
+            source/out/README.md
+            source/out/*.dll
+            source/out/*.ps1
+            source/out/*.json
