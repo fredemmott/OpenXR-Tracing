@@ -57,6 +57,7 @@ jobs:
           # If we pass the source locations, we end up with the `out\` prefix in the zip file for the other files
           Copy-Item README.md out\
           Copy-Item LICENSE out\
+          Copy-Item OXRTracing.wprp out\
       - name: Sign DLLs and scripts
         working-directory: source\out
         if: ${{steps.fetch-key.outputs.HAVE_KEY == 'true' }}
@@ -84,6 +85,7 @@ jobs:
           path: |
             source/out/README.md
             source/out/LICENSE
+            source/out/OXRTracing.wprp
             source/out/*.dll
             source/out/*.ps1
             source/out/*.json
