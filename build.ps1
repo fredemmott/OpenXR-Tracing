@@ -1,7 +1,8 @@
 param(
   [switch] $SkipCodegen = $false,
   [switch] $SkipCompile = $false,
-  [switch] $Clang = $false
+  [switch] $Clang = $false,
+  $Version
 )
 
 $ErrorActionPreference = "Stop"
@@ -55,6 +56,19 @@ try {
     "$cwd/src/tracing.cpp"
   )
 
+  $Arch = $Env:VSCMD_ARG_TGT_ARCH
+  if ("$Version" -eq "") {
+    $Version = '0.0.0.1'
+  }
+  $base = (Get-Content $cwd/version.in.rc) `
+    -replace '@VER_FILEVERSION_STR@',$Version `
+    -replace '@VER_FILEVERSION@',($Version -Replace '\.',',') `
+    -replace '@FILE_DESCRIPTION@',"OpenXR-Tracing ${Arch} ($compiler)"
+  $base -replace '@ORIGINAL_FILENAME@','XR_APILAYER_FREDEMMOTT_OXRTracing.dll' | Set-Content $cwd/gen/version.rc
+  rc.exe -fo $cwd/out/version.res $cwd/gen/version.rc
+  $base -replace '@ORIGINAL_FILENAME@','XR_APILAYER_FREDEMMOTT_OXRTracing_Alternate.dll' | Set-Content $cwd/gen/version-alternate.rc
+  rc.exe -fo $cwd/out/version-alternate.res $cwd/gen/version-alternate.rc
+
   $objs = $sources | % { $_ -replace '^.+/([^/]+).cpp', '$1.obj' }
   & $compiler @baseArgs -c $sources @trailingArgs
   if ($LastExitCode -ne 0) {
@@ -62,6 +76,7 @@ try {
   }
   & $compiler @baseArgs $objs `
     "$cwd/src/tracing_provider.cpp" `
+    "$cwd/out/version.res" `
     "/Fe:XR_APILAYER_FREDEMMOTT_OXRTracing.dll" `
     "/LD"
   if ($LastExitCode -ne 0) {
@@ -69,6 +84,7 @@ try {
   }
   & $compiler @baseArgs $objs `
     "$cwd/src/tracing_provider_alternate.cpp" `
+    "$cwd/out/version-alternate.res" `
     "/Fe:XR_APILAYER_FREDEMMOTT_OXRTracing_Alternate.dll" `
     "/LD"
   if ($LastExitCode -ne 0) {
