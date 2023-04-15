@@ -2,6 +2,15 @@
 
 Windows [Trace Logging] ([ETW]) as an OpenXR API layer.
 
+## Prebuilt binaries
+
+Prebuilt binaries are available in [the latest release](https://github.com/fredemmott/OpenXR-Tracing/releases/latest).
+
+You may need to install the latest Microsoft C++ runtime libraries:
+
+- x86: https://aka.ms/vs/17/release/vc_redist.x86.exe
+- x64: https://aka.ms/vs/17/release/vc_redist.x64.exe
+
 ## Dependencies
 
 - **Python**: installing from the MS store or `winget` should be fine.
