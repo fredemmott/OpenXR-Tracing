@@ -70,7 +70,7 @@ try {
   $objs = $sources | % { $_ -replace '^.+/([^/]+).cpp', '$1.obj' }
   & $compiler @baseArgs -c $sources @trailingArgs
   if ($LastExitCode -ne 0) {
-    return $LastExitCode
+    exit $LastExitCode
   }
   & $compiler @baseArgs $objs `
     "$cwd/src/tracing_provider.cpp" `
@@ -78,7 +78,7 @@ try {
     "/Fe:XR_APILAYER_FREDEMMOTT_OXRTracing.dll" `
     "/LD"
   if ($LastExitCode -ne 0) {
-    return $LastExitCode
+    exit $LastExitCode
   }
   & $compiler @baseArgs $objs `
     "$cwd/src/tracing_provider_alternate.cpp" `
@@ -86,7 +86,7 @@ try {
     "/Fe:XR_APILAYER_FREDEMMOTT_OXRTracing_Alternate.dll" `
     "/LD"
   if ($LastExitCode -ne 0) {
-    return $LastExitCode
+    exit $LastExitCode
   }
 }
 finally {
