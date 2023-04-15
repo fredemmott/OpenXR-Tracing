@@ -200,4 +200,4 @@ void xrCreateReferenceSpace_hook(XrResult result, XrSession session,
 	        p.y, p.z, OXRTL_HANDLE_CAST<const uint64_t>(*space));
 }
 
-// namespace OXRTracing
+} // namespace OXRTracing
