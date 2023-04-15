@@ -73,7 +73,7 @@ jobs:
         id: zip
         working-directory: source\out
         run: |
-          $name = OpenXR-Tracing-${{matrix.arch}}-${{github.run_number}}-${{matrix.compiler}}.zip
+          $name = "OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}.zip"
           Compress-Archive `
             -Path README.md `
             -Path "*.ps1" `
