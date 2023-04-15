@@ -75,7 +75,7 @@ jobs:
         run: |
           $name = "OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}.zip"
           Compress-Archive `
-            -Path README.md,"*.ps1","*.dll","*.json"
+            -Path README.md,"*.ps1","*.dll","*.json" `
             -Destination $name
           Add-Content $Env:GITHUB_OUTPUT "PATH=$((Get-ChildItem $name).FullName)"
       - name: Attach zip to build
