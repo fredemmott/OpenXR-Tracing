@@ -57,7 +57,7 @@ try {
   )
 
   $Arch = $Env:VSCMD_ARG_TGT_ARCH
-  Write-Host "Using version '$Version' for metadata"
+  Write-Host "Using version '$Version' and architecture '$Arch' for metadata"
   $base = (Get-Content $cwd/version.in.rc) `
     -replace '@VER_FILEVERSION_STR@',$Version `
     -replace '@VER_FILEVERSION@',($Version -Replace '\.',',') `
