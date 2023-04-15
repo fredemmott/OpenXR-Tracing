@@ -54,6 +54,9 @@ jobs:
           }
           Copy-Item install.ps1 out\
           Copy-Item wrap.ps1 out\
+          # If we pass the source locations, we end up with the `out\` prefix in the zip file for the other files
+          Copy-Item README.md out\
+          Copy-Item LICENSE out\
       - name: Sign DLLs and scripts
         working-directory: source\out
         if: ${{steps.fetch-key.outputs.HAVE_KEY == 'true' }}
@@ -79,8 +82,8 @@ jobs:
         with:
           name: OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}
           path: |
-            source/README.md
-            source/LICENSE
+            source/out/README.md
+            source/out/LICENSE
             source/out/*.dll
             source/out/*.ps1
             source/out/*.json
