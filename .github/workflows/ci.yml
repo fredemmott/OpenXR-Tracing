@@ -50,7 +50,7 @@ jobs:
           }
           powershell .\build.ps1 @args
           if ($LastExitCode -ne 0) {
-            return $LastExitCode;
+            exit $LastExitCode;
           }
           Copy-Item install.ps1 out\
           Copy-Item wrap.ps1 out\
