@@ -2,10 +2,11 @@ name: Continuous Integration
 on: [push, pull_request]
 jobs:
   build:
-    name: Build (${{matrix.compiler}})
+    name: Build - ${{matrix.compiler}} ${{matrix.arch}}
     runs-on: windows-2022
     strategy:
       matrix:
+        arch: [x86, x64]
         compiler: [msvc, clang]
     steps:
       - name: Fetch code-signing key
@@ -30,6 +31,9 @@ jobs:
       - name: Fetch submodules
         working-directory: source
         run: git submodule update --init
+      - uses: ilammy/msvc-dev-cmd@cec98b9d092141f74527d0afa6feb2af698cfe89
+        with:
+          arch: ${{matrix.arch}}
       - name: Build
         id: build
         working-directory: source
@@ -69,7 +73,7 @@ jobs:
         id: zip
         working-directory: source\out
         run: |
-          $name = OpenXR-Tracing-x64-${{github.run_number}}-${{matrix.compiler}}.zip
+          $name = OpenXR-Tracing-${{matrix.arch}}-${{github.run_number}}-${{matrix.compiler}}.zip
           Compress-Archive `
             -Path README.md `
             -Path "*.ps1" `
