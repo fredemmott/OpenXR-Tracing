@@ -9,13 +9,24 @@ param (
 )
 
 if ("${LayerPath}" -eq "") {
-	$LayerPath = (Get-Item out/APILayer.json).FullName
+	if (Test-Path out/APILayer.json) {
+		$LayerPath = "out/APILayer.json"
+	} elseif (Test-Path APILayer.json) {
+		$LayerPath = "APILayer.json"
+	}
+}
+
+if ("${LayerPath}" -eq "") {
+	Write-Host "Could not find APILayer.json"
+	return 1
 }
 
 if (-not (Test-Path $LayerPath)) {
 	Write-Host "LayerPath '${LayerPath}' does not exist."
 	return 1
 }
+
+$LayerPath = (Get-Item $LayerPath).FullName
 
 if ($Mode -eq "Before" -or $Mode -eq "After") {
 	if ("${RelativeTo}" -eq "") {
