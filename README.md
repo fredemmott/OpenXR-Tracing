@@ -2,6 +2,23 @@
 
 Windows [Trace Logging] ([ETW]) as an OpenXR API layer.
 
+## Why?
+
+While the OpenXR SDK source does include a dumping layer:
+
+- OpenXR-Tracing produces ETL files; tools for ETL files like Tabnalysis and Windows Performance Analyzer are designed to deal with extremely large amounts of structured data, and work much better than browsers for this
+- OpenXR-Tracing produces more detailed information, such as:
+  - both string and handles are shown for `XrPath`, `XrAction`, and `XrActionSet`
+  - arrays are walked, e.g. composition layers, subaction paths
+
+![example output from hello_xr.exe](screenshot.png)
+
+On the other hand, the layer included with the OpenXR SDK source has some advantages:
+
+- OpenXR-Tracing uses Windows-specific features, so can not be used on other platforms
+- OpenXR-Tracing currently will not handle invalid structs well, and may crash
+
+
 ## Prebuilt binaries
 
 Prebuilt binaries are available in [the latest release](https://github.com/fredemmott/OpenXR-Tracing/releases/latest).
@@ -80,22 +97,6 @@ To finish collecting data and write an ETL file:
     wpr -stop MyTraceFile.etl
 
 If you're looking for an event log rather than profiling information, I recommend [Tabnalysis].
-
-## Rationale
-
-While the OpenXR SDK source does include a dumping layer:
-
-- OpenXR-Tracing produces ETL files; tools for ETL files like Tabnalysis and Windows Performance Analyzer are designed to deal with extremely large amounts of structured data, and work much better than browsers for this
-- OpenXR-Tracing produces more detailed information, such as:
-  - both string and handles are shown for `XrPath`, `XrAction`, and `XrActionSet`
-  - arrays are walked, e.g. composition layers, subaction paths
-
-![example output from hello_xr.exe](screenshot.png)
-
-On the other hand, the layer included with the OpenXR SDK source has some advantages:
-
-- OpenXR-Tracing uses Windows-specific features, so can not be used on other platforms
-- OpenXR-Tracing currently will not handle invalid structs well, and may crash
 
 ## License
 
