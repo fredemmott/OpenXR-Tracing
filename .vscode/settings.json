@@ -87,5 +87,9 @@
 	},
 	"editor.formatOnSave": true,
 	"cmake.sourceDirectory": "${workspaceFolder}/third-party/OpenXR-SDK",
-	"cmake.configureOnOpen": false
+	"cmake.configureOnOpen": false,
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.black-formatter"
+	},
+	"python.formatting.provider": "none"
 }
