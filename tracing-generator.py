@@ -163,6 +163,7 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
         handwritten = ["xrGetInstanceProcAddr", "xrCreateInstance"]
         skip = handwritten + self.no_trampoline_or_terminator
         all = self.core_commands + self.ext_commands
+        all.sort(key=lambda command: command.name)
         return [command for command in all if command.name not in skip]
 
     def outputGeneratedAuthorNote(self):
@@ -171,19 +172,19 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
 
 class MacroOutputGenerator(BoilerplateOutputGenerator):
     def genPlatformTypeMacros(self):
-        names = {
+        names = [
             "float",
-            "int8_t",
-            "uint8_t",
             "int16_t",
-            "uint16_t",
             "int32_t",
-            "uint32_t",
             "int64_t",
-            "uint64_t",
+            "int8_t",
             "size_t",
+            "uint16_t",
+            "uint32_t",
+            "uint64_t",
+            "uint8_t",
             "uintptr_t",
-        }
+        ]
         macros = []
         for name in names:
             macros.append(
@@ -207,9 +208,9 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
         handwritten = {"XrAction", "XrActionSet", "XrSpace"}
 
         ret = ""
-        for xr_type in self.api_base_types:
+        for xr_type in sorted(self.api_base_types, key=lambda xr_type: xr_type.name):
             ret += self.genBaseTypeMacro(xr_type) + "\n"
-        for xr_type in self.api_handles:
+        for xr_type in sorted(self.api_handles, key=lambda xr_type: xr_type.name):
             macro = (
                 f"#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_HANDLE(oxrtlIt, name)"
                 + "\n"
@@ -218,13 +219,15 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
                 ret += "// EXCLUDED - HANDWRITTEN:\n// " + macro
             else:
                 ret += macro
-        for xr_type in self.api_flags:
+        for xr_type in sorted(self.api_flags, key=lambda xr_type: xr_type.name):
             ret += (
                 f"#define OXRTL_ARGS_{xr_type.name}(oxrtlIt, name) OXRTL_ARGS_{xr_type.type}(oxrtlIt, name)"
                 + "\n"
             )
 
-        for xr_type in self.api_base_types + self.api_handles:
+        for xr_type in sorted(
+            self.api_base_types + self.api_handles, key=lambda xr_type: xr_type.name
+        ):
             ret += (
                 f"""
 #define OXRTL_DUMP_{xr_type.name}(oxrtlActivity, oxrtlName, oxrtlValueName, oxrtlIt)
@@ -251,7 +254,7 @@ class MacroOutputGenerator(BoilerplateOutputGenerator):
 
     def genEnumMacros(self):
         ret = ""
-        for xr_enum in self.api_enums:
+        for xr_enum in sorted(self.api_enums, key=lambda xr_enum: xr_enum.name):
             ret += self.genEnumMacro(xr_enum) + "\n"
         return ret
 
@@ -277,7 +280,7 @@ inline std::string to_string({xr_enum.name} value) {{
 
     def genDumperAliases(self):
         ret = ""
-        for type_name in self.aliases:
+        for type_name in sorted(self.aliases):
             alias = self.aliases[type_name]
             if not self.isStruct(alias):
                 continue
@@ -293,13 +296,17 @@ inline std::string to_string({xr_enum.name} value) {{
 
     def genStructMacros(self):
         ret = ""
-        for xr_struct in self.api_structures:
+        for xr_struct in sorted(
+            self.api_structures, key=lambda xr_struct: xr_struct.name
+        ):
             ret += self.genStructMacro(xr_struct) + "\n"
         return ret
 
     def genStructNextDumpers(self):
         ret = ""
-        for xr_struct in self.api_structures:
+        for xr_struct in sorted(
+            self.api_structures, key=lambda xr_struct: xr_struct.name
+        ):
             if self.hasNextDumper(xr_struct):
                 ret += self.genStructNextDumper(xr_struct) + "\n"
         return ret
@@ -800,7 +807,9 @@ namespace OXRTracing {{
 
     def genDumpingFunctionDeclarations(self):
         ret = ""
-        for xr_struct in self.api_structures:
+        for xr_struct in sorted(
+            self.api_structures, key=lambda xr_struct: xr_struct.name
+        ):
             decl = self.getNextDumperDecl(xr_struct)
             if decl:
                 ret += decl + ";\n"
