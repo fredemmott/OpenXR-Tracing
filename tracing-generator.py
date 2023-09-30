@@ -725,13 +725,15 @@ OXRTL_DUMP_{struct_name}(
             else:
                 trace_arg = f'OXRTL_ARGS_{param.type}((*{param.name}), "{param.name}")'
             if param.is_const:
-                trace_in.append(trace_arg)
                 if is_struct:
                     trace_next_in.append(self.genTraceStruct(xr_command.name, param))
+                else:
+                    trace_in.append(trace_arg)
                 continue
-            trace_out.append(trace_arg)
             if is_struct:
                 trace_next_out.append(self.genTraceStruct(xr_command.name, param))
+            else:
+                trace_out.append(trace_arg)
 
         instance_state_pre = ""
         instance_state_post = ""
