@@ -753,12 +753,20 @@ XrResult XRAPI_CALL OXRTracing_{xr_command.name}({', '.join(parameters)}) {{
   TraceLoggingActivity<gTraceProvider> localActivity;
   TraceLoggingWriteStart(localActivity, {', '.join(trace_in)});
   {newline.join(trace_next_in)}
-  const auto ret = next_{xr_command.name}({', '.join(arguments)});
-  {newline.join(trace_next_out)}
-  {hook}
-  TraceLoggingWriteStop(localActivity, {', '.join(trace_out)});
-  {instance_state_post}
-  return ret;
+  try {{
+    const auto ret = next_{xr_command.name}({', '.join(arguments)});
+    {newline.join(trace_next_out)}
+    {hook}
+    TraceLoggingWriteStop(localActivity, {', '.join(trace_out)});
+    {instance_state_post}
+    return ret;
+  }} catch (const std::exception& e) {{
+      TraceLoggingWriteStop(localActivity, "{xr_command.name}", TraceLoggingValue(e.what(), "exception"));
+      throw;
+  }} catch(...) {{
+      TraceLoggingWriteStop(localActivity, "{xr_command.name}", TraceLoggingValue("Got a C++ exception that is not an std exception", "exception"));
+      throw;
+  }}
 }}
 """
 
