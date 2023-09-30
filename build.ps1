@@ -36,6 +36,7 @@ try {
     '/Zc:__cplusplus'
     '/permissive-'
     '/MD',
+    '/EHa',
     '/D', 'WIN32_LEAN_AND_MEAN=1',
     '/D', 'NOMINMAX=1',
     '/I', "$cwd/third-party/OpenXR-SDK-Source/src/common",
@@ -59,12 +60,12 @@ try {
   $Arch = $Env:VSCMD_ARG_TGT_ARCH
   Write-Host "Using version '$Version' and architecture '$Arch' for metadata"
   $base = (Get-Content $cwd/version.in.rc) `
-    -replace '@VER_FILEVERSION_STR@',$Version `
-    -replace '@VER_FILEVERSION@',($Version -Replace '\.',',') `
-    -replace '@FILE_DESCRIPTION@',"OpenXR-Tracing ${Arch} ($compiler)"
-  $base -replace '@ORIGINAL_FILENAME@','XR_APILAYER_FREDEMMOTT_OXRTracing.dll' | Set-Content $cwd/gen/version.rc
+    -replace '@VER_FILEVERSION_STR@', $Version `
+    -replace '@VER_FILEVERSION@', ($Version -Replace '\.', ',') `
+    -replace '@FILE_DESCRIPTION@', "OpenXR-Tracing ${Arch} ($compiler)"
+  $base -replace '@ORIGINAL_FILENAME@', 'XR_APILAYER_FREDEMMOTT_OXRTracing.dll' | Set-Content $cwd/gen/version.rc
   rc.exe /nologo /fo $cwd/out/version.res $cwd/gen/version.rc
-  $base -replace '@ORIGINAL_FILENAME@','XR_APILAYER_FREDEMMOTT_OXRTracing_Alternate.dll' | Set-Content $cwd/gen/version-alternate.rc
+  $base -replace '@ORIGINAL_FILENAME@', 'XR_APILAYER_FREDEMMOTT_OXRTracing_Alternate.dll' | Set-Content $cwd/gen/version-alternate.rc
   rc.exe /nologo /fo $cwd/out/version-alternate.res $cwd/gen/version-alternate.rc
 
   $objs = $sources | % { $_ -replace '^.+/([^/]+).cpp', '$1.obj' }
