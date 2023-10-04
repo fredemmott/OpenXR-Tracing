@@ -31,6 +31,7 @@ namespace OXRTracing {
 TRACELOGGING_DECLARE_PROVIDER(gTraceProvider);
 extern thread_local XrInstance gXrInstance;
 extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
+extern const std::string gLayerName;
 
 /* These are <type>_to_string because in 32-bit builds,
  * OpenXR handles are just type aliases to uint64_t, so

@@ -27,6 +27,9 @@
 
 #pragma comment(lib, "Advapi32.lib")
 
+#include <OXRTracing/forward_declarations.hpp>
+#include <string>
+
 namespace OXRTracing {
 
 /* PS >
@@ -36,5 +39,7 @@ namespace OXRTracing {
 TRACELOGGING_DEFINE_PROVIDER(gTraceProvider, "FredEmmott.OpenXRTracing",
     (0x0f924f5f, 0x21f0, 0x513d, 0xa2, 0xab, 0x2e, 0xde, 0x80, 0x2e, 0x0b,
         0x8f));
+
+const std::string gLayerName = "XR_APILAYER_FREDEMMOTT_OXRTracing";
 
 } // namespace OXRTracing

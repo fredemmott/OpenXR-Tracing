@@ -92,7 +92,20 @@ XrResult OXRTracing_xrEnumerateApiLayerProperties(
     uint32_t propertyCapacityInput, uint32_t* propertyCountOutput,
     XrApiLayerProperties* properties)
 {
-	*propertyCountOutput = 0;
+	if (propertyCapacityInput == 0) {
+		return XR_ERROR_SIZE_INSUFFICIENT;
+	}
+
+	*properties = XrApiLayerProperties{
+		.type = XR_TYPE_API_LAYER_PROPERTIES,
+		.specVersion = XR_CURRENT_API_VERSION,
+		.layerVersion = 1,
+		.description = "ETW-based OpenXR API Tracing",
+	};
+	std::strncpy(
+	    properties->layerName, gLayerName.c_str(), XR_MAX_API_LAYER_NAME_SIZE);
+	*propertyCountOutput = 1;
+
 	return XR_SUCCESS;
 }
 
