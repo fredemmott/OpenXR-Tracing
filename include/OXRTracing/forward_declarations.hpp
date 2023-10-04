@@ -56,3 +56,11 @@ void xrCreateReferenceSpace_hook(XrResult result, XrSession session,
     const XrReferenceSpaceCreateInfo* createInfo, XrSpace* space);
 
 } // namespace OXRTracing
+
+XrResult OXRTracing_xrEnumerateInstanceExtensionProperties(
+    const char* layerName, uint32_t propertyCapacityInput,
+    uint32_t* propertyCountOutput, XrExtensionProperties* properties);
+
+XrResult OXRTracing_xrEnumerateApiLayerProperties(
+    uint32_t propertyCapacityInput, uint32_t* propertyCountOutput,
+    XrApiLayerProperties* properties);

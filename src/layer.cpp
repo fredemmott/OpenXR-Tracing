@@ -29,8 +29,10 @@
 
 namespace OXRTracing {
 
-thread_local XrInstance gXrInstance{};
+thread_local XrInstance gXrInstance{ XR_NULL_HANDLE };
 PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr{ nullptr };
+PFN_xrEnumerateInstanceExtensionProperties
+    gXrNextEnumerateInstanceExtensionProperties{ nullptr };
 
 } // namespace OXRTracing
 
@@ -38,6 +40,61 @@ XrResult XRAPI_CALL OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance, const char* name, PFN_xrVoidFunction* function);
 
 using namespace OXRTracing;
+
+XrResult OXRTracing_xrEnumerateInstanceExtensionProperties(
+    const char* layerName, uint32_t propertyCapacityInput,
+    uint32_t* propertyCountOutput, XrExtensionProperties* properties)
+{
+	TraceLoggingActivity<gTraceProvider> localActivity;
+	TraceLoggingWriteStart(localActivity,
+	    "xrEnumerateInstanceExtensionProperties",
+	    TraceLoggingString(layerName, "layerName"),
+	    TraceLoggingUInt32(propertyCapacityInput, "propertyCapacityInput"));
+
+	// The OpenXR specification says that this should work without an instance,
+	// however, a 'next' pointer is needed to query extensions that might be
+	// provided by another API layer, and the OpenXR *Loader* spec says:
+	//
+	// "an implicit API layer, it must add it’s own instance extension
+	// contents to the list of extensions."; this means we - and any lower
+	// layers - need the 'next' pointer.
+
+	if (layerName == NULL && gXrNextEnumerateInstanceExtensionProperties) {
+		const auto ret = gXrNextEnumerateInstanceExtensionProperties(
+		    layerName, propertyCapacityInput, propertyCountOutput, properties);
+
+		if (XR_SUCCEEDED(ret)) {
+			const auto propertyCount
+			    = std::min(propertyCapacityInput, *propertyCountOutput);
+
+			for (auto i = 0; i < propertyCount; ++i) {
+				OXRTL_DUMP_XrExtensionProperties(localActivity,
+				    "xrEnumerateInstanceExtensionProperties", "properties[]",
+				    (properties[i]));
+			}
+		}
+
+		TraceLoggingWriteStop(localActivity,
+		    "xrEnumerateInstanceExtensionProperties",
+		    TraceLoggingUInt32(*propertyCountOutput, "propertyCountOutput"),
+		    OXRTL_ARGS_XrResult(ret, "XrResult"));
+		return ret;
+	}
+	*propertyCountOutput = 0;
+	TraceLoggingWriteStop(localActivity,
+	    "xrEnumerateInstanceExtensionProperties",
+	    TraceLoggingUInt32(0, "propertyCountOutput"),
+	    OXRTL_ARGS_XrResult(XR_SUCCESS, "XrResult"));
+	return XR_SUCCESS;
+}
+
+XrResult OXRTracing_xrEnumerateApiLayerProperties(
+    uint32_t propertyCapacityInput, uint32_t* propertyCountOutput,
+    XrApiLayerProperties* properties)
+{
+	*propertyCountOutput = 0;
+	return XR_SUCCESS;
+}
 
 static XrResult XRAPI_CALL OXRTracing_xrCreateApiLayerInstance(
     const XrInstanceCreateInfo* info,
@@ -61,7 +118,12 @@ static XrResult XRAPI_CALL OXRTracing_xrCreateApiLayerInstance(
 		return ret;
 	}
 
+	gXrInstance = *instance;
 	gXrNextGetInstanceProcAddr = layerInfo->nextInfo->nextGetInstanceProcAddr;
+	gXrNextGetInstanceProcAddr(*instance,
+	    "xrEnumerateInstanceExtensionProperties",
+	    reinterpret_cast<PFN_xrVoidFunction*>(
+	        &gXrNextEnumerateInstanceExtensionProperties));
 
 	return ret;
 }

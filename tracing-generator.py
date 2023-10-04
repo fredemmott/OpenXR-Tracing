@@ -644,13 +644,30 @@ XrResult XRAPI_CALL OXRTracing_xrGetInstanceProcAddr(
     XrInstance instance,
     const char* nameCStr,
     PFN_xrVoidFunction* function) {
+    
+    const std::string_view name {nameCStr};
+
+    // Must be supported without an instance
+
+    if (name == "xrEnumerateInstanceExtensionProperties") {
+        *function = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrEnumerateInstanceExtensionProperties);
+        return XR_SUCCESS;
+    }
+
+    if (name == "xrEnumerateApiLayerProperties") {
+        *function = reinterpret_cast<PFN_xrVoidFunction>(&OXRTracing_xrEnumerateApiLayerProperties);
+        return XR_SUCCESS;
+    }
+
+    if (!(instance && gXrNextGetInstanceProcAddr)) {
+        return XR_ERROR_HANDLE_INVALID;
+    }
 
     *function = nullptr;
     const auto ret = gXrNextGetInstanceProcAddr(instance, nameCStr, function);
     if (XR_FAILED(ret) || !*function) {
         return ret;
     }
-    const std::string_view name {nameCStr};
 """
         for xr_command in self.getWrappedCommands():
             ret += f"""
