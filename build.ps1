@@ -37,6 +37,7 @@ try {
     '/permissive-'
     '/MD',
     '/EHa',
+    '/Zi',
     '/D', 'WIN32_LEAN_AND_MEAN=1',
     '/D', 'NOMINMAX=1',
     '/I', "$cwd/third-party/OpenXR-SDK-Source/src/common",
