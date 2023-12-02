@@ -39,6 +39,7 @@ from reg import Registry
 from automatic_source_generator import (
     AutomaticSourceOutputGenerator,
     AutomaticSourceGeneratorOptions,
+    StructRelationGroup,
 )
 
 
@@ -106,7 +107,7 @@ class BoilerplateOutputGenerator(AutomaticSourceOutputGenerator):
             return
         group = self._next_structs.get(next_of)
         if not group:
-            group = self.StructRelationGroup(
+            group = StructRelationGroup(
                 generic_struct_name=next_of, child_struct_names=[]
             )
             self._next_structs[next_of] = group
