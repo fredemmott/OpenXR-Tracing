@@ -82,7 +82,7 @@ jobs:
             Sign-File $file.FullName
           }
       - name: Attach files to build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: OpenXR-Tracing-${{matrix.compiler}}-${{matrix.arch}}-GHA-${{github.run_number}}
           path: |
