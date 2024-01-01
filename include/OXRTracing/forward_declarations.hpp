@@ -33,6 +33,11 @@ extern thread_local XrInstance gXrInstance;
 extern PFN_xrGetInstanceProcAddr gXrNextGetInstanceProcAddr;
 extern const std::string gLayerName;
 
+template <XrStructureType T> struct XrStructureSize {};
+template <XrStructureType T>
+constexpr size_t xr_structure_size_v = XrStructureSize<T>::value;
+size_t xrStructureSize(XrStructureType);
+
 /* These are <type>_to_string because in 32-bit builds,
  * OpenXR handles are just type aliases to uint64_t, so
  * we can't use standard overload resolution. */

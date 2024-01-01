@@ -366,9 +366,20 @@ inline std::string to_string({xr_enum.name} value) {{
             struct_def = f'#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName) TraceLoggingStruct({len(member_macros)}, oxrtlName),{", ".join(member_macros)}'
         else:
             struct_def = f"#define OXRTL_ARGS_{xr_struct.name}(oxrtlIt, oxrtlName) TraceLoggingValue(oxrtlName)"
+
+        xr_type = [p for p in xr_struct.members if p.name == "type"]
+        struct_size = ""
+        if xr_type and xr_type[0].values:
+            struct_size = f"""
+template<>
+struct OXRTracing::XrStructureSize<{xr_type[0].values}> {{
+    static constexpr size_t value = sizeof({xr_struct.name});
+}};
+"""
         return f"""
 {struct_def}
 {self.genDumpStructMacro(xr_struct)}
+{struct_size}
 """
 
     def genStructNextDumper(self, xr_struct):
@@ -637,6 +648,31 @@ class LayerOutputGenerator(BoilerplateOutputGenerator):
             ret += f"PFN_{xr_command.name} next_{xr_command.name} {{nullptr}};" + "\n"
         return ret + "\n}"
 
+    def genXrStructureSize(self):
+        if self._file_number != 0:
+            return ""
+        cases = []
+        # We're examining the structs instead of the XrStructureType enum so that our exclusion
+        # list applies, e.g. we don't implement Android-specific structure size
+        xr_types = []
+        for xr_struct in self.api_structures:
+            type = next((m for m in xr_struct.members if m.name == "type"), None)
+            if type and type.values:
+                xr_types.append(type.values)
+        for xr_type in sorted(xr_types):
+            cases.append(f"case {xr_type}: return xr_structure_size_v<{xr_type}>;")
+        return f"""
+namespace OXRTracing {{
+size_t xrStructureSize(XrStructureType type) {{
+  switch(type) {{
+  {' '.join(cases)}
+    default:
+      return 0;
+  }}
+}}
+}}
+"""
+
     def genXrGetInstanceProcAddr(self):
         if self._file_number != 0:
             return ""
@@ -731,7 +767,49 @@ OXRTL_DUMP_{struct_name}(
                 continue
 
             # Figure out what/how to trace
-            if param.is_array or param.pointer_count > 1:
+            if param.pointer_count > 1:
+                continue
+            if param.is_array:
+                if param.type == "char":
+                    trace_arg = None
+                    if param.is_static_array:
+                        trace_arg = f'OXRTL_ARGS_char_FA({param.name}, "{param.name}", {param.static_array_sizes[0]})'
+                    else:
+                        trace_arg = f'OXRTL_ARGS_char_P_DA({param.name}, "{param.name}", {param.pointer_count_var})'
+                    if param.is_const:
+                        trace_in.append(trace_arg)
+                    else:
+                        trace_out.append(trace_arg)
+                elif not param.is_static_array:
+                    i = f"{param.name}_i"
+                    it = f"{param.name}_it"
+                    it_next = f"++{it}"
+                    # This needed for xrEnumerateSwapchainImages, as images is a pointer to the first
+                    # element of an array of structs, where the size it not known in advance
+                    xr_struct = next(
+                        (s for s in self.api_structures if s.name == param.type), None
+                    )
+                    if xr_struct and next(
+                        (m for m in xr_struct.members if m.name == "type"), None
+                    ):
+                        it_next = f"*reinterpret_cast<uintptr_t*>(&{it}) += xrStructureSize({it}->type)"
+                    trace_arg = f"""
+{{
+    auto {it} = {param.name};
+    for (auto {i} = 0; {i} < {param.pointer_count_var}; ++{i}, {it_next}) {{
+        OXRTL_DUMP_{param.type}(
+            localActivity,
+            "{xr_command.name}_{param.name}",
+            "element",
+            (*{it})
+        );
+    }}
+}}
+"""
+                    if param.is_const:
+                        trace_next_in.append(trace_arg)
+                    else:
+                        trace_next_out.append(trace_arg)
                 continue
             if param.pointer_count == 0:
                 trace_arg = f'OXRTL_ARGS_{param.type}({param.name}, "{param.name}")'
@@ -807,6 +885,8 @@ using namespace OXRTracing;
 {self.genNextPFNDefinitions()}
 
 {self.genWrappers()}
+
+{self.genXrStructureSize()}
 
 {self.genXrGetInstanceProcAddr()}
 """
