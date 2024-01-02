@@ -799,8 +799,8 @@ OXRTL_DUMP_{struct_name}(
     for (auto {i} = 0; {i} < {param.pointer_count_var}; ++{i}, {it_next}) {{
         OXRTL_DUMP_{param.type}(
             localActivity,
-            "{xr_command.name}_{param.name}",
-            "element",
+            "{xr_command.name}",
+            "{param.name}",
             (*{it})
         );
     }}
