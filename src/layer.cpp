@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 #include <OXRTracing.hpp>
-#include <loader_interfaces.h>
 #include <openxr/openxr.h>
+#include <openxr/openxr_loader_negotiation.h>
 
 #include <TraceLoggingActivity.h>
 #include <TraceLoggingProvider.h>
