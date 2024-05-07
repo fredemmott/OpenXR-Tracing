@@ -60,7 +60,7 @@ Each of these layers has its' own DLL and json file in `out\` after building; uo
 
 ### Enabling the layers
 
-You can manually add the .json file to the registry like any other layer, or use `install.ps1` and `wrap.ps1` as administrator. You might find [list-openxr-layers] handy.
+The easiest way is to use [OpenXR API Layers GUI](https://github.com/fredemmott/OpenXR-API-Layers-GUI); alternatively, you can manually add the .json file to the registry like any other layer, or use `install.ps1` and `wrap.ps1` as administrator. You might find [list-openxr-layers] handy.
 
 With administrator powershell:
 
