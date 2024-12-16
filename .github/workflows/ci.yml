@@ -123,7 +123,7 @@ jobs:
           Add-Content $Env:GITHUB_OUTPUT "DIR_PATH=$dir_path"
       - name: Create draft release
         id: create-release
-        uses: softprops/action-gh-release@01570a1f39cb168c169c802c3bceb9e93fb10974
+        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048
         with:
           draft: true
           files: |
