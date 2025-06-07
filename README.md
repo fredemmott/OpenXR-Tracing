@@ -2,6 +2,12 @@
 
 Windows [Trace Logging] ([ETW]) as an OpenXR API layer.
 
+## Project Status
+
+This project currently supports OpenXR 1.0; it properly logs extensions included in v1.0.34 of the OpenXR SDK. More recent extensions should not cause issues, but will not be fully traced.
+
+I occasionally update this project to fit my own needs; if your business requires updates or additional features in the short-term, I'm available for contract work - please contact me at fred@fredemmott.com. I do not offer any end-user support via email.
+
 ## Why?
 
 While the OpenXR SDK source does include a dumping layer:
@@ -17,7 +23,6 @@ On the other hand, the layer included with the OpenXR SDK source has some advant
 
 - OpenXR-Tracing uses Windows-specific features, so can not be used on other platforms
 - OpenXR-Tracing currently will not handle invalid structs well, and may crash
-
 
 ## Prebuilt binaries
 
