@@ -27,7 +27,7 @@ jobs:
             Add-Content $Env:GITHUB_OUTPUT "HAVE_KEY=true"
             Add-Content $Env:GITHUB_OUTPUT "PATH=$pfxPath"
           }
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           path: source
           fetch-depth: 0
